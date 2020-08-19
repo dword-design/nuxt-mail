@@ -1,0 +1,45 @@
+{
+  "name": "nuxt-mail",
+  "version": "1.0.0",
+  "description": "Adds mail sending capability to a Nuxt app. Adds a server route, an injected variable, and uses nodemailer to send emails",
+  "keywords": [
+    "api",
+    "contact",
+    "email",
+    "form",
+    "mail",
+    "nodemailer",
+    "nuxt",
+    "post",
+    "route",
+    "send",
+    "transport"
+  ],
+  "repository": "dword-design/nuxt-mail",
+  "license": "MIT",
+  "author": "Sebastian Landwehr <info@dword-design.de>",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "base clean",
+    "commit": "base commit",
+    "dev": "base dev",
+    "lint": "base lint",
+    "prepare": "base prepare",
+    "prepublishOnly": "base prepublishOnly",
+    "test": "base test"
+  },
+  "dependencies": {
+    "@dword-design/nuxt-push-plugins": "^1.0.2",
+    "express": "^4.17.1",
+    "nodemailer": "^6.4.11"
+  },
+  "devDependencies": {
+    "@dword-design/base": "^6.24.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
