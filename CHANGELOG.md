@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/dword-design/nuxt-mail/compare/v1.0.1...v1.0.2) (2020-12-02)
+
+
+### Bug Fixes
+
+* **config:** Update changed files ([1dc1d02](https://github.com/dword-design/nuxt-mail/commit/1dc1d02709c2b6b0ef340981e9b7e414f0f35c91))
+
 ## [1.0.1](https://github.com/dword-design/nuxt-mail/compare/v1.0.0...v1.0.1) (2020-08-25)
 
 
