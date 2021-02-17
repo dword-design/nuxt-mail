@@ -5,6 +5,7 @@
   "labels": [
     "maintenance"
   ],
+  "semanticCommitScope": null,
   "packageRules": [
     {
       "packagePatterns": [

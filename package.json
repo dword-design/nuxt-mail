@@ -23,7 +23,7 @@
     "dist"
   ],
   "scripts": {
-    "clean": "base clean",
+    "check-unknown-files": "base check-unknown-files",
     "commit": "base commit",
     "dev": "base dev",
     "lint": "base lint",
@@ -37,7 +37,7 @@
     "nodemailer": "^6.4.11"
   },
   "devDependencies": {
-    "@dword-design/base": "^6.24.2"
+    "@dword-design/base": "^7.0.0"
   },
   "publishConfig": {
     "access": "public"
