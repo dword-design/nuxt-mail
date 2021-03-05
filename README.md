@@ -73,7 +73,7 @@ export default {
 }
 ```
 
-The `smtp` options are required and directly passed to [nodemailer](https://nodemailer.com/smtp/). Refer to their documentation for available options.
+The `smtp` options are required and directly passed to [nodemailer](https://nodemailer.com/smtp/). Refer to their documentation for available options. Also note that the module only works for `universal` mode, not `spa` mode, because we need the server route (see the [Nuxt.js documentation](https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-mode) for details about the mode).
 
 The module adds a `/mail/send` post route, which can be invoked via `$axios`:
 ```js
