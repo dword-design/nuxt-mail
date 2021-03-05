@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/dword-design/nuxt-mail/compare/v1.0.3...v1.0.4) (2021-03-05)
+
+
+### Bug Fixes
+
+* fix readme code syntax ([a730454](https://github.com/dword-design/nuxt-mail/commit/a73045453a02ec2db024016bcc8542617be53426))
+
 ## [1.0.3](https://github.com/dword-design/nuxt-mail/compare/v1.0.2...v1.0.3) (2021-02-17)
 
 
