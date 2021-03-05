@@ -61,7 +61,7 @@ export default {
         host: "smtp.example.com",
         port: 587,
       },
-    },
+    }],
   ],
   // or use the top-level option:
   mail: {
