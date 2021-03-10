@@ -5,7 +5,7 @@ jobs:
     steps:
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: rokroskar/workflow-run-cleanup-action@v0.3.2
+        uses: rokroskar/workflow-run-cleanup-action@v0.3.0
   release:
     needs: test
     runs-on: ubuntu-latest
