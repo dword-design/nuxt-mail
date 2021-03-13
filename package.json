@@ -37,7 +37,18 @@
     "nodemailer": "^6.4.11"
   },
   "devDependencies": {
-    "@dword-design/base": "^7.0.0"
+    "@dword-design/base": "^7.0.0",
+    "@dword-design/functions": "^1.2.1",
+    "@dword-design/proxyquire": "^1.0.5",
+    "@dword-design/puppeteer": "^3.0.0",
+    "@dword-design/tester": "^1.1.2",
+    "@dword-design/tester-plugin-puppeteer": "^1.0.2",
+    "@nuxtjs/axios": "^5.13.1",
+    "depcheck-package-name": "^1.0.2",
+    "nodemailer-mock": "^1.5.4",
+    "nuxt": "^2.15.3",
+    "output-files": "^1.1.20",
+    "with-local-tmp-dir": "^2.2.15"
   },
   "publishConfig": {
     "access": "public"
