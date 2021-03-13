@@ -75,18 +75,7 @@ export default {
 
 The `smtp` options are required and directly passed to [nodemailer](https://nodemailer.com/smtp/). Refer to their documentation for available options. Also note that the module only works for `universal` mode, not `spa` mode, because we need the server route (see the [Nuxt.js documentation](https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-mode) for details about the mode).
 
-The module adds a `/mail/send` post route, which can be invoked via `$axios`:
-```js
-// Inside a component
-this.$axios.$post('/mail/send', {
-  from: 'John Doe',
-  subject: 'Incredible',
-  text: 'This is an incredible test message',
-  to: 'johndoe@gmail.com',
-})
-```
-
-The module also injects the `$mail` variable, which makes it even easier:
+The module injects the `$mail` variable, which we now use to send emails:
 ```js
 // Inside a component
 this.$mail.send({
@@ -97,7 +86,18 @@ this.$mail.send({
 })
 ```
 
-Note that the options are passed to [nodemailer](https://nodemailer.com/message/). Refer to the documentation for available config options.
+You can also directly call the generated `/mail/send` post route:
+```js
+// Inside a component
+this.$axios.$post('/mail/send', {
+  from: 'John Doe',
+  subject: 'Incredible',
+  text: 'This is an incredible test message',
+  to: 'johndoe@gmail.com',
+})
+```
+
+Note that the data are passed to [nodemailer](https://nodemailer.com/message/). Refer to the documentation for available config options.
 
 <!-- LICENSE/ -->
 ## License
