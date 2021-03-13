@@ -1,6 +1,6 @@
 {
   "name": "nuxt-mail",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Adds email sending capability to a Nuxt.js app. Adds a server route, an injected variable, and uses nodemailer to send emails. Works for universal mode.",
   "keywords": [
     "api",
