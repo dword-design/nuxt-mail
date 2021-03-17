@@ -44,14 +44,11 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn test
       - run: yarn check-unknown-files
-      - env:
-          COVERALLS_GIT_BRANCH: ${{ github.ref }}
-          COVERALLS_GIT_COMMIT: ${{ github.sha }}
-          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_SERVICE_NAME: github
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 12
-        name: Coveralls
-        run: yarn dw-ci coveralls
+      - if: matrix.os == 'ubuntu-latest' && matrix.node == 12
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
     strategy:
       matrix:
         exclude:
