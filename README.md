@@ -46,7 +46,7 @@
 <!-- /BADGES -->
 
 <!-- DESCRIPTION/ -->
-Adds email sending capability to a Nuxt.js app. Adds a server route, an injected variable, and uses nodemailer to send emails. Works for universal mode.
+Adds email sending capability to a Nuxt.js app. Adds a server route, an injected variable, and uses nodemailer to send emails.
 <!-- /DESCRIPTION -->
 
 Does not work for static sites (via `nuxt generate`) because the module creates a server route.
