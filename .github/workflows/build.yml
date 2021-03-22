@@ -5,7 +5,7 @@ jobs:
     steps:
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: rokroskar/workflow-run-cleanup-action@v0.3.0
+        uses: rokroskar/workflow-run-cleanup-action@v0.3.2
   release:
     needs: test
     runs-on: ubuntu-latest
@@ -37,13 +37,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           lfs: true
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
       - run: yarn --frozen-lockfile
       - run: yarn test
-      - run: yarn check-unknown-files
+      - if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          path: "**/__image_snapshots__/__diff_output__"
+      - run: yarn checkUnknownFiles
       - if: matrix.os == 'ubuntu-latest' && matrix.node == 12
         uses: codecov/codecov-action@v1
         with:
