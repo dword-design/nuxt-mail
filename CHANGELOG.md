@@ -1,3 +1,10 @@
+## [1.0.15](https://github.com/dword-design/nuxt-mail/compare/v1.0.14...v1.0.15) (2021-03-23)
+
+
+### Bug Fixes
+
+* update dependency @dword-design/functions to v3 ([#16](https://github.com/dword-design/nuxt-mail/issues/16)) ([2791360](https://github.com/dword-design/nuxt-mail/commit/279136094bc5224c51b171a9972871b64012ce4f))
+
 ## [1.0.14](https://github.com/dword-design/nuxt-mail/compare/v1.0.13...v1.0.14) (2021-03-23)
 
 
