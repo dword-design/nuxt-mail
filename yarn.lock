@@ -1209,7 +1209,7 @@
     "@dword-design/functions" "^1.1.2"
     babel-plugin-module-resolver "^4.0.0"
 
-"@dword-design/functions@^1.1.2", "@dword-design/functions@^1.1.4", "@dword-design/functions@^1.1.6", "@dword-design/functions@^1.2.0", "@dword-design/functions@^1.2.1":
+"@dword-design/functions@^1.1.2", "@dword-design/functions@^1.1.4", "@dword-design/functions@^1.1.6", "@dword-design/functions@^1.2.0":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@dword-design/functions/-/functions-1.2.2.tgz#c19562d7b652f08fd91758779c46fdd59e13a58e"
   integrity sha512-x3yI/02X//VPBFiYedDojk2quzxRq1p4lyv0i66/rHF+T5pmh95OZcASobQPWMjHyTAOWdrI91vpphhKZnAuig==
@@ -1234,6 +1234,16 @@
   integrity sha512-r58phusKVlfk0xDS5uLP4Nyl5TQwweJEY4oWy305hnGwfnW2dvMj1neLZNp/R7F3vQVOA4v6edvT5ScMRhPNuA==
   dependencies:
     endent dword-design/endent#fork
+    lodash "^4.17.15"
+    tinycolor2 "^1.4.1"
+
+"@dword-design/functions@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@dword-design/functions/-/functions-3.0.0.tgz#38d6bc440d16b89a6ace494422fe4639c30dd1f8"
+  integrity sha512-CBRMb6eRapNeJ3U6TeXtsLwiqmXEyPZ2gtVErdRCTDt6WTJ2bamt6jHlAGylfa8CoPgo+jIHC09EcPw5Qvbc2w==
+  dependencies:
+    delay "^5.0.0"
+    endent "github:dword-design/endent#fork"
     lodash "^4.17.15"
     tinycolor2 "^1.4.1"
 
