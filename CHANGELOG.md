@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/dword-design/nuxt-mail/compare/v1.0.15...v2.0.0) (2021-03-28)
+
+
+### Bug Fixes
+
+* preconfigure recipients in config to avoid a security leak  ([#21](https://github.com/dword-design/nuxt-mail/issues/21)) ([573aaf1](https://github.com/dword-design/nuxt-mail/commit/573aaf1889cc23d615b80e92eacb351336c800d7))
+
+
+### BREAKING CHANGES
+
+* You now have to configure to, cc and bcc in a message object in the module's config. This makes sure that the client does not send to arbitrary recipients from your SMTP server.
+
 ## [1.0.15](https://github.com/dword-design/nuxt-mail/compare/v1.0.14...v1.0.15) (2021-03-23)
 
 
