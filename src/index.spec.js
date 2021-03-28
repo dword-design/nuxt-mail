@@ -73,7 +73,7 @@ export default tester(
           </script>
         `,
       },
-      options: { mail: { bcc: 'johndoe@gmail.com' }, smtp: {} },
+      options: { message: { bcc: 'johndoe@gmail.com' }, smtp: {} },
       test: async () => {
         await new Promise(resolve => setTimeout(resolve, 5000))
         expect(nodemailerMock.mock.getSentMail()).toEqual([
@@ -109,7 +109,7 @@ export default tester(
           </script>
         `,
       },
-      options: { mail: { cc: 'johndoe@gmail.com' }, smtp: {} },
+      options: { message: { cc: 'johndoe@gmail.com' }, smtp: {} },
       test: async () => {
         await new Promise(resolve => setTimeout(resolve, 5000))
         expect(nodemailerMock.mock.getSentMail()).toEqual([
@@ -146,7 +146,7 @@ export default tester(
         `,
       },
       options: {
-        mail: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
+        message: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
         smtp: {},
       },
       test: async () => {
@@ -193,7 +193,11 @@ export default tester(
         `,
       },
       options: {
-        mail: { bcc: 'bcc@gmail.com', cc: 'cc@gmail.com', to: 'to@gmail.com' },
+        message: {
+          bcc: 'bcc@gmail.com',
+          cc: 'cc@gmail.com',
+          to: 'to@gmail.com',
+        },
         smtp: {},
       },
       test: async () => {
@@ -235,7 +239,7 @@ export default tester(
 
         `,
       },
-      options: { mail: { to: 'johndoe@gmail.com' }, smtp: {} },
+      options: { message: { to: 'johndoe@gmail.com' }, smtp: {} },
       test: async () => {
         await new Promise(resolve => setTimeout(resolve, 5000))
         expect(nodemailerMock.mock.getSentMail()).toEqual([

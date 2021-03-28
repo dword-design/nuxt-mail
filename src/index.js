@@ -8,7 +8,7 @@ export default function (moduleOptions) {
   if (!options.smtp) {
     throw new Error('SMTP config is missing.')
   }
-  if (!options.mail?.to && !options.mail?.cc && !options.mail?.bcc) {
+  if (!options.message?.to && !options.message?.cc && !options.message?.bcc) {
     throw new Error('You have to provide to/cc/bcc in config.')
   }
   const app = express()
@@ -18,7 +18,7 @@ export default function (moduleOptions) {
     try {
       await transport.sendMail({
         ...(req.body |> omit(['to', 'cc', 'bcc'])),
-        ...options.mail,
+        ...options.message,
       })
     } catch (error) {
       return res.status(500).send(error)
