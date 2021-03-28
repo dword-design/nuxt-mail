@@ -1,0 +1,1 @@
+export default <%= serialize(options) %>

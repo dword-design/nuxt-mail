@@ -50,8 +50,168 @@ const runTest = config => {
 
 export default tester(
   {
+    bcc: {
+      files: {
+        'pages/index.vue': endent`
+          <script>
+          export default {
+            async mounted() {
+              console.log('sending mail')
+              try {
+                await this.$mail.send({
+                  from: 'John Doe',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                })
+              } catch (error) {
+                console.log(error)
+              }
+              console.log('mail sent')
+            },
+            render: h => <div />,
+          }
+          </script>
+
+        `,
+      },
+      options: { bcc: 'johndoe@gmail.com', smtp: {} },
+      test: async () => {
+        await new Promise(resolve => setTimeout(resolve, 5000))
+        expect(nodemailerMock.mock.getSentMail()).toEqual([
+          {
+            bcc: 'johndoe@gmail.com',
+            from: 'John Doe',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+          },
+        ])
+      },
+    },
+    cc: {
+      files: {
+        'pages/index.vue': endent`
+          <script>
+          export default {
+            async mounted() {
+              console.log('sending mail')
+              try {
+                await this.$mail.send({
+                  from: 'John Doe',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                })
+              } catch (error) {
+                console.log(error)
+              }
+              console.log('mail sent')
+            },
+            render: h => <div />,
+          }
+          </script>
+
+        `,
+      },
+      options: { cc: 'johndoe@gmail.com', smtp: {} },
+      test: async () => {
+        await new Promise(resolve => setTimeout(resolve, 5000))
+        expect(nodemailerMock.mock.getSentMail()).toEqual([
+          {
+            cc: 'johndoe@gmail.com',
+            from: 'John Doe',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+          },
+        ])
+      },
+    },
+    'cc and bcc': {
+      files: {
+        'pages/index.vue': endent`
+          <script>
+          export default {
+            async mounted() {
+              console.log('sending mail')
+              try {
+                await this.$mail.send({
+                  from: 'John Doe',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                })
+              } catch (error) {
+                console.log(error)
+              }
+              console.log('mail sent')
+            },
+            render: h => <div />,
+          }
+          </script>
+
+        `,
+      },
+      options: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com', smtp: {} },
+      test: async () => {
+        await new Promise(resolve => setTimeout(resolve, 5000))
+        expect(nodemailerMock.mock.getSentMail()).toEqual([
+          {
+            bcc: 'bar@gmail.com',
+            cc: 'foo@gmail.com',
+            from: 'John Doe',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+          },
+        ])
+      },
+    },
+    'no recipients': {
+      error: 'No recipients configured.',
+      options: { smtp: {} },
+    },
     'no smtp config': {
       error: 'SMTP config is missing.',
+    },
+    'to, cc and bcc': {
+      files: {
+        'pages/index.vue': endent`
+          <script>
+          export default {
+            async mounted() {
+              console.log('sending mail')
+              try {
+                await this.$mail.send({
+                  from: 'John Doe',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                })
+              } catch (error) {
+                console.log(error)
+              }
+              console.log('mail sent')
+            },
+            render: h => <div />,
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        bcc: 'bcc@gmail.com',
+        cc: 'cc@gmail.com',
+        smtp: {},
+        to: 'to@gmail.com',
+      },
+      test: async () => {
+        await new Promise(resolve => setTimeout(resolve, 5000))
+        expect(nodemailerMock.mock.getSentMail()).toEqual([
+          {
+            bcc: 'bcc@gmail.com',
+            cc: 'cc@gmail.com',
+            from: 'John Doe',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+            to: 'to@gmail.com',
+          },
+        ])
+      },
     },
     valid: {
       files: {
@@ -65,7 +225,6 @@ export default tester(
                   from: 'John Doe',
                   subject: 'Incredible',
                   text: 'This is an incredible test message',
-                  to: 'johndoe@gmail.com',
                 })
               } catch (error) {
                 console.log(error)
@@ -78,7 +237,7 @@ export default tester(
 
         `,
       },
-      options: { smtp: {} },
+      options: { smtp: {}, to: 'johndoe@gmail.com' },
       test: async () => {
         await new Promise(resolve => setTimeout(resolve, 5000))
         expect(nodemailerMock.mock.getSentMail()).toEqual([

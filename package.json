@@ -35,7 +35,8 @@
   "dependencies": {
     "@dword-design/nuxt-push-plugins": "^1.0.2",
     "express": "^4.17.1",
-    "nodemailer": "^6.4.11"
+    "nodemailer": "^6.4.11",
+    "parse-pkg-name": "^2.0.0"
   },
   "devDependencies": {
     "@dword-design/base": "^7.0.0",
