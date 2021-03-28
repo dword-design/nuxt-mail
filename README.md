@@ -71,6 +71,9 @@ export default {
   modules: [
     '@nuxtjs/axios',
     ['nuxt-mail', {
+      message: {
+        to: 'foo@bar.de',
+      },
       smtp: {
         host: "smtp.example.com",
         port: 587,
@@ -79,6 +82,9 @@ export default {
   ],
   // or use the top-level option:
   mail: {
+    message: {
+      to: 'foo@bar.de',
+    },
     smtp: {
       host: "smtp.example.com",
       port: 587,
@@ -87,16 +93,16 @@ export default {
 }
 ```
 
-The `smtp` options are required and directly passed to [nodemailer](https://nodemailer.com/smtp/). Refer to their documentation for available options. Also note that the module only works for `universal` mode and not for `nuxt generate`, because we need the server route (see the [Nuxt.js documentation](https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-mode) for details about the mode).
+The `smtp` options are required and directly passed to [nodemailer](https://nodemailer.com/smtp/). Refer to their documentation for available options. Also, you have to pass at least `to`, `cc` or `bcc` via the `message` config. This has security reasons, this way the client cannot send emails from your SMTP server to arbitrary recipients. You can actually preconfigure the message via the `message` config, so if you always want to send emails with the same subject or from address, you can configure them here.
 
 The module injects the `$mail` variable, which we now use to send emails:
+
 ```js
 // Inside a component
 this.$mail.send({
   from: 'John Doe',
   subject: 'Incredible',
   text: 'This is an incredible test message',
-  to: 'johndoe@gmail.com',
 })
 ```
 
@@ -107,7 +113,6 @@ this.$axios.$post('/mail/send', {
   from: 'John Doe',
   subject: 'Incredible',
   text: 'This is an incredible test message',
-  to: 'johndoe@gmail.com',
 })
 ```
 

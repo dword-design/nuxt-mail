@@ -33,13 +33,13 @@
     "test": "base test"
   },
   "dependencies": {
+    "@dword-design/functions": "^3.0.0",
     "@dword-design/nuxt-push-plugins": "^1.0.2",
     "express": "^4.17.1",
     "nodemailer": "^6.4.11"
   },
   "devDependencies": {
     "@dword-design/base": "^7.0.0",
-    "@dword-design/functions": "^3.0.0",
     "@dword-design/proxyquire": "^1.0.5",
     "@dword-design/puppeteer": "^3.0.0",
     "@dword-design/tester": "^1.1.2",
