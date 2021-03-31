@@ -121,7 +121,7 @@ Note that the data are passed to [nodemailer](https://nodemailer.com/message/). 
 <!-- LICENSE/ -->
 ## Contribute
 
-Are you missing something or want to contribute? Feel free to file an [issue](https://github.com/dword-design/nuxt-mail/issues) or [pull request](https://github.com/dword-design/nuxt-mail/pulls)! ⚙️
+Are you missing something or want to contribute? Feel free to file an [issue](https://github.com/dword-design/nuxt-mail/issues) or a [pull request](https://github.com/dword-design/nuxt-mail/pulls)! ⚙️
 
 ## Support
 

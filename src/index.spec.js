@@ -10,6 +10,7 @@ import withLocalTmpDir from 'with-local-tmp-dir'
 
 const runTest = config => {
   config = { options: {}, test: () => {}, ...config }
+
   return function () {
     return withLocalTmpDir(async () => {
       await outputFiles({
@@ -24,6 +25,7 @@ const runTest = config => {
         `,
         ...config.files,
       })
+
       const nuxt = new Nuxt({
         createRequire: 'native',
         dev: false,

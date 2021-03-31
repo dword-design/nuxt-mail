@@ -2,10 +2,15 @@
   "extends": [
     ":semanticCommits"
   ],
+  "ignorePaths": [
+    ".github/workflows/build.yml"
+  ],
   "labels": [
     "maintenance"
   ],
-  "semanticCommitScope": null,
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "packageRules": [
     {
       "packagePatterns": [
@@ -23,7 +28,5 @@
       "semanticCommitType": "fix"
     }
   ],
-  "lockFileMaintenance": {
-    "enabled": true
-  }
+  "semanticCommitScope": null
 }
