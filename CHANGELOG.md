@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/dword-design/nuxt-mail/compare/v2.0.0...v2.0.1) (2021-03-31)
+
+
+### Bug Fixes
+
+* lock file maintenance ([#22](https://github.com/dword-design/nuxt-mail/issues/22)) ([194c249](https://github.com/dword-design/nuxt-mail/commit/194c2490bce703b84551bfd4803814d825808c79))
+
 # [2.0.0](https://github.com/dword-design/nuxt-mail/compare/v1.0.15...v2.0.0) (2021-03-28)
 
 
