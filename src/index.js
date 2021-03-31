@@ -8,17 +8,26 @@ export default function (moduleOptions) {
   if (!options.smtp) {
     throw new Error('SMTP config is missing.')
   }
-  if (!options.message?.to && !options.message?.cc && !options.message?.bcc) {
-    throw new Error('You have to provide to/cc/bcc in config.')
+  
+  if(!Array.isArray(options.message)) {
+    options.message = [options.message]
+  }
+  
+  if(Array.isArray(options.message) && options.message.length == 0) {
+     throw new Error('You have to provide at least one config.')
+  }
+  
+  if (options.message.some((c) => !c.to && !c.cc && !c.bcc)) {
+    throw new Error('You have to provide to/cc/bcc in all configs.')
   }
   const app = express()
   const transport = nodemailer.createTransport(options.smtp)
   app.use(express.json())
-  app.post('/send', async (req, res) => {
+  app.post('/send', async (req, res) => {  
     try {
       await transport.sendMail({
         ...(req.body |> omit(['to', 'cc', 'bcc'])),
-        ...options.message,
+        ...(options.message[req.body.type] ?? options.message[0]),
       })
     } catch (error) {
       return res.status(500).send(error)
