@@ -9,12 +9,12 @@ export default function (moduleOptions) {
     throw new Error('SMTP config is missing.')
   }
   
-  if(!Array.isArray(options.message)) {
-    options.message = [options.message]
+  if((Array.isArray(options.message) && options.message.length == 0) || !options.message) {
+     throw new Error('You have to provide at least one config.')
   }
   
-  if(Array.isArray(options.message) && options.message.length == 0) {
-     throw new Error('You have to provide at least one config.')
+  if(!Array.isArray(options.message)) {
+    options.message = [options.message]
   }
   
   if (options.message.some((c) => !c.to && !c.cc && !c.bcc)) {
