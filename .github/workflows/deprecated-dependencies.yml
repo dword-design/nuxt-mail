@@ -1,0 +1,30 @@
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+      - continue-on-error: true
+        id: check-deprecated-js-deps
+        uses: tinovyatkin/action-check-deprecated-js-deps@v1
+      - env:
+          DEPRECATED: ${{ steps.check-deprecated-js-deps.outputs.deprecated }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
+        id: create-deprecation-issue
+        if: ${{ steps.check-deprecated-js-deps.outputs.deprecated }}
+        uses: JasonEtco/create-an-issue@v2
+        with:
+          filename: .github/DEPRECATED_DEPENDENCIES_ISSUE_TEMPLATE.md
+          update_existing: true
+      - if: ${{ !steps.check-deprecated-js-deps.outputs.deprecated &&
+          steps.create-deprecation-issue.outputs.number }}
+        uses: peter-evans/close-issue@v1
+        with:
+          comment: Auto-closing the issue
+          issue-number: ${{ steps.create-deprecation-issue.outputs.number }}
+name: deprecated-dependencies
+on:
+  schedule:
+    - cron: 0 5 * * MON
