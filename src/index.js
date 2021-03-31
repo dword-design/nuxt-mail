@@ -27,7 +27,7 @@ export default function (moduleOptions) {
     try {
       await transport.sendMail({
         ...(req.body |> omit(['to', 'cc', 'bcc'])),
-        ...(options.message[req.body.type] ?? options.message[0]),
+        ...(options.message[req.body.type ?? 0] ?? options.message[0]),
       })
     } catch (error) {
       return res.status(500).send(error)
