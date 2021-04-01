@@ -15,7 +15,7 @@
     "send",
     "transport"
   ],
-  "repository": "mathe42/nuxt-mail",
+  "repository": "dword-design/nuxt-mail",
   "funding": "https://www.buymeacoffee.com/dword",
   "license": "MIT",
   "author": "Sebastian Landwehr <info@dword-design.de>",
