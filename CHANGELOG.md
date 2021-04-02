@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/dword-design/nuxt-mail/compare/v2.0.1...v2.1.0) (2021-04-02)
+
+
+### Features
+
+* allow multiple message configs ([#24](https://github.com/dword-design/nuxt-mail/issues/24)) ([e896417](https://github.com/dword-design/nuxt-mail/commit/e8964170a88c4b49c86a963d5a722e566d69879a))
+
 ## [2.0.1](https://github.com/dword-design/nuxt-mail/compare/v2.0.0...v2.0.1) (2021-03-31)
 
 
