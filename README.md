@@ -107,6 +107,7 @@ this.$mail.send({
 ```
 
 You can also directly call the generated `/mail/send` post route:
+
 ```js
 // Inside a component
 this.$axios.$post('/mail/send', {
@@ -117,6 +118,47 @@ this.$axios.$post('/mail/send', {
 ```
 
 Note that the data are passed to [nodemailer](https://nodemailer.com/message/). Refer to the documentation for available config options.
+
+## Multiple Message Configs
+
+It is also possible to provide multiple message configurations by changing the `message` config into an array.
+
+```js
+export default {
+  modules: [
+    '@nuxtjs/axios',
+    ['nuxt-mail', {
+      message: [
+        { name: 'contact', to: 'contact@foo.de' },
+        { name: 'support', to: 'support@foo.de' },
+      ],
+      ...
+    }],
+  ],
+}
+```
+
+Then you can reference the config like this:
+
+```js
+this.$axios.$post('/mail/send', {
+  config: 'support',
+  from: 'John Doe',
+  subject: 'Incredible',
+  text: 'This is an incredible test message',
+})
+```
+
+Or via index (in which case you do not need the `name` property):
+
+```js
+this.$axios.$post('/mail/send', {
+  config: 1, // resolves to 'support'
+  from: 'John Doe',
+  subject: 'Incredible',
+  text: 'This is an incredible test message',
+})
+```
 
 <!-- LICENSE/ -->
 ## Contribute

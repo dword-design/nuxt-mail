@@ -2,6 +2,7 @@ import { endent, mapValues } from '@dword-design/functions'
 import tester from '@dword-design/tester'
 import testerPluginNodemailerMock from '@dword-design/tester/dist/plugin-nodemailer-mock'
 import testerPluginPuppeteer from '@dword-design/tester-plugin-puppeteer'
+import axios from 'axios'
 import packageName from 'depcheck-package-name'
 import nodemailerMock from 'nodemailer-mock'
 import { Builder, Nuxt } from 'nuxt'
@@ -40,8 +41,7 @@ const runTest = config => {
         await new Builder(nuxt).build()
         await nuxt.listen()
         try {
-          await this.page.goto('http://localhost:3000')
-          await config.test()
+          await config.test.call(this)
         } finally {
           await nuxt.close()
         }
@@ -76,7 +76,8 @@ export default tester(
         `,
       },
       options: { message: { bcc: 'johndoe@gmail.com' }, smtp: {} },
-      test: async () => {
+      async test() {
+        await this.page.goto('http://localhost:3000')
         await new Promise(resolve => setTimeout(resolve, 5000))
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
@@ -112,7 +113,8 @@ export default tester(
         `,
       },
       options: { message: { cc: 'johndoe@gmail.com' }, smtp: {} },
-      test: async () => {
+      async test() {
+        await this.page.goto('http://localhost:3000')
         await new Promise(resolve => setTimeout(resolve, 5000))
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
@@ -151,7 +153,8 @@ export default tester(
         message: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
         smtp: {},
       },
-      test: async () => {
+      async test() {
+        await this.page.goto('http://localhost:3000')
         await new Promise(resolve => setTimeout(resolve, 5000))
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
@@ -164,9 +167,129 @@ export default tester(
         ])
       },
     },
-    'no recipients': {
-      error: 'You have to provide to/cc/bcc in config.',
+    'config by index': {
+      files: {
+        'pages/index.vue': endent`
+          <script>
+          export default {
+            async mounted() {
+              console.log('sending mail')
+              try {
+                await this.$mail.send({
+                  from: 'John Doe',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                  config: 1,
+                })
+              } catch (error) {
+                console.log(error)
+              }
+              console.log('mail sent')
+            },
+            render: h => <div />,
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
+        smtp: {},
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+        await new Promise(resolve => setTimeout(resolve, 5000))
+        expect(nodemailerMock.mock.getSentMail()).toEqual([
+          {
+            from: 'John Doe',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+            to: 'johndoe@gmail.com',
+          },
+        ])
+      },
+    },
+    'config by name': {
+      files: {
+        'pages/index.vue': endent`
+          <script>
+          export default {
+            async mounted() {
+              console.log('sending mail')
+              try {
+                await this.$mail.send({
+                  config: 'foo',
+                  from: 'John Doe',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                })
+              } catch (error) {
+                console.log(error)
+              }
+              console.log('mail sent')
+            },
+            render: h => <div />,
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: [
+          { to: 'foo@bar.com' },
+          { name: 'foo', to: 'johndoe@gmail.com' },
+        ],
+        smtp: {},
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+        await new Promise(resolve => setTimeout(resolve, 5000))
+        expect(nodemailerMock.mock.getSentMail()).toEqual([
+          {
+            from: 'John Doe',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+            to: 'johndoe@gmail.com',
+          },
+        ])
+      },
+    },
+    'config invalid index': {
+      options: {
+        message: [{ to: 'foo@bar.com' }],
+        smtp: {},
+      },
+      test: async () => {
+        let errorMessage
+        try {
+          await axios.post('http://localhost:3000/mail/send', { config: 10 })
+        } catch (error) {
+          errorMessage = error.response.data
+        }
+        expect(errorMessage).toEqual('Message config not found at index 10.')
+      },
+    },
+    'config name not found': {
+      options: { message: [{ to: 'foo@bar.com' }], smtp: {} },
+      test: async () => {
+        let errorMessage
+        try {
+          await axios.post('http://localhost:3000/mail/send', { config: 'foo' })
+        } catch (error) {
+          errorMessage = error.response.data
+        }
+        expect(errorMessage).toEqual(
+          "Message config with name 'foo' not found."
+        )
+      },
+    },
+    'no message configs': {
+      error: 'You have to provide at least one config.',
       options: { smtp: {} },
+    },
+    'no recipients': {
+      error: 'You have to provide to/cc/bcc in all configs.',
+      options: { message: {}, smtp: {} },
     },
     'no smtp config': {
       error: 'SMTP config is missing.',
@@ -202,7 +325,8 @@ export default tester(
         },
         smtp: {},
       },
-      test: async () => {
+      async test() {
+        await this.page.goto('http://localhost:3000')
         await new Promise(resolve => setTimeout(resolve, 5000))
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
@@ -228,7 +352,7 @@ export default tester(
                   from: 'John Doe',
                   subject: 'Incredible',
                   text: 'This is an incredible test message',
-                  to: 'johndoe@gmail.com',
+                  to: 'foo@bar.de',
                 })
               } catch (error) {
                 console.log(error)
@@ -242,7 +366,8 @@ export default tester(
         `,
       },
       options: { message: { to: 'johndoe@gmail.com' }, smtp: {} },
-      test: async () => {
+      async test() {
+        await this.page.goto('http://localhost:3000')
         await new Promise(resolve => setTimeout(resolve, 5000))
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
