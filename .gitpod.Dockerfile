@@ -5,7 +5,7 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
 RUN sudo apt-get install git-lfs
 RUN git lfs install
 RUN echo "\nexport PATH=$(yarn global bin):\$PATH" >> /home/gitpod/.bashrc
-RUN yarn global add @babel/core @babel/node
+RUN yarn global add gitpod-env-per-project @babel/core @babel/node
 RUN sudo apt-get install -y graphviz
 
 # Puppeteer dependencies

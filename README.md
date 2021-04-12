@@ -22,7 +22,11 @@
     </a><a href="https://david-dm.org/dword-design/nuxt-mail">
       <img src="https://img.shields.io/david/dword-design/nuxt-mail" alt="Dependency status">
     </a><img src="https://img.shields.io/badge/renovate-enabled-brightgreen" alt="Renovate enabled"><br/><a href="https://gitpod.io/#https://github.com/dword-design/nuxt-mail">
-      <img src="https://gitpod.io/button/open-in-gitpod.svg" alt="Open in Gitpod">
+      <img
+        src="https://gitpod.io/button/open-in-gitpod.svg"
+        alt="Open in Gitpod"
+        height="32"
+      >
     </a><a href="https://www.buymeacoffee.com/dword">
       <img
         src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-2.svg"
