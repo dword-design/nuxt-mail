@@ -1234,10 +1234,10 @@
   dependencies:
     "@dword-design/functions" "^3.0.0"
 
-"@dword-design/proxyquire@^1.0.5":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@dword-design/proxyquire/-/proxyquire-1.0.9.tgz#c49896a10df309f227801339b21600b8457414d6"
-  integrity sha512-0bpa64F0A/x8M9LE+JzWXi7pVg1RLAQxMOOFZYynYQphrAy5WXyo2nAVTD3myBj7MS+MeezN9krJGx96z5lNzg==
+"@dword-design/proxyquire@^1.0.9":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@dword-design/proxyquire/-/proxyquire-1.0.10.tgz#b3b01b4744cd2a7712d5c9f1a13c6bd6ce9d3cc9"
+  integrity sha512-0xCN56lKtZbdPz6vUBKFmGYJDxYMIIlDfWCpSSi2LecrqSdiCyJLzOWzW2rtffZw/1I344sf7YRAQCVOHKw6Xw==
   dependencies:
     proxyquire "^2.1.3"
 
