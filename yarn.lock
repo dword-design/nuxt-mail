@@ -1241,10 +1241,10 @@
   dependencies:
     proxyquire "^2.1.3"
 
-"@dword-design/puppeteer@^3.0.0":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@dword-design/puppeteer/-/puppeteer-3.0.3.tgz#e513bba842e9f123dd919af6bc5ddd7556561256"
-  integrity sha512-3jlQyUxfFZ5Sypm5d2axk27UoRzGMrkJKi/ml1RsYDP2cptPrjv7JgZ5wxkq5EP8M4JkQuzcZLWgNK265JzubA==
+"@dword-design/puppeteer@^3.0.3":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@dword-design/puppeteer/-/puppeteer-3.0.4.tgz#fea1231bcf918da59436fd7cf304262fe27aae7d"
+  integrity sha512-xvs5t78jeURmb9iqVb9InCFMVqXcvwAYYO+1wMIPszzT7ukpfBgZsyGCDxUgaJjSPub2Ds6u3/KmpLyyp1CzEQ==
   dependencies:
     puppeteer "^8.0.0"
 
