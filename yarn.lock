@@ -1248,10 +1248,10 @@
   dependencies:
     puppeteer "^8.0.0"
 
-"@dword-design/tester-plugin-puppeteer@^2.0.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@dword-design/tester-plugin-puppeteer/-/tester-plugin-puppeteer-2.1.0.tgz#037a22b1d410243b2cf1a272dbf8e624a5b2c229"
-  integrity sha512-jwpPb6YSNl6LMHiHuFd8hrendVMOiY20zPJzwzURM7nFennVREtRx6HhJFsVpGYP0jxPBncmlrVYdZT3NSDVEQ==
+"@dword-design/tester-plugin-puppeteer@^2.1.0":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@dword-design/tester-plugin-puppeteer/-/tester-plugin-puppeteer-2.1.1.tgz#df5c5a27703ac5f3df78af0cd72327b131565de6"
+  integrity sha512-bXJF3x+oipzetIGw9Vh9iwC6MRxr+Hqhwu9HqhuLJqzStRBAOAMfPrvY94T/I2gu2CWebJ5vWRzQu2CcbRe5ww==
   dependencies:
     puppeteer-to-istanbul "github:dword-design/puppeteer-to-istanbul#fork"
 
