@@ -1,7 +1,7 @@
 import { findIndex, omit, some } from '@dword-design/functions'
-import nuxtPushPlugins from '@dword-design/nuxt-push-plugins'
 import express from 'express'
 import nodemailer from 'nodemailer'
+import nuxtPushPlugins from 'nuxt-push-plugins'
 
 export default function (moduleOptions) {
   const options = { ...this.options.mail, ...moduleOptions }
