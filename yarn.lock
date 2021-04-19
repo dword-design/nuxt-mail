@@ -1113,10 +1113,10 @@
     fs-extra "^9.0.0"
     micromatch "^4.0.2"
 
-"@dword-design/base@^7.0.0":
-  version "7.12.3"
-  resolved "https://registry.yarnpkg.com/@dword-design/base/-/base-7.12.3.tgz#0d049c6e632f57dc94bffae1594d9e305e01d29c"
-  integrity sha512-y3aX+567cu4jwAL/UH8Okg7PoP/s8CMMFggTwk9k1bslw12Ipmw3Ise0nqYH0T5aTj3W+N6Wc8VyalXgMLwuvw==
+"@dword-design/base@^7.13.2":
+  version "7.13.2"
+  resolved "https://registry.yarnpkg.com/@dword-design/base/-/base-7.13.2.tgz#b1bf1c495c2bfec6d9d9de6f202d9f379633643c"
+  integrity sha512-+tG14FNQhwK0F+fLik/IY+CewqR0DgR/ucrTU1BL2qb+qBFNHpU9WEY/DLm+vjl2qip0lUDczImbRutV9AqkoQ==
   dependencies:
     "@babel/core" "^7.6.4"
     "@babel/register" "^7.6.2"

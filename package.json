@@ -39,7 +39,7 @@
     "nodemailer": "^6.4.11"
   },
   "devDependencies": {
-    "@dword-design/base": "^7.0.0",
+    "@dword-design/base": "^7.13.2",
     "@dword-design/proxyquire": "^1.0.5",
     "@dword-design/puppeteer": "^3.0.0",
     "@dword-design/tester": "^1.1.2",
