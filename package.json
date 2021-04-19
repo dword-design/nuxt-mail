@@ -42,7 +42,7 @@
     "@dword-design/base": "^7.0.0",
     "@dword-design/proxyquire": "^1.0.5",
     "@dword-design/puppeteer": "^3.0.0",
-    "@dword-design/tester": "^1.1.2",
+    "@dword-design/tester": "^1.2.4",
     "@dword-design/tester-plugin-puppeteer": "^2.0.0",
     "@nuxtjs/axios": "^5.13.1",
     "axios": "^0.21.1",

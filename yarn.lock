@@ -1255,10 +1255,10 @@
   dependencies:
     puppeteer-to-istanbul "github:dword-design/puppeteer-to-istanbul#fork"
 
-"@dword-design/tester@^1.1.2":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@dword-design/tester/-/tester-1.2.4.tgz#8b425f47c0a26f46d7faecab4f965fa8d0977d5a"
-  integrity sha512-GdfxONoFiMhH6inYPlBAHXmQk4Nwvxg00Q19xxB7E4wmLFo3+37rtgGZmPSZ1eahdTGsx0sdtPUfWKPvGZYE4A==
+"@dword-design/tester@^1.2.4":
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@dword-design/tester/-/tester-1.2.5.tgz#4e639607f0d2b48b09f32d263adfeaaf971f4f2a"
+  integrity sha512-ZKAqiHaMH8jPG6prjeJ7HRdqeuOGCWzJz+FVCHO+XYah53QsH5l2qBO7rPqeh+vmLlz2IpXxHIPcnK2folBODw==
   dependencies:
     "@dword-design/functions" "^3.0.0"
     promise-sequential "^1.1.1"
