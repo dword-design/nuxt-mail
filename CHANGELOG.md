@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/dword-design/nuxt-mail/compare/v2.1.1...v2.1.2) (2021-04-19)
+
+
+### Bug Fixes
+
+* fix deprecated dependency ([#41](https://github.com/dword-design/nuxt-mail/issues/41)) ([edbfa61](https://github.com/dword-design/nuxt-mail/commit/edbfa614d7e34ca0a03413691125f86f182b2ee6))
+
 ## [2.1.1](https://github.com/dword-design/nuxt-mail/compare/v2.1.0...v2.1.1) (2021-04-12)
 
 
