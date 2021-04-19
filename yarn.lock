@@ -1227,10 +1227,10 @@
     lodash "^4.17.15"
     tinycolor2 "^1.4.1"
 
-"@dword-design/nuxt-push-plugins@^1.0.2":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@dword-design/nuxt-push-plugins/-/nuxt-push-plugins-1.0.13.tgz#a99246339e482d33898f2dc6c3424a9260945f81"
-  integrity sha512-KKdSDJicLVwTk7+gCnh7Nd+UmmrfGkCLFowT48ajobyNWQ3S4BKOGrH+D0eOmBFuGEaPn7ONZWgy/2IhKvRGPQ==
+"@dword-design/nuxt-push-plugins@^1.0.13":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@dword-design/nuxt-push-plugins/-/nuxt-push-plugins-1.0.14.tgz#7a3f3f5c78a0dc4b3b3ce530d000e02a64e0c316"
+  integrity sha512-t9XKkJVAub+XB1fcj1R1k6WfTLCwUUrFOE5tQ5Et4iUQbaCgmKKAoVmdYnfVMMm5bAuIEjvMxBqz9XjXvmuo7Q==
   dependencies:
     "@dword-design/functions" "^3.0.0"
 

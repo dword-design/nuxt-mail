@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@dword-design/functions": "^3.0.0",
-    "@dword-design/nuxt-push-plugins": "^1.0.2",
+    "@dword-design/nuxt-push-plugins": "^1.0.13",
     "express": "^4.17.1",
     "nodemailer": "^6.4.11"
   },
