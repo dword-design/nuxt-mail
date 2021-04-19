@@ -4648,12 +4648,19 @@ depcheck-detector-package-name@^1.0.0:
   resolved "https://registry.yarnpkg.com/depcheck-detector-package-name/-/depcheck-detector-package-name-1.0.8.tgz#757c08c5063441a66e47ed1c98561d9ad5eff343"
   integrity sha512-9UCuaQlG9pRbkhJv82qoyyMVxqrrUYN30WhTrggUK6bckhAhHFT6O7D9amx7oNC1jTwGyAwiA84oxfL7X4Sgig==
 
-depcheck-package-name@^1.0.0, depcheck-package-name@^1.0.2:
+depcheck-package-name@^1.0.0:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/depcheck-package-name/-/depcheck-package-name-1.0.5.tgz#5e29aadf4819eefcfde62f63d1bc226789f9f84f"
   integrity sha512-UmgslfEXKX2pAv7Rrr7WKTew7lIGfzNS734KvoU/l4LO/qDl4BoapS/1wXk0OtmgAPThUkKItglmXx0VHlwiiA==
   dependencies:
     resolve-tagged-template "^1.0.0"
+
+depcheck-package-name@^1.0.5:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/depcheck-package-name/-/depcheck-package-name-1.0.7.tgz#64559afe055d8398551aa9be3f688e25313293fe"
+  integrity sha512-Mt280UvjmvaIEmevXTl2AOROJx0RIcyNjfSzDaepYZj6OGzK7VTcsLW4Pi2eJxthi3q5iQYrVrao8pN21jJPvA==
+  dependencies:
+    tagged-template-noop "^2.1.1"
 
 depcheck-parser-babel@^1.2.0:
   version "1.2.13"
@@ -12399,6 +12406,11 @@ table@^6.0.4:
     lodash.truncate "^4.4.2"
     slice-ansi "^4.0.0"
     string-width "^4.2.0"
+
+tagged-template-noop@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/tagged-template-noop/-/tagged-template-noop-2.1.1.tgz#0d215fd9eec557290f41838a22116a8d4ce606dd"
+  integrity sha512-diZ004cBHKVueqSr5p+/EPZhofCBRW7w7zZL71FcK8x+209BbMw77ICrP9AWXpVjPyyyIqRYYFAM4Wjk2HNWQg==
 
 tapable@^1.0.0, tapable@^1.0.0-beta.5, tapable@^1.1.3:
   version "1.1.3"
