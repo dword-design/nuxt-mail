@@ -1,3 +1,11 @@
+## [2.1.3](https://github.com/dword-design/nuxt-mail/compare/v2.1.2...v2.1.3) (2021-04-26)
+
+
+### Bug Fixes
+
+* update dependency @dword-design/puppeteer to v4 ([#45](https://github.com/dword-design/nuxt-mail/issues/45)) ([626512e](https://github.com/dword-design/nuxt-mail/commit/626512e1babde82e41c814f2964001ae0a1c81b0))
+* update dependency with-local-tmp-dir to v3 ([#43](https://github.com/dword-design/nuxt-mail/issues/43)) ([a50486d](https://github.com/dword-design/nuxt-mail/commit/a50486dfe2b1b88c9d00ba187c27308a0926c1e4))
+
 ## [2.1.2](https://github.com/dword-design/nuxt-mail/compare/v2.1.1...v2.1.2) (2021-04-19)
 
 
