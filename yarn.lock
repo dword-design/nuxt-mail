@@ -1232,12 +1232,12 @@
   dependencies:
     proxyquire "^2.1.3"
 
-"@dword-design/puppeteer@^3.0.0":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@dword-design/puppeteer/-/puppeteer-3.0.6.tgz#0659d15f667ee3baead9bb563a2fb2380d14991c"
-  integrity sha512-PdDvsHLVimBs+bSS4nJF/PrOY4LjDRZec3vHxidQs3oW1V9tHlDqBMuoc/p6YFq4dEMhOGYW0rW14AugwOnnRA==
+"@dword-design/puppeteer@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@dword-design/puppeteer/-/puppeteer-4.0.0.tgz#68da98d90d5f252c49efda2a35194e6424c0084a"
+  integrity sha512-JrBsxUOzLVzoHT2m2TNTzyAhTEpvh5gaDvGT5p50ow51eXO1/popAI6j3+YDAtQD92i6BLGWjg1ZndDBBF6fpA==
   dependencies:
-    puppeteer "^8.0.0"
+    puppeteer "^9.0.0"
 
 "@dword-design/tester-plugin-puppeteer@^2.0.0":
   version "2.1.3"
@@ -4743,10 +4743,10 @@ devalue@^2.0.1:
   resolved "https://registry.yarnpkg.com/devalue/-/devalue-2.0.1.tgz#5d368f9adc0928e47b77eea53ca60d2f346f9762"
   integrity sha512-I2TiqT5iWBEyB8GRfTDP0hiLZ0YeDJZ+upDxjBfOC2lebO5LezQMv7QvIUTzdb64jQyAKLf1AHADtGN+jw6v8Q==
 
-devtools-protocol@0.0.854822:
-  version "0.0.854822"
-  resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.854822.tgz#eac3a5260a6b3b4e729a09fdc0c77b0d322e777b"
-  integrity sha512-xd4D8kHQtB0KtWW0c9xBZD5LVtm9chkMOfs/3Yn01RhT/sFIsVtzTtypfKoFfWBaL+7xCYLxjOLkhwPXaX/Kcg==
+devtools-protocol@0.0.869402:
+  version "0.0.869402"
+  resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.869402.tgz#03ade701761742e43ae4de5dc188bcd80f156d8d"
+  integrity sha512-VvlVYY+VDJe639yHs5PHISzdWTLL3Aw8rO4cvUtwvoxFd6FHbE4OpHHcde52M6096uYYazAmd4l0o5VuFRO2WA==
 
 dezalgo@^1.0.0:
   version "1.0.3"
@@ -10871,13 +10871,13 @@ punycode@^2.1.0, punycode@^2.1.1:
     v8-to-istanbul "^1.2.1"
     yargs "^15.3.1"
 
-puppeteer@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-8.0.0.tgz#a236669118aa795331c2d0ca19877159e7664705"
-  integrity sha512-D0RzSWlepeWkxPPdK3xhTcefj8rjah1791GE82Pdjsri49sy11ci/JQsAO8K2NRukqvwEtcI+ImP5F4ZiMvtIQ==
+puppeteer@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-9.0.0.tgz#b476e17ceb3e33a6667bf682d66dde9898f9c031"
+  integrity sha512-Avu8SKWQRC1JKNMgfpH7d4KzzHOL/A65jRYrjNU46hxnOYGwqe4zZp/JW8qulaH0Pnbm5qyO3EbSKvqBUlfvkg==
   dependencies:
     debug "^4.1.0"
-    devtools-protocol "0.0.854822"
+    devtools-protocol "0.0.869402"
     extract-zip "^2.0.0"
     https-proxy-agent "^5.0.0"
     node-fetch "^2.6.1"
