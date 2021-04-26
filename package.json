@@ -50,7 +50,7 @@
     "nodemailer-mock": "^1.5.4",
     "nuxt": "^2.15.3",
     "output-files": "^1.1.20",
-    "with-local-tmp-dir": "^2.2.15"
+    "with-local-tmp-dir": "^3.0.0"
   },
   "publishConfig": {
     "access": "public"
