@@ -4713,10 +4713,17 @@ depcheck-detector-package-name@^1.0.0:
   resolved "https://registry.yarnpkg.com/depcheck-detector-package-name/-/depcheck-detector-package-name-1.0.10.tgz#6f9e887364a56d2def8f7a7ab686558713d1c89e"
   integrity sha512-V24JKeiVUzBC/w/aal7+T7HZzFGiQO+Gq0U/6LEDJMv2zqfRh5cqxvIfBX/EjlPewrukKkoHD+dkDa8KmqSjdg==
 
-depcheck-package-name@^1.0.0, depcheck-package-name@^1.0.2:
+depcheck-package-name@^1.0.0:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/depcheck-package-name/-/depcheck-package-name-1.0.7.tgz#64559afe055d8398551aa9be3f688e25313293fe"
   integrity sha512-Mt280UvjmvaIEmevXTl2AOROJx0RIcyNjfSzDaepYZj6OGzK7VTcsLW4Pi2eJxthi3q5iQYrVrao8pN21jJPvA==
+  dependencies:
+    tagged-template-noop "^2.1.1"
+
+depcheck-package-name@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/depcheck-package-name/-/depcheck-package-name-2.0.0.tgz#f74c20dc6d75622600cdfcd3c0b8a6a715accac4"
+  integrity sha512-VFAmDvkoYWsmD7M7kPNN7vfWVQVr9x3Wk+nxFiNoc57OpEEd9Z1fShkbyPs98iPoZ7w3yljCC75vWabrf2xggg==
   dependencies:
     tagged-template-noop "^2.1.1"
 
