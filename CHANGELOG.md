@@ -1,3 +1,19 @@
+# [3.0.0](https://github.com/dword-design/nuxt-mail/compare/v2.1.3...v3.0.0) (2021-05-03)
+
+
+### Bug Fixes
+
+* update dependency @dword-design/base to v8 ([#48](https://github.com/dword-design/nuxt-mail/issues/48)) ([9fd4ec0](https://github.com/dword-design/nuxt-mail/commit/9fd4ec00d60bd4020597b468e69329c39c1be86c))
+
+
+### BREAKING CHANGES
+
+* require Node.js >= 12
+
+Co-authored-by: Renovate Bot <bot@renovateapp.com>
+Co-authored-by: Sebastian Landwehr <info@dword-design.de>
+Co-authored-by: GitHub Actions <actions@github.com>
+
 ## [2.1.3](https://github.com/dword-design/nuxt-mail/compare/v2.1.2...v2.1.3) (2021-04-26)
 
 
