@@ -1291,10 +1291,10 @@
     lodash "^4.17.15"
     tinycolor2 "^1.4.1"
 
-"@dword-design/proxyquire@^1.0.5":
-  version "1.0.14"
-  resolved "https://registry.yarnpkg.com/@dword-design/proxyquire/-/proxyquire-1.0.14.tgz#ce4ec290d5ad7c837f4a3ea931274e1da624e1e2"
-  integrity sha512-AMfOiMpc8te72jspepeT4MKESErTpXOv6TrW/aCVfGJgEjpBU94dQ7KAkd5fdkMIbXDj8LLhK800NdXK9bI4OA==
+"@dword-design/proxyquire@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dword-design/proxyquire/-/proxyquire-2.0.0.tgz#2f0e1e7fa4f2e9a94410c9f3f571b8dbe401c087"
+  integrity sha512-j4siK9GhM83BuvmQ/GGmab59nNj944NaXRJjjQp6+3ir9DNA+Oy9V78rhFKPGzDOqwzaY4uMvBFhqm9XRoKjdQ==
   dependencies:
     proxyquire "^2.1.3"
 
