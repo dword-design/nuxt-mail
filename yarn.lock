@@ -1174,10 +1174,10 @@
     micromatch "^4.0.2"
     std-env "^2.3.0"
 
-"@dword-design/base@^7.0.0":
-  version "7.14.4"
-  resolved "https://registry.yarnpkg.com/@dword-design/base/-/base-7.14.4.tgz#1141b4c4ccca6f53a51e2aea5c12e06e88468bd8"
-  integrity sha512-GUDCfpYxgXflFo9klVWDDH2GG8/GGZWbWptBwuaaozJNpXckAmLgpS/wJDcYjkaLjPC7m00e3uT7krZPwGEBrA==
+"@dword-design/base@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@dword-design/base/-/base-8.0.0.tgz#77f225ec73e66e09ced980fae143ccbad9949ae3"
+  integrity sha512-HtkOiT+ec50jNt1GjPg1oqaATC9RU98YfHXRJPAXarUtN7r/VK2abnJZl+rLy+2LjnGDQkkHqwn4+Spt6SQCZg==
   dependencies:
     "@babel/core" "^7.6.4"
     "@babel/register" "^7.6.2"
