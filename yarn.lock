@@ -9321,10 +9321,10 @@ number-is-nan@^1.0.0:
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
 
-nuxt-push-plugins@^1.0.16:
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/nuxt-push-plugins/-/nuxt-push-plugins-1.0.20.tgz#6317fc4607a1de3d299bc4e3f3ca58e5a357ad7c"
-  integrity sha512-rVxeX9xtoZZN46GkrlUSoyJDWErpTUGE+JfhcYgfGrWJu1AMYEqW4xAm5WI1uNIt9z5xg88E3nns1AQce3wkFQ==
+nuxt-push-plugins@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/nuxt-push-plugins/-/nuxt-push-plugins-2.0.0.tgz#eefde53f301c07eafbc9d14e5cb53bdf6725af04"
+  integrity sha512-/H7uk5VjELdjykgelaAGac//lsoOK1+k3T/Ysy/0S3HDJ6VTGKuKJfUdRi5TLbuZA1JsMKuIl/tNolz5G9zL2w==
   dependencies:
     "@dword-design/functions" "^3.0.0"
 
