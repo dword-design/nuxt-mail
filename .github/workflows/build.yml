@@ -5,7 +5,7 @@ jobs:
     steps:
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: rokroskar/workflow-run-cleanup-action@v0.3.2
+        uses: rokroskar/workflow-run-cleanup-action@v0.3.3
   release:
     needs: test
     runs-on: ubuntu-latest
@@ -17,7 +17,7 @@ jobs:
             github.event.pull_request.head.ref || '' }}
       - uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 14
       - run: git config --global user.email "actions@github.com"
       - run: git config --global user.name "GitHub Actions"
       - run: yarn --frozen-lockfile
@@ -52,7 +52,7 @@ jobs:
         with:
           name: Image Snapshot Diffs
           path: "**/__image_snapshots__/__diff_output__"
-      - if: matrix.os == 'ubuntu-latest' && matrix.node == 12
+      - if: matrix.os == 'ubuntu-latest' && matrix.node == 14
         uses: codecov/codecov-action@v1
         with:
           fail_ci_if_error: true
@@ -60,13 +60,13 @@ jobs:
     strategy:
       matrix:
         exclude:
-          - node: 10
+          - node: 12
             os: macos-latest
-          - node: 10
+          - node: 12
             os: windows-latest
         node:
-          - 10
           - 12
+          - 14
         os:
           - macos-latest
           - windows-latest

@@ -39,7 +39,7 @@
     "nuxt-push-plugins": "^1.0.16"
   },
   "devDependencies": {
-    "@dword-design/base": "^7.0.0",
+    "@dword-design/base": "^8.0.0",
     "@dword-design/proxyquire": "^1.0.5",
     "@dword-design/puppeteer": "^4.0.0",
     "@dword-design/tester": "^1.1.2",
@@ -51,6 +51,9 @@
     "nuxt": "^2.15.3",
     "output-files": "^1.1.20",
     "with-local-tmp-dir": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=12"
   },
   "publishConfig": {
     "access": "public"
