@@ -41,7 +41,7 @@
   "devDependencies": {
     "@dword-design/base": "^8.0.0",
     "@dword-design/proxyquire": "^2.0.0",
-    "@dword-design/puppeteer": "^4.0.0",
+    "@dword-design/puppeteer": "^5.0.0",
     "@dword-design/tester": "^2.0.0",
     "@dword-design/tester-plugin-puppeteer": "^2.0.0",
     "@nuxtjs/axios": "^5.13.1",
