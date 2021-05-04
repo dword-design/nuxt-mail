@@ -1,3 +1,16 @@
+## [3.0.1](https://github.com/dword-design/nuxt-mail/compare/v3.0.0...v3.0.1) (2021-05-04)
+
+
+### Bug Fixes
+
+* update dependency @dword-design/functions to v4 ([#49](https://github.com/dword-design/nuxt-mail/issues/49)) ([5491400](https://github.com/dword-design/nuxt-mail/commit/54914001dd492fc65fde6402d201d7ff10360b5d))
+* update dependency @dword-design/proxyquire to v2 ([#50](https://github.com/dword-design/nuxt-mail/issues/50)) ([9f5c6cc](https://github.com/dword-design/nuxt-mail/commit/9f5c6ccf2779a06bafd517e3e2c4d6927b05c998))
+* update dependency @dword-design/tester to v2 ([#52](https://github.com/dword-design/nuxt-mail/issues/52)) ([d44614c](https://github.com/dword-design/nuxt-mail/commit/d44614c37c509ca9356b94c8c982e4d3117ccd3e))
+* update dependency depcheck-package-name to v2 ([#53](https://github.com/dword-design/nuxt-mail/issues/53)) ([c495049](https://github.com/dword-design/nuxt-mail/commit/c495049137b9b7ab52583037d0a8f60ea3737f6e))
+* update dependency nuxt-push-plugins to v2 ([#54](https://github.com/dword-design/nuxt-mail/issues/54)) ([458f520](https://github.com/dword-design/nuxt-mail/commit/458f5200b95fae32736402c058b1e94aa81f1734))
+* update dependency output-files to v2 ([#55](https://github.com/dword-design/nuxt-mail/issues/55)) ([fff7bc8](https://github.com/dword-design/nuxt-mail/commit/fff7bc82ff201c2f0dd79bf7aeeda97103207754))
+* update dependency with-local-tmp-dir to v4 ([#56](https://github.com/dword-design/nuxt-mail/issues/56)) ([be6320e](https://github.com/dword-design/nuxt-mail/commit/be6320e01cddc7f072d863b5d44d07fd6af01278))
+
 # [3.0.0](https://github.com/dword-design/nuxt-mail/compare/v2.1.3...v3.0.0) (2021-05-03)
 
 
