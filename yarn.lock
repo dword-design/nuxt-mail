@@ -1308,10 +1308,10 @@
   dependencies:
     proxyquire "^2.1.3"
 
-"@dword-design/puppeteer@^4.0.0":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@dword-design/puppeteer/-/puppeteer-4.0.1.tgz#0cf9b2109c2928264c246af8ac932cf04cebfb59"
-  integrity sha512-7MRuTilgzrVhXiRmPVkRmcc1DNkp9MOZEhefd6KtZkqF143fg8dckrrp0Vw3IPYjkUrsPeWbwyoIZDpzlpb9Hg==
+"@dword-design/puppeteer@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@dword-design/puppeteer/-/puppeteer-5.0.0.tgz#acef044d62775108ae2eb3f4130006aab83a15ab"
+  integrity sha512-Aeb5FLoJ8ZpSAkg0fHGynZ1d/sQUgFKkZHzh9WtWjK+ww07aYOK7VsgDhB52h1WVllb0RFw7NcqhRDuAPsPLRg==
   dependencies:
     puppeteer "^9.0.0"
 
