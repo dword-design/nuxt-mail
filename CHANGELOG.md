@@ -1,3 +1,10 @@
+## [3.0.2](https://github.com/dword-design/nuxt-mail/compare/v3.0.1...v3.0.2) (2021-05-04)
+
+
+### Bug Fixes
+
+* update dependency @dword-design/puppeteer to v5 ([#51](https://github.com/dword-design/nuxt-mail/issues/51)) ([a60fb0c](https://github.com/dword-design/nuxt-mail/commit/a60fb0ce8d042422cb5a1e07dc5c8e4adc62084d))
+
 ## [3.0.1](https://github.com/dword-design/nuxt-mail/compare/v3.0.0...v3.0.1) (2021-05-04)
 
 
