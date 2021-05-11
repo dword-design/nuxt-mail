@@ -164,6 +164,20 @@ this.$axios.$post('/mail/send', {
 })
 ```
 
+## Note About Production Use
+
+When you use `nuxt-mail` in production and you configured a reverse proxy that hides your localhost behind a domain, you need to tell `@nuxt/axios` which base URL you are using. Otherwise `nuxt-mail` won't find the send route. Refer to [@nuxt/axios options](https://axios.nuxtjs.org/options) on how to do that. The easiest option is to set the `API_URL` environment variable, or set something else in your `nuxt.config.js`:
+
+```js
+// nuxt.config.js
+
+export default {
+  axios: {
+    baseURL: process.env.BASE_URL,
+  },
+}
+```
+
 <!-- LICENSE/ -->
 ## Contribute
 
