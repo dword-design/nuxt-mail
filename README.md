@@ -35,13 +35,13 @@
       >
     </a><a href="https://paypal.me/SebastianLandwehr">
       <img
-        src="https://dword-design.de/images/paypal.svg"
+        src="https://sebastianlandwehr.com/images/paypal.svg"
         alt="PayPal"
         height="32"
       >
     </a><a href="https://www.patreon.com/dworddesign">
       <img
-        src="https://dword-design.de/images/patreon.svg"
+        src="https://sebastianlandwehr.com/images/patreon.svg"
         alt="Patreon"
         height="32"
       >
@@ -197,14 +197,14 @@ Hey, I am Sebastian Landwehr, a freelance web developer, and I love developing w
   </a>&nbsp;If you want to send me a one time donation. The coffee is pretty good 😊.<br/>
   <a href="https://paypal.me/SebastianLandwehr">
     <img
-      src="https://dword-design.de/images/paypal.svg"
+      src="https://sebastianlandwehr.com/images/paypal.svg"
       alt="PayPal"
       height="32"
     >
   </a>&nbsp;Also for one time donations if you like PayPal.<br/>
   <a href="https://www.patreon.com/dworddesign">
     <img
-      src="https://dword-design.de/images/patreon.svg"
+      src="https://sebastianlandwehr.com/images/patreon.svg"
       alt="Patreon"
       height="32"
     >
@@ -215,5 +215,5 @@ Thanks a lot for your support! ❤️
 
 ## License
 
-[MIT License](https://opensource.org/licenses/MIT) © [Sebastian Landwehr](https://dword-design.de)
+[MIT License](https://opensource.org/licenses/MIT) © [Sebastian Landwehr](https://sebastianlandwehr.com)
 <!-- /LICENSE -->
