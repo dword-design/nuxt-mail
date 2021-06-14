@@ -2,7 +2,7 @@
 
 Unless stated otherwise all works are:
 
-Copyright &copy; Sebastian Landwehr <info@dword-design.de>
+Copyright &copy; Sebastian Landwehr <info@sebastianlandwehr.com>
 
 and licensed under:
 

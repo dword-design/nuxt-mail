@@ -13,17 +13,8 @@
   },
   "packageRules": [
     {
-      "packagePatterns": [
-        "*"
-      ],
-      "semanticCommitType": "chore"
-    },
-    {
-      "depTypeList": [
-        "dependencies",
-        "devDependencies",
-        "peerDependencies",
-        "optionalDependencies"
+      "matchPaths": [
+        "package.json"
       ],
       "semanticCommitType": "fix"
     }
