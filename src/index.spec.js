@@ -1,6 +1,6 @@
 import { endent, mapValues } from '@dword-design/functions'
 import tester from '@dword-design/tester'
-import testerPluginNodemailerMock from '@dword-design/tester/dist/plugin-nodemailer-mock'
+import testerPluginNodemailerMock from '@dword-design/tester-plugin-nodemailer-mock'
 import testerPluginPuppeteer from '@dword-design/tester-plugin-puppeteer'
 import axios from 'axios'
 import packageName from 'depcheck-package-name'
