@@ -1,3 +1,10 @@
+## [3.0.6](https://github.com/dword-design/nuxt-mail/compare/v3.0.5...v3.0.6) (2021-06-21)
+
+
+### Bug Fixes
+
+* refactor test plugins ([e40aded](https://github.com/dword-design/nuxt-mail/commit/e40adedbc184d410e6be1174eea28c199d9b49a9))
+
 ## [3.0.5](https://github.com/dword-design/nuxt-mail/compare/v3.0.4...v3.0.5) (2021-06-14)
 
 
