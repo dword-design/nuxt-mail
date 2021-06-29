@@ -1,3 +1,10 @@
+## [3.0.7](https://github.com/dword-design/nuxt-mail/compare/v3.0.6...v3.0.7) (2021-06-29)
+
+
+### Bug Fixes
+
+* see also ([2886b1a](https://github.com/dword-design/nuxt-mail/commit/2886b1a6ee28f3a7f89a48481cedf8bab6ac4865))
+
 ## [3.0.6](https://github.com/dword-design/nuxt-mail/compare/v3.0.5...v3.0.6) (2021-06-21)
 
 
