@@ -1,5 +1,6 @@
 {
   "editor.tabSize": 2,
+  "files.autoSave": "off",
   "files.exclude": {
     ".babelrc.json": true,
     ".commitlintrc.json": true,
