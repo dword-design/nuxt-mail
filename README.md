@@ -123,7 +123,7 @@ this.$axios.$post('/mail/send', {
 
 Note that the data are passed to [nodemailer](https://nodemailer.com/message/). Refer to the documentation for available config options.
 
-## Multiple Message Configs
+## Multiple message configs
 
 It is also possible to provide multiple message configurations by changing the `message` config into an array.
 
@@ -164,7 +164,7 @@ this.$axios.$post('/mail/send', {
 })
 ```
 
-## Note About Production Use
+## Note about production use
 
 When you use `nuxt-mail` in production and you configured a reverse proxy that hides your localhost behind a domain, you need to tell `@nuxt/axios` which base URL you are using. Otherwise `nuxt-mail` won't find the send route. Refer to [@nuxt/axios options](https://axios.nuxtjs.org/options) on how to do that. The easiest option is to set the `API_URL` environment variable, or set something else in your `nuxt.config.js`:
 
@@ -213,7 +213,7 @@ Hey, I am Sebastian Landwehr, a freelance web developer, and I love developing w
 
 Thanks a lot for your support! ❤️
 
-## See Also
+## See also
 
 * [nuxt-route-meta](https://github.com/dword-design/nuxt-route-meta): Adds Nuxt page data to route meta at build time.
 * [nuxt-modernizr](https://github.com/dword-design/nuxt-modernizr): Adds a Modernizr build to your Nuxt.js app.
