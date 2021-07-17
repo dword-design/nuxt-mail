@@ -213,7 +213,7 @@ Hey, I am Sebastian Landwehr, a freelance web developer, and I love developing w
 
 Thanks a lot for your support! ❤️
 
-## See also
+## See Also
 
 * [nuxt-route-meta](https://github.com/dword-design/nuxt-route-meta): Adds Nuxt page data to route meta at build time.
 * [nuxt-modernizr](https://github.com/dword-design/nuxt-modernizr): Adds a Modernizr build to your Nuxt.js app.
