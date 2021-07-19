@@ -25,25 +25,25 @@
       <img
         src="https://gitpod.io/button/open-in-gitpod.svg"
         alt="Open in Gitpod"
-        height="32"
+        width="114"
       >
     </a><a href="https://www.buymeacoffee.com/dword">
       <img
         src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-2.svg"
         alt="Buy Me a Coffee"
-        height="32"
+        width="114"
       >
     </a><a href="https://paypal.me/SebastianLandwehr">
       <img
         src="https://sebastianlandwehr.com/images/paypal.svg"
         alt="PayPal"
-        height="32"
+        width="163"
       >
     </a><a href="https://www.patreon.com/dworddesign">
       <img
         src="https://sebastianlandwehr.com/images/patreon.svg"
         alt="Patreon"
-        height="32"
+        width="163"
       >
     </a>
 </p>
@@ -192,28 +192,28 @@ Hey, I am Sebastian Landwehr, a freelance web developer, and I love developing w
     <img
       src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-2.svg"
       alt="Buy Me a Coffee"
-      height="32"
+      width="114"
     >
   </a>&nbsp;If you want to send me a one time donation. The coffee is pretty good 😊.<br/>
   <a href="https://paypal.me/SebastianLandwehr">
     <img
       src="https://sebastianlandwehr.com/images/paypal.svg"
       alt="PayPal"
-      height="32"
+      width="163"
     >
   </a>&nbsp;Also for one time donations if you like PayPal.<br/>
   <a href="https://www.patreon.com/dworddesign">
     <img
       src="https://sebastianlandwehr.com/images/patreon.svg"
       alt="Patreon"
-      height="32"
+      width="163"
     >
   </a>&nbsp;Here you can support me regularly, which is great so I can steadily work on projects.
 </p>
 
 Thanks a lot for your support! ❤️
 
-## See Also
+## See also
 
 * [nuxt-route-meta](https://github.com/dword-design/nuxt-route-meta): Adds Nuxt page data to route meta at build time.
 * [nuxt-modernizr](https://github.com/dword-design/nuxt-modernizr): Adds a Modernizr build to your Nuxt.js app.
