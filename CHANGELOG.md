@@ -1,3 +1,10 @@
+## [3.0.12](https://github.com/dword-design/nuxt-mail/compare/v3.0.11...v3.0.12) (2021-10-05)
+
+
+### Bug Fixes
+
+* update dependency axios to ^0.22.0 ([2ed8298](https://github.com/dword-design/nuxt-mail/commit/2ed82983db8c1fdace49f058ecd488ea35c4fd12))
+
 ## [3.0.11](https://github.com/dword-design/nuxt-mail/compare/v3.0.10...v3.0.11) (2021-08-08)
 
 
