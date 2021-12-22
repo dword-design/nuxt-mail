@@ -178,7 +178,7 @@ export default {
 }
 ```
 
-Also, the module not work for static sites (via `nuxt generate`) because the module creates a server route.
+Also, the module does not work for static sites (via `nuxt generate`) because the module creates a server route.
 
 ## Debugging mail errors
 
