@@ -1,3 +1,10 @@
+## [3.0.13](https://github.com/dword-design/nuxt-mail/compare/v3.0.12...v3.0.13) (2021-12-22)
+
+
+### Bug Fixes
+
+* document nuxt generate in note about production use ([37c64d5](https://github.com/dword-design/nuxt-mail/commit/37c64d58c10d4bbbd9879470b19b499e699a1a93))
+
 ## [3.0.12](https://github.com/dword-design/nuxt-mail/compare/v3.0.11...v3.0.12) (2021-10-05)
 
 
