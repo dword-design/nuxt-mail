@@ -69,7 +69,7 @@ $ yarn add nuxt-mail
 
 ## Usage
 
-Add the module to your `nuxt.config.js`. We also have to install the [@nuxtjs/axios](https://www.npmjs.com/package/@nuxtjs/axios) module because it is used internally to call the server route:
+Add the module to the `modules` array in your `nuxt.config.js`. Note to add it to `modules` instead of `buildModules`, otherwise the server route will not be generated. We also have to install the [@nuxtjs/axios](https://www.npmjs.com/package/@nuxtjs/axios) module because it is used internally to call the server route:
 ```js
 export default {
   modules: [
