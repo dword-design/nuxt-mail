@@ -1,3 +1,10 @@
+## [3.0.15](https://github.com/dword-design/nuxt-mail/compare/v3.0.14...v3.0.15) (2021-12-29)
+
+
+### Bug Fixes
+
+* document modules instead of buildModules ([469d4ba](https://github.com/dword-design/nuxt-mail/commit/469d4ba8f300c91d9333c4fccddc6356e73b0e84))
+
 ## [3.0.14](https://github.com/dword-design/nuxt-mail/compare/v3.0.13...v3.0.14) (2021-12-22)
 
 
