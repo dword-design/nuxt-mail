@@ -180,9 +180,41 @@ export default {
 
 Also, the module does not work for static sites (via `nuxt generate`) because the module creates a server route.
 
+## Setting up popular email services
+
+### Gmail
+
+You have to setup an [app-specific password](https://myaccount.google.com/apppasswords) to log into the SMTP server. Then, add the following config to your `nuxt-mail` config:
+
+```js
+export default {
+  modules: [
+    '@nuxtjs/axios',
+    ['nuxt-mail', {
+      // ...
+      smtp: {
+        service: 'gmail',
+        auth: {
+          user: 'foo@gmail.com',
+          pass: '<app-specific password>',
+        },
+      },
+    }],
+  ],
+}
+```
+
+Missing something? Add your service here via a [pull request](https://github.com/dword-design/nuxt-mail/pulls).
+
 ## Debugging mail errors
 
-If the mail doesn't get sent, you can debug the error using the browser developer tools. If a 500 error is thrown (check out the console output), you can find the error message in the Network tab. For Chrome users, open the Network tab, then find the "send" request. Open it and select the "Response" tab. There it should show the error message. In most cases, it is related to authentication with the SMTP server.
+If the mail doesn't get sent, you can debug the error using the browser developer tools. If a `500` error is thrown (check out the console output), you can find the error message in the Network tab. For Chrome users, open the Network tab, then find the "send" request. Open it and select the "Response" tab. There it should show the error message. In most cases, it is related to authentication with the SMTP server.
+
+## Open questions
+
+### "Self signed certificate in certificate chain" error
+
+There is [an issue](https://github.com/dword-design/nuxt-mail/issues/62) where the above error is thrown. If someone knows a solution for this, it is warmly welcome 😍.
 
 <!-- LICENSE/ -->
 ## Contribute
