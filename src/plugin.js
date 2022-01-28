@@ -1,5 +1,10 @@
-export default (context, inject) => {
+export default (context, inject) =>
   inject('mail', {
-    send: config => context.app.$axios.$post('/mail/send', config),
+    send: async config => {
+      try {
+        await context.app.$axios.$post('/mail/send', config)
+      } catch (error) {
+        throw new Error(error.response.data)
+      }
+    },
   })
-}

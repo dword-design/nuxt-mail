@@ -55,30 +55,25 @@ export default tester(
     bcc: {
       files: {
         'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
           <script>
           export default {
-            async mounted() {
-              console.log('sending mail')
-              try {
-                await this.$mail.send({
-                  from: 'John Doe',
-                  subject: 'Incredible',
-                  text: 'This is an incredible test message',
-                })
-              } catch (error) {
-                console.log(error)
-              }
-              console.log('mail sent')
-            },
-            render: h => <div />,
+            asyncData: context => context.$mail.send({
+              from: 'John Doe',
+              subject: 'Incredible',
+              text: 'This is an incredible test message',
+            }),
           }
           </script>
+
         `,
       },
       options: { message: { bcc: 'johndoe@gmail.com' }, smtp: {} },
-      async test() {
-        await this.page.goto('http://localhost:3000')
-        await new Promise(resolve => setTimeout(resolve, 5000))
+      test: async () => {
+        await axios.get('http://localhost:3000')
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
             bcc: 'johndoe@gmail.com',
@@ -92,30 +87,25 @@ export default tester(
     cc: {
       files: {
         'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
           <script>
           export default {
-            async mounted() {
-              console.log('sending mail')
-              try {
-                await this.$mail.send({
-                  from: 'John Doe',
-                  subject: 'Incredible',
-                  text: 'This is an incredible test message',
-                })
-              } catch (error) {
-                console.log(error)
-              }
-              console.log('mail sent')
-            },
-            render: h => <div />,
+            asyncData: context => context.$mail.send({
+              from: 'John Doe',
+              subject: 'Incredible',
+              text: 'This is an incredible test message',
+            }),
           }
           </script>
+
         `,
       },
       options: { message: { cc: 'johndoe@gmail.com' }, smtp: {} },
-      async test() {
-        await this.page.goto('http://localhost:3000')
-        await new Promise(resolve => setTimeout(resolve, 5000))
+      test: async () => {
+        await axios.get('http://localhost:3000')
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
             cc: 'johndoe@gmail.com',
@@ -129,33 +119,28 @@ export default tester(
     'cc and bcc': {
       files: {
         'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
           <script>
           export default {
-            async mounted() {
-              console.log('sending mail')
-              try {
-                await this.$mail.send({
-                  from: 'John Doe',
-                  subject: 'Incredible',
-                  text: 'This is an incredible test message',
-                })
-              } catch (error) {
-                console.log(error)
-              }
-              console.log('mail sent')
-            },
-            render: h => <div />,
+            asyncData: context => context.$mail.send({
+              from: 'John Doe',
+              subject: 'Incredible',
+              text: 'This is an incredible test message',
+            }),
           }
           </script>
+
         `,
       },
       options: {
         message: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
         smtp: {},
       },
-      async test() {
-        await this.page.goto('http://localhost:3000')
-        await new Promise(resolve => setTimeout(resolve, 5000))
+      test: async () => {
+        await axios.get('http://localhost:3000')
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
             bcc: 'bar@gmail.com',
@@ -167,38 +152,77 @@ export default tester(
         ])
       },
     },
-    'config by index': {
+    'client side': {
       files: {
         'pages/index.vue': endent`
+          <template>
+            <button :class="{ sent }" @click="send" />
+          </template>
+
           <script>
           export default {
-            async mounted() {
-              console.log('sending mail')
-              try {
+            data: () => ({
+              sent: false,
+            }),
+            methods: {
+              async send() {
                 await this.$mail.send({
                   from: 'John Doe',
                   subject: 'Incredible',
                   text: 'This is an incredible test message',
-                  config: 1,
+                  to: 'foo@bar.de',
                 })
-              } catch (error) {
-                console.log(error)
-              }
-              console.log('mail sent')
+                this.sent = true
+              },
             },
-            render: h => <div />,
           }
           </script>
 
         `,
       },
+      options: { message: { to: 'johndoe@gmail.com' }, smtp: {} },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+        await button.click()
+        await this.page.waitForSelector('button.sent')
+        expect(nodemailerMock.mock.getSentMail()).toEqual([
+          {
+            from: 'John Doe',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+            to: 'johndoe@gmail.com',
+          },
+        ])
+      },
+    },
+    'config by index': {
+      files: {
+        'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script>
+        export default {
+          asyncData: context => context.$mail.send({
+            from: 'John Doe',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+            config: 1,
+          }),
+        }
+        </script>
+
+      `,
+      },
       options: {
         message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
         smtp: {},
       },
-      async test() {
-        await this.page.goto('http://localhost:3000')
-        await new Promise(resolve => setTimeout(resolve, 5000))
+      test: async () => {
+        await axios.get('http://localhost:3000')
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
             from: 'John Doe',
@@ -212,23 +236,18 @@ export default tester(
     'config by name': {
       files: {
         'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
           <script>
           export default {
-            async mounted() {
-              console.log('sending mail')
-              try {
-                await this.$mail.send({
-                  config: 'foo',
-                  from: 'John Doe',
-                  subject: 'Incredible',
-                  text: 'This is an incredible test message',
-                })
-              } catch (error) {
-                console.log(error)
-              }
-              console.log('mail sent')
-            },
-            render: h => <div />,
+            asyncData: context => context.$mail.send({
+              config: 'foo',
+              from: 'John Doe',
+              subject: 'Incredible',
+              text: 'This is an incredible test message',
+            }),
           }
           </script>
 
@@ -241,9 +260,8 @@ export default tester(
         ],
         smtp: {},
       },
-      async test() {
-        await this.page.goto('http://localhost:3000')
-        await new Promise(resolve => setTimeout(resolve, 5000))
+      test: async () => {
+        await axios.get('http://localhost:3000')
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
             from: 'John Doe',
@@ -255,6 +273,18 @@ export default tester(
       },
     },
     'config invalid index': {
+      files: {
+        'pages/index.vue': endent`
+          <script>
+          export default {
+            asyncData(context) {
+              return context.$mail.send({ config: 10 })
+            },
+          }
+          </script>
+
+        `,
+      },
       options: {
         message: [{ to: 'foo@bar.com' }],
         smtp: {},
@@ -262,21 +292,33 @@ export default tester(
       test: async () => {
         let errorMessage
         try {
-          await axios.post('http://localhost:3000/mail/send', { config: 10 })
+          await axios.post('http://localhost:3000')
         } catch (error) {
-          errorMessage = error.response.data
+          errorMessage = error.response.data.message
         }
         expect(errorMessage).toEqual('Message config not found at index 10.')
       },
     },
     'config name not found': {
+      files: {
+        'pages/index.vue': endent`
+          <script>
+          export default {
+            asyncData(context) {
+              return context.$mail.send({ config: 'foo' })
+            },
+          }
+          </script>
+
+        `,
+      },
       options: { message: [{ to: 'foo@bar.com' }], smtp: {} },
       test: async () => {
         let errorMessage
         try {
-          await axios.post('http://localhost:3000/mail/send', { config: 'foo' })
+          await axios.post('http://localhost:3000')
         } catch (error) {
-          errorMessage = error.response.data
+          errorMessage = error.response.data.message
         }
         expect(errorMessage).toEqual(
           "Message config with name 'foo' not found."
@@ -297,24 +339,20 @@ export default tester(
     'to, cc and bcc': {
       files: {
         'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
           <script>
           export default {
-            async mounted() {
-              console.log('sending mail')
-              try {
-                await this.$mail.send({
-                  from: 'John Doe',
-                  subject: 'Incredible',
-                  text: 'This is an incredible test message',
-                })
-              } catch (error) {
-                console.log(error)
-              }
-              console.log('mail sent')
-            },
-            render: h => <div />,
+            asyncData: context => context.$mail.send({
+              from: 'John Doe',
+              subject: 'Incredible',
+              text: 'This is an incredible test message',
+            }),
           }
           </script>
+
         `,
       },
       options: {
@@ -325,9 +363,8 @@ export default tester(
         },
         smtp: {},
       },
-      async test() {
-        await this.page.goto('http://localhost:3000')
-        await new Promise(resolve => setTimeout(resolve, 5000))
+      test: async () => {
+        await axios.get('http://localhost:3000')
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
             bcc: 'bcc@gmail.com',
@@ -343,32 +380,26 @@ export default tester(
     valid: {
       files: {
         'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
           <script>
           export default {
-            async mounted() {
-              console.log('sending mail')
-              try {
-                await this.$mail.send({
-                  from: 'John Doe',
-                  subject: 'Incredible',
-                  text: 'This is an incredible test message',
-                  to: 'foo@bar.de',
-                })
-              } catch (error) {
-                console.log(error)
-              }
-              console.log('mail sent')
-            },
-            render: h => <div />,
+            asyncData: context => context.$mail.send({
+              from: 'John Doe',
+              subject: 'Incredible',
+              text: 'This is an incredible test message',
+              to: 'foo@bar.de',
+            }),
           }
           </script>
 
         `,
       },
       options: { message: { to: 'johndoe@gmail.com' }, smtp: {} },
-      async test() {
-        await this.page.goto('http://localhost:3000')
-        await new Promise(resolve => setTimeout(resolve, 5000))
+      test: async () => {
+        await axios.get('http://localhost:3000')
         expect(nodemailerMock.mock.getSentMail()).toEqual([
           {
             from: 'John Doe',
