@@ -1,3 +1,10 @@
+## [3.0.20](https://github.com/dword-design/nuxt-mail/compare/v3.0.19...v3.0.20) (2022-01-29)
+
+
+### Bug Fixes
+
+* write GitHub metadata to package.json [keywords] ([55d9440](https://github.com/dword-design/nuxt-mail/commit/55d9440db26090a0f4ffbaff62e94ad246ab2d9e))
+
 ## [3.0.19](https://github.com/dword-design/nuxt-mail/compare/v3.0.18...v3.0.19) (2022-01-28)
 
 
