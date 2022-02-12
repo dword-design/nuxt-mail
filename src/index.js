@@ -45,7 +45,7 @@ export default function (moduleOptions) {
         ...(options.message[req.body.config] |> omit(['name'])),
       })
     } catch (error) {
-      return res.status(500).send(error.message)
+      return res.status(400).send(error.message)
     }
 
     return res.sendStatus(200)
