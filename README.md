@@ -208,7 +208,7 @@ Missing something? Add your service here via a [pull request](https://github.com
 
 ## Debugging mail errors
 
-If the mail doesn't get sent, you can debug the error using the browser developer tools. If a `500` error is thrown (check out the console output), you can find the error message in the Network tab. For Chrome users, open the Network tab, then find the "send" request. Open it and select the "Response" tab. There it should show the error message. In most cases, it is related to authentication with the SMTP server.
+If the mail doesn't get sent, you can debug the error using the browser developer tools. If a `400` error is thrown (check out the console output), you can find the error message in the Network tab. For Chrome users, open the Network tab, then find the "send" request. Open it and select the "Response" tab. There it should show the error message. In most cases, it is related to authentication with the SMTP server.
 
 ## Open questions
 
