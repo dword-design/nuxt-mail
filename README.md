@@ -157,7 +157,7 @@ Or via index (in which case you do not need the `name` property):
 
 ```js
 this.$axios.$post('/mail/send', {
-  config: 1, // resolves to 'support'
+  config: 1, // Resolves to 'support'
   from: 'John Doe',
   subject: 'Incredible',
   text: 'This is an incredible test message',
