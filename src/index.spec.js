@@ -1,4 +1,13 @@
-import { endent, find, includes, map, pick } from '@dword-design/functions'
+import {
+  endent,
+  find,
+  identity,
+  includes,
+  keys,
+  map,
+  pick,
+  pickBy,
+} from '@dword-design/functions'
 import tester from '@dword-design/tester'
 import testerPluginPuppeteer from '@dword-design/tester-plugin-puppeteer'
 import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir'
@@ -20,9 +29,12 @@ const testerPluginEmail = options => {
       this.smtpServer = new SMTPServer({
         authOptional: true,
         onData: async (stream, session, callback) => {
-          const message = options.mapEmail(await simpleParser(stream))
-          this.sentEmails.push(message)
-          callback()
+          try {
+            const message = options.mapEmail(await simpleParser(stream))
+            this.sentEmails.push(message)
+          } finally {
+            callback()
+          }
         },
       })
       this.smtpServer.listen(options.port)
@@ -980,7 +992,6 @@ export default tester(
           await outputFiles(test.files)
 
           const nuxt = new Nuxt({
-            build: { quiet: false },
             createRequire: 'native',
             dev: false,
             modules: [
@@ -1004,11 +1015,20 @@ export default tester(
     },
     testerPluginPuppeteer(),
     testerPluginEmail({
-      mapEmail: email => ({
-        from: email.from.text,
-        to: email.to.text,
-        ...(email |> pick(['subject', 'text'])),
-      }),
+      mapEmail: email =>
+        ({
+          from: email.from?.text,
+          to: email.to?.text,
+          ...(email
+            |> pick(
+              {
+                bcc: true,
+                cc: true,
+                subject: true,
+                text: true,
+              } |> keys
+            )),
+        } |> pickBy(identity)),
     }),
     testerPluginTmpDir(),
   ]
