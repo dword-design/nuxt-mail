@@ -44,18 +44,17 @@
   },
   "devDependencies": {
     "@dword-design/base": "^8.0.0",
-    "@dword-design/proxyquire": "^2.0.0",
     "@dword-design/puppeteer": "^5.0.0",
     "@dword-design/tester": "^2.0.0",
-    "@dword-design/tester-plugin-nodemailer-mock": "^1.0.0",
     "@dword-design/tester-plugin-puppeteer": "^2.0.0",
+    "@dword-design/tester-plugin-tmp-dir": "^2.1.5",
     "@nuxtjs/axios": "^5.13.1",
     "axios": "^0.25.0",
     "depcheck-package-name": "^2.0.0",
-    "nodemailer-mock": "^1.5.4",
+    "mailparser": "^3.4.0",
     "nuxt": "^2.15.3",
     "output-files": "^2.0.0",
-    "with-local-tmp-dir": "^4.0.0"
+    "smtp-server": "^3.9.0"
   },
   "engines": {
     "node": ">=12"

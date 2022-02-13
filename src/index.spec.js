@@ -1,158 +1,97 @@
-import { endent, mapValues } from '@dword-design/functions'
+import { endent, includes, map, pick } from '@dword-design/functions'
 import tester from '@dword-design/tester'
-import testerPluginNodemailerMock from '@dword-design/tester-plugin-nodemailer-mock'
 import testerPluginPuppeteer from '@dword-design/tester-plugin-puppeteer'
+import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir'
 import axios from 'axios'
 import packageName from 'depcheck-package-name'
-import nodemailerMock from 'nodemailer-mock'
+import { simpleParser } from 'mailparser'
 import { Builder, Nuxt } from 'nuxt'
 import outputFiles from 'output-files'
-import withLocalTmpDir from 'with-local-tmp-dir'
+import { SMTPServer } from 'smtp-server'
 
-const runTest = config => {
-  config = { options: {}, test: () => {}, ...config }
+const testerPluginEmail = options => {
+  options = { mapEmail: x => x, port: 3001, ...options }
 
-  return function () {
-    return withLocalTmpDir(async () => {
-      await outputFiles({
-        'modules/module.js': endent`
-          import proxyquire from '${packageName`@dword-design/proxyquire`}'
-          import nodemailerMock from '${packageName`nodemailer-mock`}'
-
-          export default proxyquire('./../../src', {
-            nodemailer: nodemailerMock
-          })
-          
-        `,
-        ...config.files,
+  return {
+    after() {
+      this.smtpServer.close()
+    },
+    before() {
+      this.smtpServer = new SMTPServer({
+        authOptional: true,
+        onData: async (stream, session, callback) => {
+          const message = options.mapEmail(await simpleParser(stream))
+          this.sentEmails.push(message)
+          callback()
+        },
       })
-
-      const nuxt = new Nuxt({
-        createRequire: 'native',
-        dev: false,
-        modules: [
-          packageName`@nuxtjs/axios`,
-          ['~/modules/module', config.options],
-        ],
-      })
-      if (config.error) {
-        await expect(new Builder(nuxt).build()).rejects.toThrow(config.error)
-      } else {
-        await new Builder(nuxt).build()
-        await nuxt.listen()
-        try {
-          await config.test.call(this)
-        } finally {
-          await nuxt.close()
-        }
-      }
-    })
+      this.smtpServer.listen(options.port)
+    },
+    beforeEach() {
+      this.sentEmails = []
+    },
   }
 }
 
+const waitForError = (page, errorMessage) =>
+  new Promise(resolve =>
+    page.on('console', async msg => {
+      const messages = await Promise.all(
+        msg.args()
+          |> map(arg =>
+            arg
+              .executionContext()
+              .evaluate(
+                _arg => (_arg instanceof Error ? _arg.message : undefined),
+                arg
+              )
+          )
+      )
+      if (messages |> includes(errorMessage)) {
+        resolve()
+      }
+    })
+  )
+
 export default tester(
   {
-    bcc: {
+    'client side: no config': {
       files: {
         'pages/index.vue': endent`
           <template>
-            <div />
+            <button :class="{ sent }" @click="send" />
           </template>
 
           <script>
           export default {
-            asyncData: context => context.$mail.send({
-              from: 'John Doe',
-              subject: 'Incredible',
-              text: 'This is an incredible test message',
-            }),
-          }
-          </script>
-
-        `,
-      },
-      options: { message: { bcc: 'johndoe@gmail.com' }, smtp: {} },
-      test: async () => {
-        await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
-          {
-            bcc: 'johndoe@gmail.com',
-            from: 'John Doe',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-          },
-        ])
-      },
-    },
-    cc: {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <div />
-          </template>
-
-          <script>
-          export default {
-            asyncData: context => context.$mail.send({
-              from: 'John Doe',
-              subject: 'Incredible',
-              text: 'This is an incredible test message',
-            }),
-          }
-          </script>
-
-        `,
-      },
-      options: { message: { cc: 'johndoe@gmail.com' }, smtp: {} },
-      test: async () => {
-        await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
-          {
-            cc: 'johndoe@gmail.com',
-            from: 'John Doe',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-          },
-        ])
-      },
-    },
-    'cc and bcc': {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <div />
-          </template>
-
-          <script>
-          export default {
-            asyncData: context => context.$mail.send({
-              from: 'John Doe',
-              subject: 'Incredible',
-              text: 'This is an incredible test message',
-            }),
+            methods: {
+              async send() {
+                await this.$mail.send()
+              },
+            },
           }
           </script>
 
         `,
       },
       options: {
-        message: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
-        smtp: {},
-      },
-      test: async () => {
-        await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
-          {
-            bcc: 'bar@gmail.com',
-            cc: 'foo@gmail.com',
-            from: 'John Doe',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
           },
-        ])
+        },
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+        await button.click()
+        await waitForError(this.page, 'Message config not found at index 0.')
+        expect(this.sentEmails).toEqual([])
       },
     },
-    'client side': {
+    'client side: valid': {
       files: {
         'pages/index.vue': endent`
           <template>
@@ -167,7 +106,7 @@ export default tester(
             methods: {
               async send() {
                 await this.$mail.send({
-                  from: 'John Doe',
+                  from: 'john@doe.de',
                   subject: 'Incredible',
                   text: 'This is an incredible test message',
                   to: 'foo@bar.de',
@@ -180,24 +119,209 @@ export default tester(
 
         `,
       },
-      options: { message: { to: 'johndoe@gmail.com' }, smtp: {} },
+      options: {
+        message: { to: 'johndoe@gmail.com' },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
       async test() {
         await this.page.goto('http://localhost:3000')
 
         const button = await this.page.waitForSelector('button')
         await button.click()
         await this.page.waitForSelector('button.sent')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
+        expect(this.sentEmails).toEqual([
           {
-            from: 'John Doe',
+            from: 'john@doe.de',
             subject: 'Incredible',
-            text: 'This is an incredible test message',
+            text: 'This is an incredible test message\n',
             to: 'johndoe@gmail.com',
           },
         ])
       },
     },
-    'config by index': {
+    'no recipients': {
+      error: 'You have to provide to/cc/bcc in all configs.',
+      options: {
+        message: {},
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+    },
+    'no smtp config': {
+      error: 'SMTP config is missing.',
+    },
+    'server side: bcc': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send({
+              from: 'john@doe.de',
+              subject: 'Incredible',
+              text: 'This is an incredible test message',
+            }),
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: { bcc: 'johndoe@gmail.com' },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails).toEqual([
+          {
+            bcc: 'johndoe@gmail.com',
+            from: 'john@doe.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message\n',
+          },
+        ])
+      },
+    },
+    'server side: cc': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send({
+              from: 'john@doe.de',
+              subject: 'Incredible',
+              text: 'This is an incredible test message',
+            }),
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: { cc: 'johndoe@gmail.com' },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails).toEqual([
+          {
+            cc: 'johndoe@gmail.com',
+            from: 'john@doe.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message\n',
+          },
+        ])
+      },
+    },
+    'server side: cc and bcc': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send({
+              from: 'john@doe.de',
+              subject: 'Incredible',
+              text: 'This is an incredible test message',
+            }),
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails).toEqual([
+          {
+            bcc: 'bar@gmail.com',
+            cc: 'foo@gmail.com',
+            from: 'john@doe.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message\n',
+          },
+        ])
+      },
+    },
+    'server side: config': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send({
+              from: 'john@doe.de',
+              subject: 'Incredible',
+              text: 'This is an incredible test message',
+              to: 'foo@bar.de',
+            }),
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: { to: 'johndoe@gmail.com' },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'john@doe.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message\n',
+            to: 'johndoe@gmail.com',
+          },
+        ])
+      },
+    },
+    'server side: config by index': {
       files: {
         'pages/index.vue': endent`
         <template>
@@ -207,7 +331,7 @@ export default tester(
         <script>
         export default {
           asyncData: context => context.$mail.send({
-            from: 'John Doe',
+            from: 'john@doe.de',
             subject: 'Incredible',
             text: 'This is an incredible test message',
             config: 1,
@@ -219,21 +343,26 @@ export default tester(
       },
       options: {
         message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
-        smtp: {},
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
       },
-      test: async () => {
+      async test() {
         await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
+        expect(this.sentEmails).toEqual([
           {
-            from: 'John Doe',
+            from: 'john@doe.de',
             subject: 'Incredible',
-            text: 'This is an incredible test message',
+            text: 'This is an incredible test message\n',
             to: 'johndoe@gmail.com',
           },
         ])
       },
     },
-    'config by name': {
+    'server side: config by name': {
       files: {
         'pages/index.vue': endent`
           <template>
@@ -244,7 +373,7 @@ export default tester(
           export default {
             asyncData: context => context.$mail.send({
               config: 'foo',
-              from: 'John Doe',
+              from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
             }),
@@ -258,21 +387,26 @@ export default tester(
           { to: 'foo@bar.com' },
           { name: 'foo', to: 'johndoe@gmail.com' },
         ],
-        smtp: {},
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
       },
-      test: async () => {
+      async test() {
         await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
+        expect(this.sentEmails).toEqual([
           {
-            from: 'John Doe',
+            from: 'john@doe.de',
             subject: 'Incredible',
-            text: 'This is an incredible test message',
+            text: 'This is an incredible test message\n',
             to: 'johndoe@gmail.com',
           },
         ])
       },
     },
-    'config invalid index': {
+    'server side: config invalid index': {
       files: {
         'pages/index.vue': endent`
           <script>
@@ -287,7 +421,12 @@ export default tester(
       },
       options: {
         message: [{ to: 'foo@bar.com' }],
-        smtp: {},
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
       },
       test: async () => {
         let errorMessage
@@ -299,7 +438,7 @@ export default tester(
         expect(errorMessage).toEqual('Message config not found at index 10.')
       },
     },
-    'config name not found': {
+    'server side: config name not found': {
       files: {
         'pages/index.vue': endent`
           <script>
@@ -312,7 +451,15 @@ export default tester(
 
         `,
       },
-      options: { message: [{ to: 'foo@bar.com' }], smtp: {} },
+      options: {
+        message: [{ to: 'foo@bar.com' }],
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
       test: async () => {
         let errorMessage
         try {
@@ -325,18 +472,7 @@ export default tester(
         )
       },
     },
-    'no message configs': {
-      error: 'You have to provide at least one config.',
-      options: { smtp: {} },
-    },
-    'no recipients': {
-      error: 'You have to provide to/cc/bcc in all configs.',
-      options: { message: {}, smtp: {} },
-    },
-    'no smtp config': {
-      error: 'SMTP config is missing.',
-    },
-    'to, cc and bcc': {
+    'server side: to, cc and bcc': {
       files: {
         'pages/index.vue': endent`
           <template>
@@ -346,7 +482,7 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
-              from: 'John Doe',
+              from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
             }),
@@ -361,23 +497,28 @@ export default tester(
           cc: 'cc@gmail.com',
           to: 'to@gmail.com',
         },
-        smtp: {},
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
       },
-      test: async () => {
+      async test() {
         await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
+        expect(this.sentEmails).toEqual([
           {
             bcc: 'bcc@gmail.com',
             cc: 'cc@gmail.com',
-            from: 'John Doe',
+            from: 'john@doe.de',
             subject: 'Incredible',
-            text: 'This is an incredible test message',
+            text: 'This is an incredible test message\n',
             to: 'to@gmail.com',
           },
         ])
       },
     },
-    valid: {
+    'server side: valid': {
       files: {
         'pages/index.vue': endent`
           <template>
@@ -387,7 +528,7 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
-              from: 'John Doe',
+              from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
               to: 'foo@bar.de',
@@ -397,19 +538,65 @@ export default tester(
 
         `,
       },
-      options: { message: { to: 'johndoe@gmail.com' }, smtp: {} },
-      test: async () => {
+      options: {
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
         await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
+        expect(this.sentEmails).toEqual([
           {
-            from: 'John Doe',
+            from: 'john@doe.de',
             subject: 'Incredible',
-            text: 'This is an incredible test message',
-            to: 'johndoe@gmail.com',
+            text: 'This is an incredible test message\n',
+            to: 'foo@bar.de',
           },
         ])
       },
     },
-  } |> mapValues(runTest),
-  [testerPluginPuppeteer(), testerPluginNodemailerMock()]
+  },
+  [
+    {
+      transform: test => {
+        test = { options: {}, test: () => {}, ...test }
+
+        return async function () {
+          await outputFiles(test.files)
+
+          const nuxt = new Nuxt({
+            createRequire: 'native',
+            dev: false,
+            modules: [
+              packageName`@nuxtjs/axios`,
+              [require.resolve('../src'), test.options],
+            ],
+          })
+          if (test.error) {
+            await expect(new Builder(nuxt).build()).rejects.toThrow(test.error)
+          } else {
+            await new Builder(nuxt).build()
+            await nuxt.listen()
+            try {
+              await test.test.call(this)
+            } finally {
+              await nuxt.close()
+            }
+          }
+        }
+      },
+    },
+    testerPluginPuppeteer(),
+    testerPluginEmail({
+      mapEmail: email => ({
+        from: email.from.text,
+        to: email.to.text,
+        ...(email |> pick(['subject', 'text'])),
+      }),
+    }),
+    testerPluginTmpDir(),
+  ]
 )
