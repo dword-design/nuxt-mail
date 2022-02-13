@@ -1017,17 +1017,11 @@ export default tester(
     testerPluginEmail({
       mapEmail: email =>
         ({
+          bcc: email.bcc?.text,
+          cc: email.cc?.text,
           from: email.from?.text,
           to: email.to?.text,
-          ...(email
-            |> pick(
-              {
-                bcc: true,
-                cc: true,
-                subject: true,
-                text: true,
-              } |> keys
-            )),
+          ...(email |> pick({ subject: true, text: true } |> keys)),
         } |> pickBy(identity)),
     }),
     testerPluginTmpDir(),
