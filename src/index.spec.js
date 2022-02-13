@@ -1,4 +1,4 @@
-import { endent, includes, map, pick } from '@dword-design/functions'
+import { endent, find, includes, map, pick } from '@dword-design/functions'
 import tester from '@dword-design/tester'
 import testerPluginPuppeteer from '@dword-design/tester-plugin-puppeteer'
 import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir'
@@ -34,8 +34,8 @@ const testerPluginEmail = options => {
 }
 
 const waitForError = (page, errorMessage) =>
-  new Promise(resolve =>
-    page.on('console', async msg => {
+  new Promise(resolve => {
+    const handler = async msg => {
       const messages = await Promise.all(
         msg.args()
           |> map(arg =>
@@ -47,14 +47,363 @@ const waitForError = (page, errorMessage) =>
               )
           )
       )
-      if (messages |> includes(errorMessage)) {
-        resolve()
+      if (errorMessage && messages |> includes(errorMessage)) {
+        page.off('console', handler)
+        resolve(errorMessage)
+      } else if (!errorMessage) {
+        const message = messages |> find(_message => !!_message)
+        if (message) {
+          page.off('console', handler)
+          resolve(message)
+        }
       }
-    })
-  )
+    }
+    page.on('console', handler)
+  })
 
 export default tester(
   {
+    'client side: bcc': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <button :class="{ sent }" @click="send" />
+          </template>
+
+          <script>
+          export default {
+            data: () => ({
+              sent: false,
+            }),
+            methods: {
+              async send() {
+                await this.$mail.send({
+                  from: 'john@doe.de',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                })
+                this.sent = true
+              },
+            },
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: { bcc: 'johndoe@gmail.com' },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+        await button.click()
+        await this.page.waitForSelector('button.sent')
+        expect(this.sentEmails).toEqual([
+          {
+            bcc: 'johndoe@gmail.com',
+            from: 'john@doe.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message\n',
+          },
+        ])
+      },
+    },
+    'client side: cc': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <button :class="{ sent }" @click="send" />
+          </template>
+
+          <script>
+          export default {
+            data: () => ({
+              sent: false,
+            }),
+            methods: {
+              async send() {
+                await this.$mail.send({
+                  from: 'john@doe.de',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                })
+                this.sent = true
+              },
+            },
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: { cc: 'johndoe@gmail.com' },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+        await button.click()
+        await this.page.waitForSelector('button.sent')
+        expect(this.sentEmails).toEqual([
+          {
+            cc: 'johndoe@gmail.com',
+            from: 'john@doe.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message\n',
+          },
+        ])
+      },
+    },
+    'client side: cc and bcc': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <button :class="{ sent }" @click="send" />
+          </template>
+
+          <script>
+          export default {
+            data: () => ({
+              sent: false,
+            }),
+            methods: {
+              async send() {
+                await this.$mail.send({
+                  from: 'john@doe.de',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                })
+                this.sent = true
+              },
+            },
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+        await button.click()
+        await this.page.waitForSelector('button.sent')
+        expect(this.sentEmails).toEqual([
+          {
+            bcc: 'bar@gmail.com',
+            cc: 'foo@gmail.com',
+            from: 'john@doe.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message\n',
+          },
+        ])
+      },
+    },
+    'client side: config by index': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <button :class="{ sent }" @click="send" />
+          </template>
+
+          <script>
+          export default {
+            data: () => ({
+              sent: false,
+            }),
+            methods: {
+              async send() {
+                await this.$mail.send({
+                  from: 'john@doe.de',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                  config: 1,
+                })
+                this.sent = true
+              },
+            },
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+        await button.click()
+        await this.page.waitForSelector('button.sent')
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'john@doe.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message\n',
+            to: 'johndoe@gmail.com',
+          },
+        ])
+      },
+    },
+    'client side: config by name': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <button :class="{ sent }" @click="send" />
+          </template>
+
+          <script>
+          export default {
+            data: () => ({
+              sent: false,
+            }),
+            methods: {
+              async send() {
+                await this.$mail.send({
+                  from: 'john@doe.de',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                  config: 'foo',
+                })
+                this.sent = true
+              },
+            },
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: [
+          { to: 'foo@bar.com' },
+          { name: 'foo', to: 'johndoe@gmail.com' },
+        ],
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+        await button.click()
+        await this.page.waitForSelector('button.sent')
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'john@doe.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message\n',
+            to: 'johndoe@gmail.com',
+          },
+        ])
+      },
+    },
+    'client side: config invalid index': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <button :class="{ sent }" @click="send" />
+          </template>
+
+          <script>
+          export default {
+            methods: {
+              async send() {
+                await this.$mail.send({ config: 10 })
+              },
+            },
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+        await button.click()
+        await waitForError(this.page, 'Message config not found at index 10.')
+        expect(this.sentEmails).toEqual([])
+      },
+    },
+    'client side: config name not found': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <button :class="{ sent }" @click="send" />
+          </template>
+
+          <script>
+          export default {
+            methods: {
+              async send() {
+                await this.$mail.send({ config: 'foo' })
+              },
+            },
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+        await button.click()
+        await waitForError(
+          this.page,
+          "Message config with name 'foo' not found."
+        )
+        expect(this.sentEmails).toEqual([])
+      },
+    },
     'client side: no config': {
       files: {
         'pages/index.vue': endent`
@@ -89,6 +438,64 @@ export default tester(
         await button.click()
         await waitForError(this.page, 'Message config not found at index 0.')
         expect(this.sentEmails).toEqual([])
+      },
+    },
+    'client side: to, cc and bcc': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <button :class="{ sent }" @click="send" />
+          </template>
+
+          <script>
+          export default {
+            data: () => ({
+              sent: false,
+            }),
+            methods: {
+              async send() {
+                await this.$mail.send({
+                  from: 'john@doe.de',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                })
+                this.sent = true
+              },
+            },
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        message: {
+          bcc: 'bcc@gmail.com',
+          cc: 'cc@gmail.com',
+          to: 'to@gmail.com',
+        },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+        await button.click()
+        await this.page.waitForSelector('button.sent')
+        expect(this.sentEmails).toEqual([
+          {
+            bcc: 'bcc@gmail.com',
+            cc: 'cc@gmail.com',
+            from: 'john@doe.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message\n',
+            to: 'to@gmail.com',
+          },
+        ])
       },
     },
     'client side: valid': {
@@ -169,6 +576,7 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
+              config: 0,
               from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
@@ -209,6 +617,7 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
+              config: 0,
               from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
@@ -249,6 +658,7 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
+              config: 0,
               from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
@@ -290,6 +700,7 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
+              config: 0,
               from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
@@ -482,6 +893,7 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
+              config: 0,
               from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
@@ -568,6 +980,7 @@ export default tester(
           await outputFiles(test.files)
 
           const nuxt = new Nuxt({
+            build: { quiet: false },
             createRequire: 'native',
             dev: false,
             modules: [
