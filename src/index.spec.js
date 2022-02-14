@@ -90,7 +90,7 @@ export default tester(
             }),
             methods: {
               async send() {
-                await this.$mail.send({
+                await this.$mail.send('contact', {
                   from: 'john@doe.de',
                   subject: 'Incredible',
                   text: 'This is an incredible test message',
@@ -104,7 +104,9 @@ export default tester(
         `,
       },
       options: {
-        message: { bcc: 'johndoe@gmail.com' },
+        configs: {
+          contact: { bcc: 'johndoe@gmail.com' },
+        },
         smtp: {
           port: 3001,
           tls: {
@@ -142,7 +144,7 @@ export default tester(
             }),
             methods: {
               async send() {
-                await this.$mail.send({
+                await this.$mail.send('contact', {
                   from: 'john@doe.de',
                   subject: 'Incredible',
                   text: 'This is an incredible test message',
@@ -156,7 +158,9 @@ export default tester(
         `,
       },
       options: {
-        message: { cc: 'johndoe@gmail.com' },
+        configs: {
+          contact: { cc: 'johndoe@gmail.com' },
+        },
         smtp: {
           port: 3001,
           tls: {
@@ -195,7 +199,7 @@ export default tester(
             }),
             methods: {
               async send() {
-                await this.$mail.send({
+                await this.$mail.send('contact', {
                   from: 'john@doe.de',
                   subject: 'Incredible',
                   text: 'This is an incredible test message',
@@ -209,7 +213,9 @@ export default tester(
         `,
       },
       options: {
-        message: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
+        configs: {
+          contact: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
+        },
         smtp: {
           port: 3001,
           tls: {
@@ -234,60 +240,6 @@ export default tester(
         ])
       },
     },
-    'client side: config by index': {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <button :class="{ sent }" @click="send" />
-          </template>
-
-          <script>
-          export default {
-            data: () => ({
-              sent: false,
-            }),
-            methods: {
-              async send() {
-                await this.$mail.send({
-                  from: 'john@doe.de',
-                  subject: 'Incredible',
-                  text: 'This is an incredible test message',
-                  config: 1,
-                })
-                this.sent = true
-              },
-            },
-          }
-          </script>
-
-        `,
-      },
-      options: {
-        message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
-        smtp: {
-          port: 3001,
-          tls: {
-            rejectUnauthorized: false,
-          },
-        },
-      },
-      async test() {
-        await this.page.goto('http://localhost:3000')
-
-        const button = await this.page.waitForSelector('button')
-        await button.click()
-        await this.page.waitForSelector('button.sent')
-        expect(this.sentEmails).toEqual([
-          {
-            from: 'john@doe.de',
-            rcptTo: ['johndoe@gmail.com'],
-            subject: 'Incredible',
-            text: 'This is an incredible test message\n',
-            to: 'johndoe@gmail.com',
-          },
-        ])
-      },
-    },
     'client side: config by name': {
       files: {
         'pages/index.vue': endent`
@@ -302,7 +254,7 @@ export default tester(
             }),
             methods: {
               async send() {
-                await this.$mail.send({
+                await this.$mail.send('foo', {
                   from: 'john@doe.de',
                   subject: 'Incredible',
                   text: 'This is an incredible test message',
@@ -317,10 +269,10 @@ export default tester(
         `,
       },
       options: {
-        message: [
-          { to: 'foo@bar.com' },
-          { name: 'foo', to: 'johndoe@gmail.com' },
-        ],
+        configs: {
+          bar: { to: 'foo@bar.com' },
+          foo: { to: 'johndoe@gmail.com' },
+        },
         smtp: {
           port: 3001,
           tls: {
@@ -345,42 +297,6 @@ export default tester(
         ])
       },
     },
-    'client side: config invalid index': {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <button :class="{ sent }" @click="send" />
-          </template>
-
-          <script>
-          export default {
-            methods: {
-              async send() {
-                await this.$mail.send({ config: 10 })
-              },
-            },
-          }
-          </script>
-
-        `,
-      },
-      options: {
-        smtp: {
-          port: 3001,
-          tls: {
-            rejectUnauthorized: false,
-          },
-        },
-      },
-      async test() {
-        await this.page.goto('http://localhost:3000')
-
-        const button = await this.page.waitForSelector('button')
-        await button.click()
-        await waitForError(this.page, 'Message config not found at index 10.')
-        expect(this.sentEmails).toEqual([])
-      },
-    },
     'client side: config name not found': {
       files: {
         'pages/index.vue': endent`
@@ -392,7 +308,7 @@ export default tester(
           export default {
             methods: {
               async send() {
-                await this.$mail.send({ config: 'foo' })
+                return this.$mail.send('foo')
               },
             },
           }
@@ -452,8 +368,65 @@ export default tester(
 
         const button = await this.page.waitForSelector('button')
         await button.click()
-        await waitForError(this.page, 'Message config not found at index 0.')
+        await waitForError(
+          this.page,
+          'You have to specify a config in your message.'
+        )
         expect(this.sentEmails).toEqual([])
+      },
+    },
+    'client side: only config': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <button :class="{ sent }" @click="send" />
+          </template>
+
+          <script>
+          export default {
+            data: () => ({
+              sent: false,
+            }),
+            methods: {
+              async send() {
+                await this.$mail.send('contact')
+                this.sent = true
+              },
+            },
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        configs: {
+          contact: {
+            from: 'foo@bar.de',
+            text: 'foo bar',
+            to: 'bar@baz.de',
+          },
+        },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+        await button.click()
+        await this.page.waitForSelector('button.sent')
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'foo@bar.de',
+            rcptTo: ['bar@baz.de'],
+            text: 'foo bar\n',
+            to: 'bar@baz.de',
+          },
+        ])
       },
     },
     'client side: to, cc and bcc': {
@@ -470,7 +443,7 @@ export default tester(
             }),
             methods: {
               async send() {
-                await this.$mail.send({
+                await this.$mail.send('contact', {
                   from: 'john@doe.de',
                   subject: 'Incredible',
                   text: 'This is an incredible test message',
@@ -484,10 +457,12 @@ export default tester(
         `,
       },
       options: {
-        message: {
-          bcc: 'bcc@gmail.com',
-          cc: 'cc@gmail.com',
-          to: 'to@gmail.com',
+        configs: {
+          contact: {
+            bcc: 'bcc@gmail.com',
+            cc: 'cc@gmail.com',
+            to: 'to@gmail.com',
+          },
         },
         smtp: {
           port: 3001,
@@ -528,7 +503,7 @@ export default tester(
             }),
             methods: {
               async send() {
-                await this.$mail.send({
+                await this.$mail.send('contact', {
                   from: 'john@doe.de',
                   subject: 'Incredible',
                   text: 'This is an incredible test message',
@@ -543,7 +518,9 @@ export default tester(
         `,
       },
       options: {
-        message: { to: 'johndoe@gmail.com' },
+        configs: {
+          contact: { to: 'johndoe@gmail.com' },
+        },
         smtp: {
           port: 3001,
           tls: {
@@ -568,10 +545,38 @@ export default tester(
         ])
       },
     },
-    'no recipients': {
-      error: 'You have to provide to/cc/bcc in all configs.',
+    'config: array': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send('contact'),
+          }
+          </script>
+
+        `,
+      },
       options: {
-        message: {},
+        configs: {
+          contact: [
+            {
+              from: 'foo@bar.de',
+              rcptTo: ['foo@bar.de'],
+              text: 'This is an incredible test message\n',
+              to: 'foo@bar.de',
+            },
+            {
+              from: 'bar@baz.de',
+              rcptTo: ['bar@baz.de'],
+              text: 'This is another incredible test message\n',
+              to: 'bar@baz.de',
+            },
+          ],
+        },
         smtp: {
           port: 3001,
           tls: {
@@ -579,9 +584,386 @@ export default tester(
           },
         },
       },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails).toEqual(
+          expect.arrayContaining([
+            {
+              from: 'foo@bar.de',
+              rcptTo: ['foo@bar.de'],
+              text: 'This is an incredible test message\n',
+              to: 'foo@bar.de',
+            },
+            {
+              from: 'bar@baz.de',
+              rcptTo: ['bar@baz.de'],
+              text: 'This is another incredible test message\n',
+              to: 'bar@baz.de',
+            },
+          ])
+        )
+      },
+    },
+    'config: function': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send('contact', { to: 'a@b.de' }),
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        configs: {
+          contact: params => ({
+            from: 'foo@bar.de',
+            text: 'This is an incredible test message',
+            to: params.to,
+          }),
+        },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'foo@bar.de',
+            rcptTo: ['a@b.de'],
+            text: 'This is an incredible test message\n',
+            to: 'a@b.de',
+          },
+        ])
+      },
+    },
+    'config: function returning an array': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send('contact', { to: 'a@b.de' }),
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        configs: {
+          contact: params => [
+            {
+              from: 'foo@bar.de',
+              rcptTo: [params.to],
+              text: 'This is an incredible test message\n',
+              to: params.to,
+            },
+            {
+              from: 'bar@baz.de',
+              rcptTo: [params.to],
+              text: 'This is another incredible test message\n',
+              to: params.to,
+            },
+          ],
+        },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails.length).toEqual(2)
+        expect(this.sentEmails).toEqual(
+          expect.arrayContaining([
+            {
+              from: 'foo@bar.de',
+              rcptTo: ['a@b.de'],
+              text: 'This is an incredible test message\n',
+              to: 'a@b.de',
+            },
+            {
+              from: 'bar@baz.de',
+              rcptTo: ['a@b.de'],
+              text: 'This is another incredible test message\n',
+              to: 'a@b.de',
+            },
+          ])
+        )
+      },
     },
     'no smtp config': {
       error: 'SMTP config is missing.',
+    },
+    'send: multiple messages': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send([
+              {
+                from: 'foo@bar.de',
+                rcptTo: ['foo@bar.de'],
+                text: 'This is an incredible test message',
+                to: 'foo@bar.de',
+              },
+              {
+                from: 'bar@baz.de',
+                rcptTo: ['bar@baz.de'],
+                text: 'This is another incredible test message',
+                to: 'bar@baz.de',
+              },
+            ]),
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails).toEqual(
+          expect.arrayContaining([
+            {
+              from: 'foo@bar.de',
+              rcptTo: ['foo@bar.de'],
+              text: 'This is an incredible test message\n',
+              to: 'foo@bar.de',
+            },
+            {
+              from: 'bar@baz.de',
+              rcptTo: ['bar@baz.de'],
+              text: 'This is another incredible test message\n',
+              to: 'bar@baz.de',
+            },
+          ])
+        )
+      },
+    },
+    'send: multiple messages with config array': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send('contact', [
+              {
+                from: 'foo@bar.de',
+                rcptTo: ['foo@bar.de'],
+                text: 'This is an incredible test message',
+                to: 'foo@bar.de',
+              },
+              {
+                from: 'bar@baz.de',
+                rcptTo: ['bar@baz.de'],
+                text: 'This is another incredible test message',
+                to: 'bar@baz.de',
+              },
+            ]),
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        configs: {
+          contact: [{ subject: 'foo' }, { subject: 'bar' }],
+        },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails).toEqual(
+          expect.arrayContaining([
+            {
+              from: 'foo@bar.de',
+              rcptTo: ['foo@bar.de'],
+              subject: 'foo',
+              text: 'This is an incredible test message\n',
+              to: 'foo@bar.de',
+            },
+            {
+              from: 'bar@baz.de',
+              rcptTo: ['bar@baz.de'],
+              subject: 'foo',
+              text: 'This is another incredible test message\n',
+              to: 'bar@baz.de',
+            },
+            {
+              from: 'foo@bar.de',
+              rcptTo: ['foo@bar.de'],
+              subject: 'bar',
+              text: 'This is an incredible test message\n',
+              to: 'foo@bar.de',
+            },
+            {
+              from: 'bar@baz.de',
+              rcptTo: ['bar@baz.de'],
+              subject: 'bar',
+              text: 'This is another incredible test message\n',
+              to: 'bar@baz.de',
+            },
+          ])
+        )
+      },
+    },
+    'send: multiple messages with config function': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send('contact', [
+              {
+                from: 'foo@bar.de',
+                rcptTo: ['foo@bar.de'],
+                text: 'This is an incredible test message',
+                to: 'foo@bar.de',
+              },
+              {
+                from: 'bar@baz.de',
+                rcptTo: ['bar@baz.de'],
+                text: 'This is another incredible test message',
+                to: 'bar@baz.de',
+              },
+            ]),
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        configs: {
+          contact: messages =>
+            messages.map(message => ({ ...message, subject: 'foo' })),
+        },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails).toEqual(
+          expect.arrayContaining([
+            {
+              from: 'foo@bar.de',
+              rcptTo: ['foo@bar.de'],
+              subject: 'foo',
+              text: 'This is an incredible test message\n',
+              to: 'foo@bar.de',
+            },
+            {
+              from: 'bar@baz.de',
+              rcptTo: ['bar@baz.de'],
+              subject: 'foo',
+              text: 'This is another incredible test message\n',
+              to: 'bar@baz.de',
+            },
+          ])
+        )
+      },
+    },
+    'send: multiple messages with config object': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send('contact', [
+              {
+                from: 'foo@bar.de',
+                rcptTo: ['foo@bar.de'],
+                text: 'This is an incredible test message',
+                to: 'foo@bar.de',
+              },
+              {
+                from: 'bar@baz.de',
+                rcptTo: ['bar@baz.de'],
+                text: 'This is another incredible test message',
+                to: 'bar@baz.de',
+              },
+            ]),
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        configs: {
+          contact: {
+            subject: 'foo',
+          },
+        },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails).toEqual(
+          expect.arrayContaining([
+            {
+              from: 'foo@bar.de',
+              rcptTo: ['foo@bar.de'],
+              subject: 'foo',
+              text: 'This is an incredible test message\n',
+              to: 'foo@bar.de',
+            },
+            {
+              from: 'bar@baz.de',
+              rcptTo: ['bar@baz.de'],
+              subject: 'foo',
+              text: 'This is another incredible test message\n',
+              to: 'bar@baz.de',
+            },
+          ])
+        )
+      },
     },
     'server side: bcc': {
       files: {
@@ -592,8 +974,7 @@ export default tester(
 
           <script>
           export default {
-            asyncData: context => context.$mail.send({
-              config: 0,
+            asyncData: context => context.$mail.send('contact', {
               from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
@@ -604,7 +985,9 @@ export default tester(
         `,
       },
       options: {
-        message: { bcc: 'johndoe@gmail.com' },
+        configs: {
+          contact: { bcc: 'johndoe@gmail.com' },
+        },
         smtp: {
           port: 3001,
           tls: {
@@ -633,8 +1016,7 @@ export default tester(
 
           <script>
           export default {
-            asyncData: context => context.$mail.send({
-              config: 0,
+            asyncData: context => context.$mail.send('contact', {
               from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
@@ -645,7 +1027,9 @@ export default tester(
         `,
       },
       options: {
-        message: { cc: 'johndoe@gmail.com' },
+        configs: {
+          contact: { cc: 'johndoe@gmail.com' },
+        },
         smtp: {
           port: 3001,
           tls: {
@@ -675,8 +1059,7 @@ export default tester(
 
           <script>
           export default {
-            asyncData: context => context.$mail.send({
-              config: 0,
+            asyncData: context => context.$mail.send('contact', {
               from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
@@ -687,7 +1070,9 @@ export default tester(
         `,
       },
       options: {
-        message: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
+        configs: {
+          contact: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
+        },
         smtp: {
           port: 3001,
           tls: {
@@ -717,93 +1102,7 @@ export default tester(
 
           <script>
           export default {
-            asyncData: context => context.$mail.send({
-              config: 0,
-              from: 'john@doe.de',
-              subject: 'Incredible',
-              text: 'This is an incredible test message',
-              to: 'foo@bar.de',
-            }),
-          }
-          </script>
-
-        `,
-      },
-      options: {
-        message: { to: 'johndoe@gmail.com' },
-        smtp: {
-          port: 3001,
-          tls: {
-            rejectUnauthorized: false,
-          },
-        },
-      },
-      async test() {
-        await axios.get('http://localhost:3000')
-        expect(this.sentEmails).toEqual([
-          {
-            from: 'john@doe.de',
-            rcptTo: ['johndoe@gmail.com'],
-            subject: 'Incredible',
-            text: 'This is an incredible test message\n',
-            to: 'johndoe@gmail.com',
-          },
-        ])
-      },
-    },
-    'server side: config by index': {
-      files: {
-        'pages/index.vue': endent`
-        <template>
-          <div />
-        </template>
-
-        <script>
-        export default {
-          asyncData: context => context.$mail.send({
-            from: 'john@doe.de',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-            config: 1,
-          }),
-        }
-        </script>
-
-      `,
-      },
-      options: {
-        message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
-        smtp: {
-          port: 3001,
-          tls: {
-            rejectUnauthorized: false,
-          },
-        },
-      },
-      async test() {
-        await axios.get('http://localhost:3000')
-        expect(this.sentEmails).toEqual([
-          {
-            from: 'john@doe.de',
-            rcptTo: ['johndoe@gmail.com'],
-            subject: 'Incredible',
-            text: 'This is an incredible test message\n',
-            to: 'johndoe@gmail.com',
-          },
-        ])
-      },
-    },
-    'server side: config by name': {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <div />
-          </template>
-
-          <script>
-          export default {
-            asyncData: context => context.$mail.send({
-              config: 'foo',
+            asyncData: context => context.$mail.send('foo', {
               from: 'john@doe.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
@@ -814,10 +1113,10 @@ export default tester(
         `,
       },
       options: {
-        message: [
-          { to: 'foo@bar.com' },
-          { name: 'foo', to: 'johndoe@gmail.com' },
-        ],
+        configs: {
+          bar: { to: 'foo@bar.com' },
+          foo: { to: 'johndoe@gmail.com' },
+        },
         smtp: {
           port: 3001,
           tls: {
@@ -836,38 +1135,6 @@ export default tester(
             to: 'johndoe@gmail.com',
           },
         ])
-      },
-    },
-    'server side: config invalid index': {
-      files: {
-        'pages/index.vue': endent`
-          <script>
-          export default {
-            asyncData(context) {
-              return context.$mail.send({ config: 10 })
-            },
-          }
-          </script>
-
-        `,
-      },
-      options: {
-        message: [{ to: 'foo@bar.com' }],
-        smtp: {
-          port: 3001,
-          tls: {
-            rejectUnauthorized: false,
-          },
-        },
-      },
-      test: async () => {
-        let errorMessage
-        try {
-          await axios.post('http://localhost:3000')
-        } catch (error) {
-          errorMessage = error.response.data.message
-        }
-        expect(errorMessage).toEqual('Message config not found at index 10.')
       },
     },
     'server side: config name not found': {
@@ -875,16 +1142,13 @@ export default tester(
         'pages/index.vue': endent`
           <script>
           export default {
-            asyncData(context) {
-              return context.$mail.send({ config: 'foo' })
-            },
+            asyncData: context => context.$mail.send('foo'),
           }
           </script>
 
         `,
       },
       options: {
-        message: [{ to: 'foo@bar.com' }],
         smtp: {
           port: 3001,
           tls: {
@@ -904,6 +1168,48 @@ export default tester(
         )
       },
     },
+    'server side: only config': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script>
+          export default {
+            asyncData: context => context.$mail.send('contact'),
+          }
+          </script>
+
+        `,
+      },
+      options: {
+        configs: {
+          contact: {
+            from: 'john@doe.de',
+            text: 'This is an incredible test message',
+            to: 'foo@bar.de',
+          },
+        },
+        smtp: {
+          port: 3001,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        },
+      },
+      async test() {
+        await axios.get('http://localhost:3000')
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'john@doe.de',
+            rcptTo: ['foo@bar.de'],
+            text: 'This is an incredible test message\n',
+            to: 'foo@bar.de',
+          },
+        ])
+      },
+    },
     'server side: to, cc and bcc': {
       files: {
         'pages/index.vue': endent`
@@ -913,7 +1219,7 @@ export default tester(
 
           <script>
           export default {
-            asyncData: context => context.$mail.send({
+            asyncData: context => context.$mail.send('contact', {
               config: 0,
               from: 'john@doe.de',
               subject: 'Incredible',
@@ -925,10 +1231,12 @@ export default tester(
         `,
       },
       options: {
-        message: {
-          bcc: 'bcc@gmail.com',
-          cc: 'cc@gmail.com',
-          to: 'to@gmail.com',
+        configs: {
+          contact: {
+            bcc: 'bcc@gmail.com',
+            cc: 'cc@gmail.com',
+            to: 'to@gmail.com',
+          },
         },
         smtp: {
           port: 3001,

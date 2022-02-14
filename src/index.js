@@ -1,4 +1,4 @@
-import { some } from '@dword-design/functions'
+import { compact } from '@dword-design/functions'
 import express from 'express'
 import nodemailer from 'nodemailer'
 import nuxtPushPlugins from 'nuxt-push-plugins'
@@ -7,15 +7,9 @@ import P from 'path'
 import send from './send'
 
 export default function (moduleOptions) {
-  const options = { message: [], ...this.options.mail, ...moduleOptions }
+  const options = { configs: {}, ...this.options.mail, ...moduleOptions }
   if (!options.smtp) {
     throw new Error('SMTP config is missing.')
-  }
-  if (typeof options.message === 'object' && !Array.isArray(options.message)) {
-    options.message = [options.message]
-  }
-  if (options.message |> some(c => !c.to && !c.cc && !c.bcc)) {
-    throw new Error('You have to provide to/cc/bcc in all configs.')
   }
 
   const transport = nodemailer.createTransport(options.smtp)
@@ -24,7 +18,11 @@ export default function (moduleOptions) {
   app.use(express.json())
   app.post('/send', async (req, res) => {
     try {
-      await send(req.body, { ...options, forceConfig: true, transport })
+      await send(...([req.body.configName, req.body.message] |> compact), {
+        ...options,
+        clientSideCall: true,
+        transport,
+      })
     } catch (error) {
       return res.status(400).send(error.message)
     }

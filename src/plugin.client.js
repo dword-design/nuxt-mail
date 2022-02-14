@@ -1,8 +1,10 @@
+import axios from 'axios'
+
 export default (context, inject) =>
   inject('mail', {
-    send: async message => {
+    send: async (configName, message) => {
       try {
-        await context.app.$axios.$post('/mail/send', message)
+        await axios.post('/mail/send', { configName, message })
       } catch (error) {
         throw new Error(error.response.data)
       }
