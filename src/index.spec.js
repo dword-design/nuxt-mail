@@ -30,8 +30,9 @@ const testerPluginEmail = options => {
         authOptional: true,
         onData: async (stream, session, callback) => {
           try {
-            const message = options.mapEmail(await simpleParser(stream))
-            this.sentEmails.push(message)
+            this.sentEmails.push(
+              options.mapEmail({ email: await simpleParser(stream), session })
+            )
           } finally {
             callback()
           }
@@ -119,8 +120,8 @@ export default tester(
         await this.page.waitForSelector('button.sent')
         expect(this.sentEmails).toEqual([
           {
-            bcc: 'johndoe@gmail.com',
             from: 'john@doe.de',
+            rcptTo: ['johndoe@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
           },
@@ -173,6 +174,7 @@ export default tester(
           {
             cc: 'johndoe@gmail.com',
             from: 'john@doe.de',
+            rcptTo: ['johndoe@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
           },
@@ -223,9 +225,9 @@ export default tester(
         await this.page.waitForSelector('button.sent')
         expect(this.sentEmails).toEqual([
           {
-            bcc: 'bar@gmail.com',
             cc: 'foo@gmail.com',
             from: 'john@doe.de',
+            rcptTo: ['foo@gmail.com', 'bar@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
           },
@@ -278,6 +280,7 @@ export default tester(
         expect(this.sentEmails).toEqual([
           {
             from: 'john@doe.de',
+            rcptTo: ['johndoe@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
             to: 'johndoe@gmail.com',
@@ -334,6 +337,7 @@ export default tester(
         expect(this.sentEmails).toEqual([
           {
             from: 'john@doe.de',
+            rcptTo: ['johndoe@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
             to: 'johndoe@gmail.com',
@@ -500,9 +504,9 @@ export default tester(
         await this.page.waitForSelector('button.sent')
         expect(this.sentEmails).toEqual([
           {
-            bcc: 'bcc@gmail.com',
             cc: 'cc@gmail.com',
             from: 'john@doe.de',
+            rcptTo: ['to@gmail.com', 'cc@gmail.com', 'bcc@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
             to: 'to@gmail.com',
@@ -556,6 +560,7 @@ export default tester(
         expect(this.sentEmails).toEqual([
           {
             from: 'john@doe.de',
+            rcptTo: ['johndoe@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
             to: 'johndoe@gmail.com',
@@ -611,8 +616,8 @@ export default tester(
         await axios.get('http://localhost:3000')
         expect(this.sentEmails).toEqual([
           {
-            bcc: 'johndoe@gmail.com',
             from: 'john@doe.de',
+            rcptTo: ['johndoe@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
           },
@@ -654,6 +659,7 @@ export default tester(
           {
             cc: 'johndoe@gmail.com',
             from: 'john@doe.de',
+            rcptTo: ['johndoe@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
           },
@@ -693,9 +699,9 @@ export default tester(
         await axios.get('http://localhost:3000')
         expect(this.sentEmails).toEqual([
           {
-            bcc: 'bar@gmail.com',
             cc: 'foo@gmail.com',
             from: 'john@doe.de',
+            rcptTo: ['foo@gmail.com', 'bar@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
           },
@@ -737,6 +743,7 @@ export default tester(
         expect(this.sentEmails).toEqual([
           {
             from: 'john@doe.de',
+            rcptTo: ['johndoe@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
             to: 'johndoe@gmail.com',
@@ -778,6 +785,7 @@ export default tester(
         expect(this.sentEmails).toEqual([
           {
             from: 'john@doe.de',
+            rcptTo: ['johndoe@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
             to: 'johndoe@gmail.com',
@@ -822,6 +830,7 @@ export default tester(
         expect(this.sentEmails).toEqual([
           {
             from: 'john@doe.de',
+            rcptTo: ['johndoe@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
             to: 'johndoe@gmail.com',
@@ -932,9 +941,9 @@ export default tester(
         await axios.get('http://localhost:3000')
         expect(this.sentEmails).toEqual([
           {
-            bcc: 'bcc@gmail.com',
             cc: 'cc@gmail.com',
             from: 'john@doe.de',
+            rcptTo: ['to@gmail.com', 'cc@gmail.com', 'bcc@gmail.com'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
             to: 'to@gmail.com',
@@ -975,6 +984,7 @@ export default tester(
         expect(this.sentEmails).toEqual([
           {
             from: 'john@doe.de',
+            rcptTo: ['foo@bar.de'],
             subject: 'Incredible',
             text: 'This is an incredible test message\n',
             to: 'foo@bar.de',
@@ -1015,13 +1025,13 @@ export default tester(
     },
     testerPluginPuppeteer(),
     testerPluginEmail({
-      mapEmail: email =>
+      mapEmail: info =>
         ({
-          bcc: email.bcc?.text,
-          cc: email.cc?.text,
-          from: email.from?.text,
-          to: email.to?.text,
-          ...(email |> pick({ subject: true, text: true } |> keys)),
+          cc: info.email.cc?.text,
+          from: info.email.from?.text,
+          rcptTo: info.session.envelope.rcptTo |> map('address'),
+          to: info.email.to?.text,
+          ...(info.email |> pick({ subject: true, text: true } |> keys)),
         } |> pickBy(identity)),
     }),
     testerPluginTmpDir(),
