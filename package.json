@@ -1,7 +1,7 @@
 {
   "name": "nuxt-mail",
   "version": "3.0.23",
-  "description": "Adds email sending capability to a Nuxt.js app. Adds a server route, an injected variable, and uses nodemailer to send emails.",
+  "description": "Adds email sending capabilities to a Nuxt.js app.",
   "keywords": [
     "email",
     "express",
@@ -38,24 +38,22 @@
   },
   "dependencies": {
     "@dword-design/functions": "^4.0.0",
+    "axios": "^0.25.0",
     "express": "^4.17.1",
     "nodemailer": "^6.4.11",
     "nuxt-push-plugins": "^2.0.0"
   },
   "devDependencies": {
     "@dword-design/base": "^8.0.0",
-    "@dword-design/proxyquire": "^2.0.0",
     "@dword-design/puppeteer": "^5.0.0",
     "@dword-design/tester": "^2.0.0",
-    "@dword-design/tester-plugin-nodemailer-mock": "^1.0.0",
     "@dword-design/tester-plugin-puppeteer": "^2.0.0",
-    "@nuxtjs/axios": "^5.13.1",
-    "axios": "^0.25.0",
+    "@dword-design/tester-plugin-tmp-dir": "^2.1.5",
     "depcheck-package-name": "^2.0.0",
-    "nodemailer-mock": "^1.5.4",
+    "mailparser": "^3.4.0",
     "nuxt": "^2.15.3",
     "output-files": "^2.0.0",
-    "with-local-tmp-dir": "^4.0.0"
+    "smtp-server": "^3.9.0"
   },
   "engines": {
     "node": ">=12"

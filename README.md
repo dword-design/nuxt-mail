@@ -50,10 +50,10 @@
 <!-- /BADGES -->
 
 <!-- DESCRIPTION/ -->
-Adds email sending capability to a Nuxt.js app. Adds a server route, an injected variable, and uses nodemailer to send emails.
+Adds email sending capabilities to a Nuxt.js app.
 <!-- /DESCRIPTION -->
 
-Does not work for static sites (via `nuxt generate`) because the module creates a server route.
+Does not work for static sites (via `nuxt generate`) because emails are sent server-side.
 
 <!-- INSTALL/ -->
 ## Install
@@ -69,15 +69,12 @@ $ yarn add nuxt-mail
 
 ## Usage
 
-Add the module to the `modules` array in your `nuxt.config.js`. Note to add it to `modules` instead of `buildModules`, otherwise the server route will not be generated. We also have to install the [@nuxtjs/axios](https://www.npmjs.com/package/@nuxtjs/axios) module because it is used internally to call the server route:
+Add the module to the `modules` array in your `nuxt.config.js`. Note that you need to add it to `modules` instead of `buildModules` because it generates a serverMiddleware that is called from the client.
+
 ```js
 export default {
   modules: [
-    '@nuxtjs/axios',
     ['nuxt-mail', {
-      message: {
-        to: 'foo@bar.de',
-      },
       smtp: {
         host: "smtp.example.com",
         port: 587,
@@ -86,9 +83,6 @@ export default {
   ],
   // or use the top-level option:
   mail: {
-    message: {
-      to: 'foo@bar.de',
-    },
     smtp: {
       host: "smtp.example.com",
       port: 587,
@@ -97,99 +91,253 @@ export default {
 }
 ```
 
-The `smtp` options are required and directly passed to [nodemailer](https://nodemailer.com/smtp/). Refer to their documentation for available options. Also, you have to pass at least `to`, `cc` or `bcc` via the `message` config. This has security reasons, this way the client cannot send emails from your SMTP server to arbitrary recipients. You can actually preconfigure the message via the `message` config, so if you always want to send emails with the same subject or from address, you can configure them here.
-
-The module injects the `$mail` variable, which we now use to send emails:
+The `smtp` options are required and directly passed to [nodemailer](https://nodemailer.com/smtp/). Refer to their documentation for available options. The module injects a `$mail` variable, which is used to send emails like so:
 
 ```js
-// Inside a component
-this.$mail.send({
+this.$mail.send('config', {
   from: 'John Doe',
   subject: 'Incredible',
   text: 'This is an incredible test message',
+  to: 'foo@@bar.de',
 })
 ```
 
-You can also directly call the generated `/mail/send` post route:
+We will see in a minute what the `config` parameter does.
 
-```js
-// Inside a component
-this.$axios.$post('/mail/send', {
-  from: 'John Doe',
-  subject: 'Incredible',
-  text: 'This is an incredible test message',
-})
-```
+## Sending emails from the client
 
-Note that the data are passed to [nodemailer](https://nodemailer.com/message/). Refer to the documentation for available config options.
+Sending emails has security implications, which means that server side and client side work a bit differently.
 
-## Multiple message configs
+On the server side you can basically do anything you can also do with nodemailer, but you have to be careful. On the client side, you shouldn't pass recipient addresses like `to`, `cc`, and `bcc` from the client because that would allow an attacker to send emails to many users from your SMTP server. The client should only pass fields like `text` or `replyTo`.
 
-It is also possible to provide multiple message configurations by changing the `message` config into an array.
+To solve this problem, we define so-called **message configs** that are triggered by the client but are actually executed on the server. They can be plain message objects or functions with parameters returning a message object. You only pass the parameters to the configs that are really input from the client. Think of them like templates that have parameters and you trigger them via the client. This approach is similar to what [EmailJS](https://www.emailjs.com/) does.
 
-```js
-export default {
-  modules: [
-    '@nuxtjs/axios',
-    ['nuxt-mail', {
-      message: [
-        { name: 'contact', to: 'contact@foo.de' },
-        { name: 'support', to: 'support@foo.de' },
-      ],
-      ...
-    }],
-  ],
-}
-```
-
-Then you can reference the config like this:
-
-```js
-this.$axios.$post('/mail/send', {
-  config: 'support',
-  from: 'John Doe',
-  subject: 'Incredible',
-  text: 'This is an incredible test message',
-})
-```
-
-Or via index (in which case you do not need the `name` property):
-
-```js
-this.$axios.$post('/mail/send', {
-  config: 1, // Resolves to 'support'
-  from: 'John Doe',
-  subject: 'Incredible',
-  text: 'This is an incredible test message',
-})
-```
-
-## Note about production use
-
-When you use `nuxt-mail` in production and you configured a reverse proxy that hides your localhost behind a domain, you need to tell `@nuxt/axios` which base URL you are using. Otherwise `nuxt-mail` won't find the send route. Refer to [@nuxt/axios options](https://axios.nuxtjs.org/options) on how to do that. The easiest option is to set the `API_URL` environment variable, or set something else in your `nuxt.config.js`:
+You can also define multiple message configs depending on the use cases. To define message configs, set the `configs` property in your module config. Then you can reference the configs via the first parameter of `this.$mail.send`. Here is an example:
 
 ```js
 // nuxt.config.js
 
 export default {
-  axios: {
-    baseURL: process.env.BASE_URL,
-  },
+  modules: [
+    ['nuxt-mail', {
+      configs: {
+        contact: {
+          from: 'admin@foo.de',
+          to: 'admin@foo.de',
+        },
+        issues: { /* ... */ },
+      },
+      smtp: { /* ... */ },
+    }],
+  ],
 }
 ```
 
-Also, the module does not work for static sites (via `nuxt generate`) because the module creates a server route.
+This message config defines a simple contact form email. Note how we set `from` and `to` because it cannot be done via `this.$mail.send`. When setting an object as a message config, `nuxt-mail` will auto filter out `to`, `cc` and `bcc` for you so you are on the safe side!
 
-## Setting up popular email services
+```js
+<template>
+  <form @submit.prevent="submit">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" v-model="email" />
 
-### Gmail
+    <label for="email">Text</label>
+    <textarea id="text" name="text" v-model="text" />
+
+    <button type="submit" name="submit">Send</button>
+  </form>
+</template>
+
+<script>
+export default {
+  data: () => ({
+    email: '',
+    text: '',
+  }),
+  methods: {
+    submit() {
+      return this.$mail.send('contact', {
+        replyTo: this.email,
+        text: this.text,
+      })
+    },
+  },
+}
+</script>
+```
+
+Great, that already works!
+
+## Functions as message configs
+
+You can also set a function as a message config. It allows you to do more complex logic in the message config, but you also have to be very careful because `nuxt-mail` won't filter out `to`, `cc` and `bcc` anymore. You are responsible for what is happening inside the function. So be sure that you only return the fields that are necessary and that an attacker cannot inject variables. Better do not use a spread operator here. The following example does the same as the one above:
+
+```js
+export default {
+  modules: [
+    ['nuxt-mail', {
+      configs: {
+        contact: ({ replyTo, text }) => ({
+          from: 'admin@foo.de',
+          to: 'admin@foo.de',
+          replyTo,
+          text,
+        }),
+      },
+      smtp: { /* ... */ },
+    }],
+  ],
+}
+```
+
+## Sending multiple emails
+
+You can send multiple emails via a message config as well as `this.$mail.send` by specifying an array as parameter or return value. `nuxt-mail` will detect it and send them one after another:
+
+```js
+export default {
+  modules: [
+    ['nuxt-mail', {
+      configs: {
+        contact: [
+          {
+            from: 'admin1@foo.de',
+            to: 'admin1@foo.de',
+            replyTo,
+            text,
+          },
+          {
+            from: 'admin2@foo.de',
+            to: 'admin2@foo.de',
+            replyTo,
+            text,
+          },
+        ],
+      },
+      smtp: { /* ... */ },
+    }],
+  ],
+}
+```
+
+The same applies to `this.$mail.send`. You can pass an array of messages:
+
+```
+this.$mail.send('contact', [
+  {
+    from: 'a@b.de',
+    text: 'foo bar',
+  },
+  {
+    from: 'a@b.de',
+    text: 'foo bar',
+  },
+])
+</script>
+```
+
+You can even pass an array to both a message config and `this.$mail.send` and it will apply each email from `this.$mail.send` to each message returned from the message config 🥳.
+
+## Server side
+
+Since Nuxt is a Vue-based framework, a lot of the user interaction is going on client-side. If you do want to run `this.$mail.send` from the server, you can do that too. Server-side execution does not require a message config, you can also send emails directly. Be careful though, do not just expose an interface to the public. It can be used for spamming! There are not too many use cases to run `this.$mail.send` from the server, but here is an example that sends an email to an admin when loading a page via `asyncData`. Here `$mail.send` is accessed from the [application context](https://nuxtjs.org/docs/internals-glossary/context/).
+
+```js
+<template>
+  <div />
+</template>
+
+<script>
+export default {
+  asyncData: ({ $mail, req }) => $mail.send({
+    from: 'admin@foo.de',
+    replyTo: req.body.email,
+    text: req.body.text,
+    to: 'admin@foo.de',
+  }),
+}
+</script>
+```
+
+Note that you do not have to pass the first config parameter anymore but you can pass the message directly. Still, you can use configs on the server if you want:
+
+```js
+<template>
+  <div />
+</template>
+
+<script>
+export default {
+  asyncData: ({ $mail, req }) => $mail.send('contact', {
+    from: 'admin@foo.de',
+    replyTo: req.body.email,
+    text: req.body.text,
+    to: 'admin@foo.de',
+  }),
+}
+</script>
+```
+
+If you want to handle form submission server-side, you could add [body-parser](https://www.npmjs.com/package/body-parser) to your server middlewares and then access `context.req.body` in `asyncData`.
+
+```js
+// nuxt.config.js
+
+import bodyParser from 'body-parser'
+
+export default {
+  serverMiddleware: [
+    bodyParser.urlencoded({ extended: false }),
+  ],
+}
+```
+
+```js
+<template>
+  <form method="POST">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" v-model="email" />
+
+    <label for="text">Text</label>
+    <textarea id="text" name="text" v-model="text" />
+
+    <button type="submit" name="submit">Send</button>
+  </form>
+</template>
+
+<script>
+export default {
+  asyncData: ({ $mail, req }) => {
+    if (req.body.submit) {
+      return $mail.send('contact', {
+        from: 'admin@foo.de',
+        replyTo: req.body.email,
+        text: req.body.text,
+        to: 'admin@foo.de',
+      })
+    }
+  }
+}
+</script>
+```
+
+## FAQ
+
+### What about server middlewares?
+
+You cannot access the application context from server middlewares (as far as I know, otherwise let me know). So, if you want to send emails from your custom REST API, you should use `nodemailer` directly.
+
+### Can I access the Nuxt application context in a message config?
+
+You can't, and the reason is that `this.$mail.send` internally calls a serverMiddleware route and those routes cannot access the context. In fact it is not really needed because on client side you can access the context from the calling function via `this`, and on the server side you can access it via the `context` parameter passed to the respective functions. In both cases, run your application logic and then pass the result to `$mail.send`. In case there are issues that are not covered here, feel free to open up an [issue](https://github.com/dword-design/nuxt-mail/issues).
+
+### How to setup Gmail?
 
 You have to setup an [app-specific password](https://myaccount.google.com/apppasswords) to log into the SMTP server. Then, add the following config to your `nuxt-mail` config:
 
 ```js
 export default {
   modules: [
-    '@nuxtjs/axios',
     ['nuxt-mail', {
       // ...
       smtp: {
@@ -205,10 +353,6 @@ export default {
 ```
 
 Missing something? Add your service here via a [pull request](https://github.com/dword-design/nuxt-mail/pulls).
-
-## Debugging mail errors
-
-If the mail doesn't get sent, you can debug the error using the browser developer tools. If a `400` error is thrown (check out the console output), you can find the error message in the Network tab. For Chrome users, open the Network tab, then find the "send" request. Open it and select the "Response" tab. There it should show the error message. In most cases, it is related to authentication with the SMTP server.
 
 ## Open questions
 

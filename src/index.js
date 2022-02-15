@@ -1,48 +1,27 @@
-import { findIndex, omit, some } from '@dword-design/functions'
+import { compact } from '@dword-design/functions'
 import express from 'express'
 import nodemailer from 'nodemailer'
 import nuxtPushPlugins from 'nuxt-push-plugins'
+import P from 'path'
+
+import send from './send'
 
 export default function (moduleOptions) {
-  const options = { ...this.options.mail, ...moduleOptions }
+  const options = { configs: {}, ...this.options.mail, ...moduleOptions }
   if (!options.smtp) {
     throw new Error('SMTP config is missing.')
   }
-  if (
-    (Array.isArray(options.message) && options.message.length === 0) ||
-    !options.message
-  ) {
-    throw new Error('You have to provide at least one config.')
-  }
-  if (!Array.isArray(options.message)) {
-    options.message = [options.message]
-  }
-  if (options.message |> some(c => !c.to && !c.cc && !c.bcc)) {
-    throw new Error('You have to provide to/cc/bcc in all configs.')
-  }
-
-  const app = express()
 
   const transport = nodemailer.createTransport(options.smtp)
+
+  const app = express()
   app.use(express.json())
   app.post('/send', async (req, res) => {
-    req.body = { config: 0, ...req.body }
     try {
-      if (typeof req.body.config === 'string') {
-        const configIndex =
-          options.message |> findIndex(_ => _.name === req.body.config)
-        if (configIndex === -1) {
-          throw new Error(
-            `Message config with name '${req.body.config}' not found.`
-          )
-        }
-        req.body.config = configIndex
-      } else if (!options.message[req.body.config]) {
-        throw new Error(`Message config not found at index ${req.body.config}.`)
-      }
-      await transport.sendMail({
-        ...(req.body |> omit(['config', 'to', 'cc', 'bcc'])),
-        ...(options.message[req.body.config] |> omit(['name'])),
+      await send(...([req.body.configName, req.body.message] |> compact), {
+        ...options,
+        clientSideCall: true,
+        transport,
       })
     } catch (error) {
       return res.status(400).send(error.message)
@@ -51,5 +30,22 @@ export default function (moduleOptions) {
     return res.sendStatus(200)
   })
   this.addServerMiddleware({ handler: app, path: '/mail' })
-  nuxtPushPlugins(this, require.resolve('./plugin'))
+  this.addTemplate({
+    fileName: P.join('nuxt-mail', 'options.js'),
+    options,
+    src: require.resolve('./options.js.template'),
+  })
+  this.addTemplate({
+    fileName: P.join('nuxt-mail', 'send.js'),
+    options,
+    src: require.resolve('./send'),
+  })
+  nuxtPushPlugins(this, {
+    fileName: P.join('nuxt-mail', 'plugin.client.js'),
+    src: require.resolve('./plugin.client'),
+  })
+  nuxtPushPlugins(this, {
+    fileName: P.join('nuxt-mail', 'plugin.server.js'),
+    src: require.resolve('./plugin.server'),
+  })
 }
