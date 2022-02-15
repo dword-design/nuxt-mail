@@ -69,7 +69,7 @@ $ yarn add nuxt-mail
 
 ## Usage
 
-Add the module to the `modules` array in your `nuxt.config.js`. Note that you need to add it to `modules` instead of `buildModules`.
+Add the module to the `modules` array in your `nuxt.config.js`. Note that you need to add it to `modules` instead of `buildModules` because it generates a serverMiddleware that is called from the client.
 
 ```js
 export default {
@@ -106,7 +106,11 @@ We will see in a minute what the `config` parameter means.
 
 ## Sending emails from the client
 
-Sending emails has security implications, which means that server side and client side work a bit differently. On the server side you can basically do anything you can also do with nodemailer, but you also have to be careful. For the client side, you define so-called message configs that are triggered by the client but are actually executed on the server. Think of them like templates that have parameters and you trigger them via the client. This approach is similar to what [EmailJS](https://www.emailjs.com/) does. You can also define multiple message configs, depending on the use cases. To define configs, set the `configs` property in your module config. Then you reference the config via the first parameter of `this.$mail.send`. Here is an example:
+Sending emails has security implications, which means that server side and client side work a bit differently.
+
+On the server side you can basically do anything you can also do with nodemailer, but you also have to be careful. For the client side, you define so-called **message configs** that are triggered by the client but are actually executed on the server. Think of them like templates that have parameters and you trigger them via the client. This approach is similar to what [EmailJS](https://www.emailjs.com/) does.
+
+You can also define multiple message configs, depending on the use cases. To define message configs, set the `configs` property in your module config. Then you reference the configs via the first parameter of `this.$mail.send`. Here is an example:
 
 ```js
 export default {
@@ -167,8 +171,8 @@ export default {
     ['nuxt-mail', {
       configs: {
         contact: {
-          from: 'admin1@foo.de',
-          to: 'admin1@foo.de',
+          from: 'admin@foo.de',
+          to: 'admin@foo.de',
         },
       },
       smtp: { /* ... */ },
@@ -177,7 +181,25 @@ export default {
 }
 ```
 
-You can also send multiple emails by returning an array (also works for the function):
+```
+this.$mail.send('contact', [
+  {
+    from: 'a@b.de',
+    text: 'foo bar',
+  },
+  {
+    from: 'a@b.de',
+    text: 'foo bar',
+  },
+])
+</script>
+```
+
+You can even do both and it will apply each email from `this.$mail.send` to each message returned from the message config 🥳.
+
+## Sending multiple emails
+
+You can send multiple emails via a message config as well as `this.$mail.send` by specifying an array as parameter or return value. `nuxt-mail` will detect it and send them one after another:
 
 ```js
 export default {
@@ -207,7 +229,7 @@ export default {
 
 ## Server side
 
-Since Nuxt is a Vue-based framework, a lot of the user interaction is going on client-side. If you do want to run `this.$mail.send` from the server, you can do that too. Server-side execution does not require a message config, you can also send emails directly. Be careful though, do not just expose an interface to the public because it can be used for spamming. There are not too many use cases to run `this.$mail.send` from the server, but here is an example that sends an email to an admin when loading a page via `asyncData`. Here `$mail.send` is accessed from the application context.
+Since Nuxt is a Vue-based framework, a lot of the user interaction is going on client-side. If you do want to run `this.$mail.send` from the server, you can do that too. Server-side execution does not require a message config, you can also send emails directly. Be careful though, do not just expose an interface to the public. It can be used for spamming! There are not too many use cases to run `this.$mail.send` from the server, but here is an example that sends an email to an admin when loading a page via `asyncData`. Here `$mail.send` is accessed from the application context.
 
 ```js
 <template>
@@ -226,7 +248,7 @@ export default {
 </script>
 ```
 
-Note that you do not have to pass the first config parameter anymore but you can pass the message directly. Still, you can pass it and recycle the config if you want 🛠:
+Note that you do not have to pass the first config parameter anymore but you can pass the message directly. Still, you can use configs on the server if you want:
 
 ```js
 <template>
@@ -267,7 +289,7 @@ export default {
 
     <label for="text">Text</label>
     <textarea id="text" name="text" v-model="text" />
-    
+
     <button type="submit" name="submit">Send</button>
   </form>
 </template>

@@ -586,22 +586,20 @@ export default tester(
       },
       async test() {
         await axios.get('http://localhost:3000')
-        expect(this.sentEmails).toEqual(
-          expect.arrayContaining([
-            {
-              from: 'foo@bar.de',
-              rcptTo: ['foo@bar.de'],
-              text: 'This is an incredible test message\n',
-              to: 'foo@bar.de',
-            },
-            {
-              from: 'bar@baz.de',
-              rcptTo: ['bar@baz.de'],
-              text: 'This is another incredible test message\n',
-              to: 'bar@baz.de',
-            },
-          ])
-        )
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'foo@bar.de',
+            rcptTo: ['foo@bar.de'],
+            text: 'This is an incredible test message\n',
+            to: 'foo@bar.de',
+          },
+          {
+            from: 'bar@baz.de',
+            rcptTo: ['bar@baz.de'],
+            text: 'This is another incredible test message\n',
+            to: 'bar@baz.de',
+          },
+        ])
       },
     },
     'config: function': {
@@ -688,22 +686,20 @@ export default tester(
       async test() {
         await axios.get('http://localhost:3000')
         expect(this.sentEmails.length).toEqual(2)
-        expect(this.sentEmails).toEqual(
-          expect.arrayContaining([
-            {
-              from: 'foo@bar.de',
-              rcptTo: ['a@b.de'],
-              text: 'This is an incredible test message\n',
-              to: 'a@b.de',
-            },
-            {
-              from: 'bar@baz.de',
-              rcptTo: ['a@b.de'],
-              text: 'This is another incredible test message\n',
-              to: 'a@b.de',
-            },
-          ])
-        )
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'foo@bar.de',
+            rcptTo: ['a@b.de'],
+            text: 'This is an incredible test message\n',
+            to: 'a@b.de',
+          },
+          {
+            from: 'bar@baz.de',
+            rcptTo: ['a@b.de'],
+            text: 'This is another incredible test message\n',
+            to: 'a@b.de',
+          },
+        ])
       },
     },
     'no smtp config': {
@@ -747,22 +743,20 @@ export default tester(
       },
       async test() {
         await axios.get('http://localhost:3000')
-        expect(this.sentEmails).toEqual(
-          expect.arrayContaining([
-            {
-              from: 'foo@bar.de',
-              rcptTo: ['foo@bar.de'],
-              text: 'This is an incredible test message\n',
-              to: 'foo@bar.de',
-            },
-            {
-              from: 'bar@baz.de',
-              rcptTo: ['bar@baz.de'],
-              text: 'This is another incredible test message\n',
-              to: 'bar@baz.de',
-            },
-          ])
-        )
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'foo@bar.de',
+            rcptTo: ['foo@bar.de'],
+            text: 'This is an incredible test message\n',
+            to: 'foo@bar.de',
+          },
+          {
+            from: 'bar@baz.de',
+            rcptTo: ['bar@baz.de'],
+            text: 'This is another incredible test message\n',
+            to: 'bar@baz.de',
+          },
+        ])
       },
     },
     'send: multiple messages with config array': {
@@ -806,38 +800,36 @@ export default tester(
       },
       async test() {
         await axios.get('http://localhost:3000')
-        expect(this.sentEmails).toEqual(
-          expect.arrayContaining([
-            {
-              from: 'foo@bar.de',
-              rcptTo: ['foo@bar.de'],
-              subject: 'foo',
-              text: 'This is an incredible test message\n',
-              to: 'foo@bar.de',
-            },
-            {
-              from: 'bar@baz.de',
-              rcptTo: ['bar@baz.de'],
-              subject: 'foo',
-              text: 'This is another incredible test message\n',
-              to: 'bar@baz.de',
-            },
-            {
-              from: 'foo@bar.de',
-              rcptTo: ['foo@bar.de'],
-              subject: 'bar',
-              text: 'This is an incredible test message\n',
-              to: 'foo@bar.de',
-            },
-            {
-              from: 'bar@baz.de',
-              rcptTo: ['bar@baz.de'],
-              subject: 'bar',
-              text: 'This is another incredible test message\n',
-              to: 'bar@baz.de',
-            },
-          ])
-        )
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'foo@bar.de',
+            rcptTo: ['foo@bar.de'],
+            subject: 'foo',
+            text: 'This is an incredible test message\n',
+            to: 'foo@bar.de',
+          },
+          {
+            from: 'bar@baz.de',
+            rcptTo: ['bar@baz.de'],
+            subject: 'foo',
+            text: 'This is another incredible test message\n',
+            to: 'bar@baz.de',
+          },
+          {
+            from: 'foo@bar.de',
+            rcptTo: ['foo@bar.de'],
+            subject: 'bar',
+            text: 'This is an incredible test message\n',
+            to: 'foo@bar.de',
+          },
+          {
+            from: 'bar@baz.de',
+            rcptTo: ['bar@baz.de'],
+            subject: 'bar',
+            text: 'This is another incredible test message\n',
+            to: 'bar@baz.de',
+          },
+        ])
       },
     },
     'send: multiple messages with config function': {
@@ -882,24 +874,22 @@ export default tester(
       },
       async test() {
         await axios.get('http://localhost:3000')
-        expect(this.sentEmails).toEqual(
-          expect.arrayContaining([
-            {
-              from: 'foo@bar.de',
-              rcptTo: ['foo@bar.de'],
-              subject: 'foo',
-              text: 'This is an incredible test message\n',
-              to: 'foo@bar.de',
-            },
-            {
-              from: 'bar@baz.de',
-              rcptTo: ['bar@baz.de'],
-              subject: 'foo',
-              text: 'This is another incredible test message\n',
-              to: 'bar@baz.de',
-            },
-          ])
-        )
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'foo@bar.de',
+            rcptTo: ['foo@bar.de'],
+            subject: 'foo',
+            text: 'This is an incredible test message\n',
+            to: 'foo@bar.de',
+          },
+          {
+            from: 'bar@baz.de',
+            rcptTo: ['bar@baz.de'],
+            subject: 'foo',
+            text: 'This is another incredible test message\n',
+            to: 'bar@baz.de',
+          },
+        ])
       },
     },
     'send: multiple messages with config object': {
@@ -945,24 +935,22 @@ export default tester(
       },
       async test() {
         await axios.get('http://localhost:3000')
-        expect(this.sentEmails).toEqual(
-          expect.arrayContaining([
-            {
-              from: 'foo@bar.de',
-              rcptTo: ['foo@bar.de'],
-              subject: 'foo',
-              text: 'This is an incredible test message\n',
-              to: 'foo@bar.de',
-            },
-            {
-              from: 'bar@baz.de',
-              rcptTo: ['bar@baz.de'],
-              subject: 'foo',
-              text: 'This is another incredible test message\n',
-              to: 'bar@baz.de',
-            },
-          ])
-        )
+        expect(this.sentEmails).toEqual([
+          {
+            from: 'foo@bar.de',
+            rcptTo: ['foo@bar.de'],
+            subject: 'foo',
+            text: 'This is an incredible test message\n',
+            to: 'foo@bar.de',
+          },
+          {
+            from: 'bar@baz.de',
+            rcptTo: ['bar@baz.de'],
+            subject: 'foo',
+            text: 'This is another incredible test message\n',
+            to: 'bar@baz.de',
+          },
+        ])
       },
     },
     'server side: bcc': {

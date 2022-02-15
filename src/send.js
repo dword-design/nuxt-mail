@@ -24,17 +24,17 @@ export default async (...args) => {
       return config(message)
     }
 
-    return flatMap(_message =>
-      [].concat(config).map(configMessage => ({
+    return flatMap(configMessage =>
+      [].concat(message).map(_message => ({
         ...configMessage,
         ...omit(options.clientSideCall ? ['to', 'cc', 'bcc'] : [])(_message),
       }))
-    )([].concat(message))
+    )([].concat(config))
   })()
   if (!Array.isArray(processedMessages)) {
     processedMessages = [processedMessages]
   }
-  await Promise.all(
-    processedMessages.map(_message => options.transport.sendMail(_message))
-  )
+  for (const _message of processedMessages) {
+    await options.transport.sendMail(_message)
+  }
 }
