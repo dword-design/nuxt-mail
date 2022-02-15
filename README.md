@@ -102,27 +102,30 @@ this.$mail.send('config', {
 })
 ```
 
-We will see in a minute what the `config` parameter means.
+We will see in a minute what the `config` parameter does.
 
 ## Sending emails from the client
 
 Sending emails has security implications, which means that server side and client side work a bit differently.
 
-On the server side you can basically do anything you can also do with nodemailer, but you also have to be careful. For the client side, you define so-called **message configs** that are triggered by the client but are actually executed on the server. Think of them like templates that have parameters and you trigger them via the client. This approach is similar to what [EmailJS](https://www.emailjs.com/) does.
+On the server side you can basically do anything you can also do with nodemailer, but you have to be careful. On the client side, you shouldn't pass recipient addresses like `to`, `cc`, and `bcc` from the client because that would allow an attacker to send emails to many users from your SMTP server. The client should only pass fields like `text` or `replyTo`.
 
-You can also define multiple message configs, depending on the use cases. To define message configs, set the `configs` property in your module config. Then you reference the configs via the first parameter of `this.$mail.send`. Here is an example:
+To solve this problem, we define so-called **message configs** that are triggered by the client but are actually executed on the server. They can be plain message objects or functions with parameters returning a message object. You only pass the parameters to the configs that are really input from the client. Think of them like templates that have parameters and you trigger them via the client. This approach is similar to what [EmailJS](https://www.emailjs.com/) does.
+
+You can also define multiple message configs depending on the use cases. To define message configs, set the `configs` property in your module config. Then you can reference the configs via the first parameter of `this.$mail.send`. Here is an example:
 
 ```js
+// nuxt.config.js
+
 export default {
   modules: [
     ['nuxt-mail', {
       configs: {
-        contact: ({ replyTo, text }) => ({
+        contact: {
           from: 'admin@foo.de',
           to: 'admin@foo.de',
-          replyTo,
-          text,
-        }),
+        },
+        issues: { /* ... */ },
       },
       smtp: { /* ... */ },
     }],
@@ -130,7 +133,7 @@ export default {
 }
 ```
 
-Now we can implement our contact form like so:
+This message config defines a simple contact form email. Note how we set `from` and `to` because it cannot be done via `this.$mail.send`. When setting an object as a message config, `nuxt-mail` will auto filter out `to`, `cc` and `bcc` for you so you are on the safe side!
 
 ```js
 <template>
@@ -163,39 +166,29 @@ export default {
 </script>
 ```
 
-Great, that already works! You can also pass an object to a message config instead of a function, in which case it will add the object properties to the values passed to `this.$mail.send`. The following example does the same as the one above:
+Great, that already works!
+
+## Functions as message configs
+
+You can also set a function as a message config. It allows you to do more complex logic in the message config, but you also have to be very careful because `nuxt-mail` won't filter out `to`, `cc` and `bcc` anymore. You are responsible for what is happening inside the function. So be sure that you only return the fields that are necessary and that an attacker cannot inject variables. Better do not use a spread operator here. The following example does the same as the one above:
 
 ```js
 export default {
   modules: [
     ['nuxt-mail', {
       configs: {
-        contact: {
+        contact: ({ replyTo, text }) => ({
           from: 'admin@foo.de',
           to: 'admin@foo.de',
-        },
+          replyTo,
+          text,
+        }),
       },
       smtp: { /* ... */ },
     }],
   ],
 }
 ```
-
-```
-this.$mail.send('contact', [
-  {
-    from: 'a@b.de',
-    text: 'foo bar',
-  },
-  {
-    from: 'a@b.de',
-    text: 'foo bar',
-  },
-])
-</script>
-```
-
-You can even do both and it will apply each email from `this.$mail.send` to each message returned from the message config 🥳.
 
 ## Sending multiple emails
 
@@ -227,9 +220,27 @@ export default {
 }
 ```
 
+The same applies to `this.$mail.send`. You can pass an array of messages:
+
+```
+this.$mail.send('contact', [
+  {
+    from: 'a@b.de',
+    text: 'foo bar',
+  },
+  {
+    from: 'a@b.de',
+    text: 'foo bar',
+  },
+])
+</script>
+```
+
+You can even pass an array to both a message config and `this.$mail.send` and it will apply each email from `this.$mail.send` to each message returned from the message config 🥳.
+
 ## Server side
 
-Since Nuxt is a Vue-based framework, a lot of the user interaction is going on client-side. If you do want to run `this.$mail.send` from the server, you can do that too. Server-side execution does not require a message config, you can also send emails directly. Be careful though, do not just expose an interface to the public. It can be used for spamming! There are not too many use cases to run `this.$mail.send` from the server, but here is an example that sends an email to an admin when loading a page via `asyncData`. Here `$mail.send` is accessed from the application context.
+Since Nuxt is a Vue-based framework, a lot of the user interaction is going on client-side. If you do want to run `this.$mail.send` from the server, you can do that too. Server-side execution does not require a message config, you can also send emails directly. Be careful though, do not just expose an interface to the public. It can be used for spamming! There are not too many use cases to run `this.$mail.send` from the server, but here is an example that sends an email to an admin when loading a page via `asyncData`. Here `$mail.send` is accessed from the [application context](https://nuxtjs.org/docs/internals-glossary/context/).
 
 ```js
 <template>
