@@ -10,12 +10,12 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           lfs: true
           ref: ${{ github.event.pull_request.head.repo.full_name == github.repository &&
             github.event.pull_request.head.ref || '' }}
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: 14
       - run: git config --global user.email "actions@github.com"
@@ -38,17 +38,19 @@ jobs:
     needs: cancel-existing
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           lfs: true
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
       - run: yarn --frozen-lockfile
-      - run: yarn test
+      - env:
+          TEST_GITHUB_API_TOKEN: ${{ secrets.TEST_GITHUB_API_TOKEN }}
+        run: yarn test
       - if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Image Snapshot Diffs
           path: "**/__image_snapshots__/__diff_output__"
@@ -59,18 +61,15 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
     strategy:
       matrix:
-        exclude:
+        include:
           - node: 12
-            os: macos-latest
-          - node: 12
-            os: windows-latest
-        node:
-          - 12
-          - 14
-        os:
-          - macos-latest
-          - windows-latest
-          - ubuntu-latest
+            os: ubuntu-latest
+          - node: 14
+            os: ubuntu-latest
+          - os: macos-latest
+            version: 14
+          - os: windows-latest
+            version: 14
 name: build
 on:
   pull_request: {}
