@@ -1294,9 +1294,9 @@
     param-case "^3.0.3"
 
 "@dword-design/babel-register-esm@^1.0.0":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@dword-design/babel-register-esm/-/babel-register-esm-1.0.3.tgz#85b9d4102601625de7c4a473b1527807093fabd4"
-  integrity sha512-Ie0QxojHAWyc8XMKEc87wuxs4jSIJKyAhhGt6r/0RSkAq3Znjp8TqAmcNXQ4NUkJZm8W6UfNVtLcKe1ey114Eg==
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@dword-design/babel-register-esm/-/babel-register-esm-1.0.4.tgz#17481cab12bfc0ef9b0551f0805aba627985a35b"
+  integrity sha512-P+/7wdiPiS5BvFDgKlRai+sd9mWIVA+4esrIkYHHeoFTrhs3aY9gY7cMQfpU/bMGbyLL7P7zM40KaQvZv+sn4w==
   dependencies:
     package-resolver "^1.1.0"
 

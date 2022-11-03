@@ -22,7 +22,7 @@ const nuxt2BabelConfig = {
 
 export default tester(
   {
-    'bcc foo': {
+    bcc: {
       files: {
         'pages/index.vue': endent`
           <template>
