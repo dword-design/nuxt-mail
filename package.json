@@ -23,7 +23,8 @@
   "funding": "https://github.com/sponsors/dword-design",
   "license": "MIT",
   "author": "Sebastian Landwehr <info@sebastianlandwehr.com>",
-  "main": "dist/index.js",
+  "type": "module",
+  "exports": "./dist/index.js",
   "files": [
     "dist"
   ],
@@ -43,19 +44,20 @@
     "nuxt-push-plugins": "^2.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.19.6",
+    "@dword-design/babel-config": "^2.1.0",
     "@dword-design/base": "^8.0.0",
-    "@dword-design/proxyquire": "^2.0.0",
     "@dword-design/puppeteer": "^5.0.0",
     "@dword-design/tester": "^2.0.0",
-    "@dword-design/tester-plugin-nodemailer-mock": "^1.0.0",
     "@dword-design/tester-plugin-puppeteer": "^2.0.0",
+    "@dword-design/tester-plugin-tmp-dir": "^2.1.6",
     "@nuxtjs/axios": "^5.13.1",
     "axios": "^0.25.0",
     "depcheck-package-name": "^2.0.0",
-    "nodemailer-mock": "^1.5.4",
+    "jiti": "^1.16.0",
     "nuxt": "^2.15.3",
     "output-files": "^2.0.0",
-    "with-local-tmp-dir": "^4.0.0"
+    "smtp-tester": "^2.0.1"
   },
   "engines": {
     "node": ">=12"

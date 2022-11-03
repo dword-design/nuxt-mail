@@ -2,7 +2,7 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           lfs: true
       - continue-on-error: true
@@ -20,10 +20,11 @@ jobs:
           update_existing: true
       - if: ${{ !steps.check-deprecated-js-deps.outputs.deprecated &&
           steps.create-deprecation-issue.outputs.number }}
-        uses: peter-evans/close-issue@v1
+        uses: peter-evans/close-issue@v2
         with:
           comment: Auto-closing the issue
           issue-number: ${{ steps.create-deprecation-issue.outputs.number }}
+      - uses: gautamkrishnar/keepalive-workflow@v1
 name: deprecated-dependencies
 on:
   schedule:

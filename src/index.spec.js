@@ -1,58 +1,28 @@
-import { endent, mapValues } from '@dword-design/functions'
+import { transformSync } from '@babel/core'
+import babelConfig from '@dword-design/babel-config'
+import { endent } from '@dword-design/functions'
 import tester from '@dword-design/tester'
-import testerPluginNodemailerMock from '@dword-design/tester-plugin-nodemailer-mock'
 import testerPluginPuppeteer from '@dword-design/tester-plugin-puppeteer'
+import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir'
 import axios from 'axios'
 import packageName from 'depcheck-package-name'
-import nodemailerMock from 'nodemailer-mock'
+import jiti from 'jiti'
 import { Builder, Nuxt } from 'nuxt'
 import outputFiles from 'output-files'
-import withLocalTmpDir from 'with-local-tmp-dir'
+import smtpTester from 'smtp-tester'
 
-const runTest = config => {
-  config = { options: {}, test: () => {}, ...config }
-
-  return function () {
-    return withLocalTmpDir(async () => {
-      await outputFiles({
-        'modules/module.js': endent`
-          import proxyquire from '${packageName`@dword-design/proxyquire`}'
-          import nodemailerMock from '${packageName`nodemailer-mock`}'
-
-          export default proxyquire('./../../src', {
-            nodemailer: nodemailerMock
-          })
-          
-        `,
-        ...config.files,
-      })
-
-      const nuxt = new Nuxt({
-        createRequire: 'native',
-        dev: false,
-        modules: [
-          packageName`@nuxtjs/axios`,
-          ['~/modules/module', config.options],
-        ],
-      })
-      if (config.error) {
-        await expect(new Builder(nuxt).build()).rejects.toThrow(config.error)
-      } else {
-        await new Builder(nuxt).build()
-        await nuxt.listen()
-        try {
-          await config.test.call(this)
-        } finally {
-          await nuxt.close()
-        }
-      }
-    })
-  }
+const nuxt2BabelConfig = {
+  ...babelConfig,
+  presets: babelConfig.presets.map(preset =>
+    preset[0] === '@babel/preset-env'
+      ? [preset[0], { targets: { node: 10 } }]
+      : preset
+  ),
 }
 
 export default tester(
   {
-    bcc: {
+    'bcc foo': {
       files: {
         'pages/index.vue': endent`
           <template>
@@ -62,7 +32,7 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
-              from: 'John Doe',
+              from: 'a@b.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
             }),
@@ -71,17 +41,16 @@ export default tester(
 
         `,
       },
-      options: { message: { bcc: 'johndoe@gmail.com' }, smtp: {} },
-      test: async () => {
+      options: { message: { bcc: 'johndoe@gmail.com' }, smtp: { port: 587 } },
+      async test() {
+        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
         await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
-          {
-            bcc: 'johndoe@gmail.com',
-            from: 'John Doe',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-          },
-        ])
+
+        const email = await waiter
+        expect(email.email.body).toEqual('This is an incredible test message')
+        expect(email.email.headers.subject).toEqual('Incredible')
+        expect(email.email.headers.from).toEqual('a@b.de')
+        expect(email.email.receivers).toEqual({ 'johndoe@gmail.com': true })
       },
     },
     cc: {
@@ -94,7 +63,7 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
-              from: 'John Doe',
+              from: 'a@b.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
             }),
@@ -103,17 +72,17 @@ export default tester(
 
         `,
       },
-      options: { message: { cc: 'johndoe@gmail.com' }, smtp: {} },
-      test: async () => {
+      options: { message: { cc: 'johndoe@gmail.com' }, smtp: { port: 587 } },
+      async test() {
+        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
         await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
-          {
-            cc: 'johndoe@gmail.com',
-            from: 'John Doe',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-          },
-        ])
+
+        const email = await waiter
+        expect(email.email.body).toEqual('This is an incredible test message')
+        expect(email.email.headers.subject).toEqual('Incredible')
+        expect(email.email.headers.from).toEqual('a@b.de')
+        expect(email.email.headers.cc).toEqual('johndoe@gmail.com')
+        expect(email.email.receivers).toEqual({ 'johndoe@gmail.com': true })
       },
     },
     'cc and bcc': {
@@ -126,7 +95,7 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
-              from: 'John Doe',
+              from: 'a@b.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
             }),
@@ -136,20 +105,22 @@ export default tester(
         `,
       },
       options: {
-        message: { bcc: 'bar@gmail.com', cc: 'foo@gmail.com' },
-        smtp: {},
+        message: { bcc: 'bcc@gmail.com', cc: 'cc@gmail.com' },
+        smtp: { port: 587 },
       },
-      test: async () => {
+      async test() {
+        const waiter = this.mailServer.captureOne('cc@gmail.com')
         await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
-          {
-            bcc: 'bar@gmail.com',
-            cc: 'foo@gmail.com',
-            from: 'John Doe',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-          },
-        ])
+
+        const email = await waiter
+        expect(email.email.body).toEqual('This is an incredible test message')
+        expect(email.email.headers.subject).toEqual('Incredible')
+        expect(email.email.headers.from).toEqual('a@b.de')
+        expect(email.email.headers.cc).toEqual('cc@gmail.com')
+        expect(email.email.receivers).toEqual({
+          'bcc@gmail.com': true,
+          'cc@gmail.com': true,
+        })
       },
     },
     'client side': {
@@ -167,7 +138,7 @@ export default tester(
             methods: {
               async send() {
                 await this.$mail.send({
-                  from: 'John Doe',
+                  from: 'a@b.de',
                   subject: 'Incredible',
                   text: 'This is an incredible test message',
                   to: 'foo@bar.de',
@@ -180,21 +151,21 @@ export default tester(
 
         `,
       },
-      options: { message: { to: 'johndoe@gmail.com' }, smtp: {} },
+      options: { message: { to: 'johndoe@gmail.com' }, smtp: { port: 587 } },
       async test() {
         await this.page.goto('http://localhost:3000')
 
         const button = await this.page.waitForSelector('button')
+
+        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
         await button.click()
         await this.page.waitForSelector('button.sent')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
-          {
-            from: 'John Doe',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-            to: 'johndoe@gmail.com',
-          },
-        ])
+
+        const email = await waiter
+        expect(email.email.body).toEqual('This is an incredible test message')
+        expect(email.email.headers.subject).toEqual('Incredible')
+        expect(email.email.headers.from).toEqual('a@b.de')
+        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
       },
     },
     'config by index': {
@@ -207,7 +178,7 @@ export default tester(
         <script>
         export default {
           asyncData: context => context.$mail.send({
-            from: 'John Doe',
+            from: 'a@b.de',
             subject: 'Incredible',
             text: 'This is an incredible test message',
             config: 1,
@@ -219,18 +190,17 @@ export default tester(
       },
       options: {
         message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
-        smtp: {},
+        smtp: { port: 587 },
       },
-      test: async () => {
+      async test() {
+        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
         await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
-          {
-            from: 'John Doe',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-            to: 'johndoe@gmail.com',
-          },
-        ])
+
+        const email = await waiter
+        expect(email.email.body).toEqual('This is an incredible test message')
+        expect(email.email.headers.subject).toEqual('Incredible')
+        expect(email.email.headers.from).toEqual('a@b.de')
+        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
       },
     },
     'config by name': {
@@ -244,7 +214,7 @@ export default tester(
           export default {
             asyncData: context => context.$mail.send({
               config: 'foo',
-              from: 'John Doe',
+              from: 'a@b.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
             }),
@@ -258,18 +228,17 @@ export default tester(
           { to: 'foo@bar.com' },
           { name: 'foo', to: 'johndoe@gmail.com' },
         ],
-        smtp: {},
+        smtp: { port: 587 },
       },
-      test: async () => {
+      async test() {
+        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
         await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
-          {
-            from: 'John Doe',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-            to: 'johndoe@gmail.com',
-          },
-        ])
+
+        const email = await waiter
+        expect(email.email.body).toEqual('This is an incredible test message')
+        expect(email.email.headers.subject).toEqual('Incredible')
+        expect(email.email.headers.from).toEqual('a@b.de')
+        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
       },
     },
     'config invalid index': {
@@ -346,7 +315,7 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
-              from: 'John Doe',
+              from: 'a@b.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
             }),
@@ -361,20 +330,23 @@ export default tester(
           cc: 'cc@gmail.com',
           to: 'to@gmail.com',
         },
-        smtp: {},
+        smtp: { port: 587 },
       },
-      test: async () => {
+      async test() {
+        const waiter = this.mailServer.captureOne('to@gmail.com')
         await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
-          {
-            bcc: 'bcc@gmail.com',
-            cc: 'cc@gmail.com',
-            from: 'John Doe',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-            to: 'to@gmail.com',
-          },
-        ])
+
+        const email = await waiter
+        expect(email.email.body).toEqual('This is an incredible test message')
+        expect(email.email.headers.subject).toEqual('Incredible')
+        expect(email.email.headers.from).toEqual('a@b.de')
+        expect(email.email.headers.to).toEqual('to@gmail.com')
+        expect(email.email.headers.cc).toEqual('cc@gmail.com')
+        expect(email.email.receivers).toEqual({
+          'bcc@gmail.com': true,
+          'cc@gmail.com': true,
+          'to@gmail.com': true,
+        })
       },
     },
     valid: {
@@ -387,29 +359,86 @@ export default tester(
           <script>
           export default {
             asyncData: context => context.$mail.send({
-              from: 'John Doe',
+              from: 'a@b.de',
               subject: 'Incredible',
               text: 'This is an incredible test message',
               to: 'foo@bar.de',
-            }),
+            })
           }
           </script>
 
         `,
       },
-      options: { message: { to: 'johndoe@gmail.com' }, smtp: {} },
-      test: async () => {
+      options: {
+        message: { to: 'johndoe@gmail.com' },
+        smtp: { port: 587 },
+      },
+      async test() {
+        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
         await axios.get('http://localhost:3000')
-        expect(nodemailerMock.mock.getSentMail()).toEqual([
-          {
-            from: 'John Doe',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-            to: 'johndoe@gmail.com',
-          },
-        ])
+
+        const email = await waiter
+        expect(email.email.body).toEqual('This is an incredible test message')
+        expect(email.email.headers.subject).toEqual('Incredible')
+        expect(email.email.headers.from).toEqual('a@b.de')
+        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
       },
     },
-  } |> mapValues(runTest),
-  [testerPluginPuppeteer(), testerPluginNodemailerMock()]
+  },
+  [
+    testerPluginTmpDir(),
+    testerPluginPuppeteer(),
+    {
+      after() {
+        return this.mailServer.stop()
+      },
+      before() {
+        this.mailServer = smtpTester.init(587)
+      },
+    },
+    {
+      transform: config => {
+        config = { options: {}, test: () => {}, ...config }
+
+        return async function () {
+          await outputFiles({
+            '.babelrc.json': JSON.stringify({
+              extends: '@dword-design/babel-config',
+            }),
+            'package.json': JSON.stringify({}),
+            ...config.files,
+          })
+
+          const nuxt = new Nuxt({
+            createRequire: filename =>
+              jiti(filename, {
+                cache: false,
+                transform: opts => ({
+                  code:
+                    transformSync(opts.source, {
+                      filename,
+                      ...nuxt2BabelConfig,
+                    })?.code || '',
+                }),
+              }),
+            dev: false,
+            modules: [packageName`@nuxtjs/axios`, ['~/../src', config.options]],
+          })
+          if (config.error) {
+            await expect(new Builder(nuxt).build()).rejects.toThrow(
+              config.error
+            )
+          } else {
+            await new Builder(nuxt).build()
+            await nuxt.listen()
+            try {
+              await config.test.call(this)
+            } finally {
+              await nuxt.close()
+            }
+          }
+        }
+      },
+    },
+  ]
 )
