@@ -62,9 +62,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - node: 12
-            os: ubuntu-latest
           - node: 14
+            os: ubuntu-latest
+          - node: 16
             os: ubuntu-latest
           - node: 14
             os: macos-latest

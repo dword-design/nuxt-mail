@@ -6,5 +6,6 @@
     { "repository": "nuxt-mermaid-string", "description": "Embed a Mermaid diagram in a Nuxt.js app by providing its diagram string." },
     { "repository": "nuxt-content-git", "description": "Additional module for @nuxt/content that replaces or adds createdAt and updatedAt dates based on the git history." },
     { "repository": "nuxt-babel-runtime", "description": "Nuxt CLI that supports babel. Inspired by @nuxt/typescript-runtime." }
-  ]
+  ],
+  "supportedNodeVersions": [14, 16]
 }
