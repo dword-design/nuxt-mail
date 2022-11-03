@@ -41,7 +41,7 @@ export default tester(
 
         `,
       },
-      options: { message: { bcc: 'johndoe@gmail.com' }, smtp: { port: 587 } },
+      options: { message: { bcc: 'johndoe@gmail.com' }, smtp: { port: 3001 } },
       async test() {
         const waiter = this.mailServer.captureOne('johndoe@gmail.com')
         await axios.get('http://localhost:3000')
@@ -72,7 +72,7 @@ export default tester(
 
         `,
       },
-      options: { message: { cc: 'johndoe@gmail.com' }, smtp: { port: 587 } },
+      options: { message: { cc: 'johndoe@gmail.com' }, smtp: { port: 3001 } },
       async test() {
         const waiter = this.mailServer.captureOne('johndoe@gmail.com')
         await axios.get('http://localhost:3000')
@@ -106,7 +106,7 @@ export default tester(
       },
       options: {
         message: { bcc: 'bcc@gmail.com', cc: 'cc@gmail.com' },
-        smtp: { port: 587 },
+        smtp: { port: 3001 },
       },
       async test() {
         const waiter = this.mailServer.captureOne('cc@gmail.com')
@@ -151,7 +151,7 @@ export default tester(
 
         `,
       },
-      options: { message: { to: 'johndoe@gmail.com' }, smtp: { port: 587 } },
+      options: { message: { to: 'johndoe@gmail.com' }, smtp: { port: 3001 } },
       async test() {
         await this.page.goto('http://localhost:3000')
 
@@ -190,7 +190,7 @@ export default tester(
       },
       options: {
         message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
-        smtp: { port: 587 },
+        smtp: { port: 3001 },
       },
       async test() {
         const waiter = this.mailServer.captureOne('johndoe@gmail.com')
@@ -228,7 +228,7 @@ export default tester(
           { to: 'foo@bar.com' },
           { name: 'foo', to: 'johndoe@gmail.com' },
         ],
-        smtp: { port: 587 },
+        smtp: { port: 3001 },
       },
       async test() {
         const waiter = this.mailServer.captureOne('johndoe@gmail.com')
@@ -330,7 +330,7 @@ export default tester(
           cc: 'cc@gmail.com',
           to: 'to@gmail.com',
         },
-        smtp: { port: 587 },
+        smtp: { port: 3001 },
       },
       async test() {
         const waiter = this.mailServer.captureOne('to@gmail.com')
@@ -371,7 +371,7 @@ export default tester(
       },
       options: {
         message: { to: 'johndoe@gmail.com' },
-        smtp: { port: 587 },
+        smtp: { port: 3001 },
       },
       async test() {
         const waiter = this.mailServer.captureOne('johndoe@gmail.com')
@@ -393,7 +393,7 @@ export default tester(
         return this.mailServer.stop()
       },
       before() {
-        this.mailServer = smtpTester.init(587)
+        this.mailServer = smtpTester.init(3001)
       },
     },
     {
