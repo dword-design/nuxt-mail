@@ -1,15 +1,19 @@
 import { transformSync } from '@babel/core'
 import babelConfig from '@dword-design/babel-config'
-import { endent } from '@dword-design/functions'
+import { delay, endent } from '@dword-design/functions'
 import tester from '@dword-design/tester'
 import testerPluginPuppeteer from '@dword-design/tester-plugin-puppeteer'
 import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir'
 import axios from 'axios'
 import packageName from 'depcheck-package-name'
+import execa from 'execa'
 import jiti from 'jiti'
-import { Builder, Nuxt } from 'nuxt'
 import outputFiles from 'output-files'
+import P from 'path'
 import smtpTester from 'smtp-tester'
+import kill from 'tree-kill-promise'
+
+import self from './index.js'
 
 const nuxt2BabelConfig = {
   ...babelConfig,
@@ -305,6 +309,42 @@ export default tester(
     'no smtp config': {
       error: 'SMTP config is missing.',
     },
+    nuxt3: {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script setup>
+          const { $mail } = useNuxtApp()
+
+          await $mail.send({
+            from: 'a@b.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+            to: 'foo@bar.de',
+          })
+          </script>
+
+        `,
+      },
+      nuxtVersion: 3,
+      options: {
+        message: { to: 'johndoe@gmail.com' },
+        smtp: { port: 3001 },
+      },
+      async test() {
+        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
+        await axios.get('http://localhost:3000')
+
+        const email = await waiter
+        expect(email.email.body).toEqual('This is an incredible test message')
+        expect(email.email.headers.subject).toEqual('Incredible')
+        expect(email.email.headers.from).toEqual('a@b.de')
+        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
+      },
+    },
     'to, cc and bcc': {
       files: {
         'pages/index.vue': endent`
@@ -398,43 +438,79 @@ export default tester(
     },
     {
       transform: config => {
-        config = { options: {}, test: () => {}, ...config }
+        config.nuxtVersion = config.nuxtVersion || 2
+        config.options = config.options || {}
+        config.test = config.test || (() => {})
 
         return async function () {
           await outputFiles({
-            '.babelrc.json': JSON.stringify({
-              extends: '@dword-design/babel-config',
-            }),
-            'package.json': JSON.stringify({}),
+            'package.json': JSON.stringify({ type: 'module' }),
             ...config.files,
           })
+          if (config.nuxtVersion === 3) {
+            await execa.command('yarn add --dev nuxt@3.0.0-rc.12')
 
-          const nuxt = new Nuxt({
-            createRequire: filename =>
-              jiti(filename, {
-                cache: false,
-                transform: opts => ({
-                  code:
-                    transformSync(opts.source, {
-                      filename,
-                      ...nuxt2BabelConfig,
-                    })?.code || '',
-                }),
-              }),
-            dev: false,
-            modules: [packageName`@nuxtjs/axios`, ['~/../src', config.options]],
-          })
-          if (config.error) {
-            await expect(new Builder(nuxt).build()).rejects.toThrow(
-              config.error
+            const nuxtImport = await import(
+              P.resolve('node_modules', '@nuxt', 'kit', 'dist', 'index.mjs')
             )
-          } else {
-            await new Builder(nuxt).build()
-            await nuxt.listen()
+
+            const loadNuxt = nuxtImport.loadNuxt
+
+            const buildNuxt = nuxtImport.buildNuxt
+
+            const nuxt = await loadNuxt({
+              config: { modules: [[self, config.options]] },
+            })
+            await buildNuxt(nuxt)
+
+            const childProcess = execa('node', [
+              P.join('.output', 'server', 'index.mjs'),
+            ])
+            await delay(5000)
             try {
               await config.test.call(this)
             } finally {
-              await nuxt.close()
+              await kill(childProcess.pid)
+            }
+          } else {
+            await execa.command('yarn add --dev nuxt@^2')
+
+            const nuxtImport = await import(
+              P.resolve('node_modules', 'nuxt', 'dist', 'nuxt.js')
+            )
+
+            const Nuxt = nuxtImport.Nuxt
+
+            const Builder = nuxtImport.Builder
+
+            const nuxt = new Nuxt({
+              createRequire: filename =>
+                jiti(filename, {
+                  cache: false,
+                  transform: opts => ({
+                    code:
+                      transformSync(opts.source, {
+                        filename,
+                        ...nuxt2BabelConfig,
+                      })?.code || '',
+                  }),
+                }),
+              dev: false,
+              modules: [packageName`@nuxtjs/axios`, [self, config.options]],
+              telemetry: false,
+            })
+            if (config.error) {
+              await expect(new Builder(nuxt).build()).rejects.toThrow(
+                config.error
+              )
+            } else {
+              await new Builder(nuxt).build()
+              await nuxt.listen()
+              try {
+                await config.test.call(this)
+              } finally {
+                await nuxt.close()
+              }
             }
           }
         }

@@ -1,4 +1,10 @@
 import { findIndex, omit, some } from '@dword-design/functions'
+import {
+  addServerHandler,
+  addTemplate,
+  createResolver,
+  isNuxt3 as isNuxt3Try,
+} from '@nuxt/kit'
 import express from 'express'
 import nodemailer from 'nodemailer'
 import nuxtPushPlugins from 'nuxt-push-plugins'
@@ -17,39 +23,61 @@ export default function (moduleOptions) {
   if (!Array.isArray(options.message)) {
     options.message = [options.message]
   }
-  if (options.message |> some(c => !c.to && !c.cc && !c.bcc)) {
+  if (some(c => !c.to && !c.cc && !c.bcc)(options.message)) {
     throw new Error('You have to provide to/cc/bcc in all configs.')
   }
 
-  const app = express()
+  const resolver = createResolver(import.meta.url)
+  let isNuxt3 = true
+  try {
+    isNuxt3 = isNuxt3Try()
+  } catch {
+    isNuxt3 = false
+  }
+  if (isNuxt3) {
+    this.options.alias['#mail'] = addTemplate({
+      filename: 'mail.js',
+      getContents: () =>
+        `export default ${JSON.stringify(options, undefined, 2)}`,
+      write: true,
+    }).dst
+    addServerHandler({
+      handler: resolver.resolve('./server-handler.post.js'),
+      route: '/mail/send',
+    })
+  } else {
+    const app = express()
 
-  const transport = nodemailer.createTransport(options.smtp)
-  app.use(express.json())
-  app.post('/send', async (req, res) => {
-    req.body = { config: 0, ...req.body }
-    try {
-      if (typeof req.body.config === 'string') {
-        const configIndex =
-          options.message |> findIndex(_ => _.name === req.body.config)
-        if (configIndex === -1) {
+    const transport = nodemailer.createTransport(options.smtp)
+    app.use(express.json())
+    app.post('/send', async (req, res) => {
+      req.body = { config: 0, ...req.body }
+      try {
+        if (typeof req.body.config === 'string') {
+          const configIndex =
+            options.message |> findIndex(_ => _.name === req.body.config)
+          if (configIndex === -1) {
+            throw new Error(
+              `Message config with name '${req.body.config}' not found.`
+            )
+          }
+          req.body.config = configIndex
+        } else if (!options.message[req.body.config]) {
           throw new Error(
-            `Message config with name '${req.body.config}' not found.`
+            `Message config not found at index ${req.body.config}.`
           )
         }
-        req.body.config = configIndex
-      } else if (!options.message[req.body.config]) {
-        throw new Error(`Message config not found at index ${req.body.config}.`)
+        await transport.sendMail({
+          ...(req.body |> omit(['config', 'to', 'cc', 'bcc'])),
+          ...(options.message[req.body.config] |> omit(['name'])),
+        })
+      } catch (error) {
+        return res.status(400).send(error.message)
       }
-      await transport.sendMail({
-        ...(req.body |> omit(['config', 'to', 'cc', 'bcc'])),
-        ...(options.message[req.body.config] |> omit(['name'])),
-      })
-    } catch (error) {
-      return res.status(400).send(error.message)
-    }
 
-    return res.sendStatus(200)
-  })
-  this.addServerMiddleware({ handler: app, path: '/mail' })
-  nuxtPushPlugins(this, require.resolve('./plugin'))
+      return res.sendStatus(200)
+    })
+    this.addServerMiddleware({ handler: app, path: '/mail' })
+  }
+  nuxtPushPlugins(this, resolver.resolve('./plugin.js'))
 }

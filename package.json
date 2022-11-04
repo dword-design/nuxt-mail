@@ -39,9 +39,11 @@
   },
   "dependencies": {
     "@dword-design/functions": "^4.0.0",
+    "@nuxt/kit": "^3.0.0-rc.12",
     "express": "^4.17.1",
+    "h3": "^0.8.6",
     "nodemailer": "^6.4.11",
-    "nuxt-push-plugins": "^2.0.0"
+    "nuxt-push-plugins": "^2.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
@@ -54,10 +56,12 @@
     "@nuxtjs/axios": "^5.13.1",
     "axios": "^0.25.0",
     "depcheck-package-name": "^2.0.0",
+    "execa": "^4",
+    "fs-extra": "^10.1.0",
     "jiti": "^1.16.0",
-    "nuxt": "^2.15.3",
     "output-files": "^2.0.0",
-    "smtp-tester": "^2.0.1"
+    "smtp-tester": "^2.0.1",
+    "tree-kill-promise": "^2.0.8"
   },
   "engines": {
     "node": ">=14"
