@@ -43,7 +43,7 @@
     "nuxt-push-plugins": "^2.0.0"
   },
   "devDependencies": {
-    "@dword-design/base": "^8.0.0",
+    "@dword-design/base": "^9.0.0",
     "@dword-design/proxyquire": "^2.0.0",
     "@dword-design/puppeteer": "^5.0.0",
     "@dword-design/tester": "^2.0.0",
