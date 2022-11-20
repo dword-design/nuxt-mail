@@ -53,7 +53,7 @@
     "axios": "^0.25.0",
     "depcheck-package-name": "^2.0.0",
     "nodemailer-mock": "^1.5.4",
-    "nuxt": "^2.15.3",
+    "nuxt": "^3.0.0",
     "output-files": "^2.0.0",
     "with-local-tmp-dir": "^4.0.0"
   },
