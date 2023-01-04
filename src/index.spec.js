@@ -448,7 +448,9 @@ export default tester(
             ...config.files,
           })
           if (config.nuxtVersion === 3) {
-            await execa.command('yarn add --dev nuxt@3.0.0-rc.12', { stdio: 'inherit' })
+            await execa.command('yarn add --dev nuxt@3.0.0-rc.12', {
+              stdio: 'inherit',
+            })
 
             const nuxtImport = await import(
               P.resolve('node_modules', '@nuxt', 'kit', 'dist', 'index.mjs')
