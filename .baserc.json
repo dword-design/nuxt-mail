@@ -17,5 +17,8 @@
     "settings": {
       "import/core-modules": ["#mail"]
     }
+  },
+  "depcheckConfig": {
+    "ignoreMatches": ["nuxt"]
   }
 }

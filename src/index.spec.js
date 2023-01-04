@@ -4,10 +4,13 @@ import { delay, endent } from '@dword-design/functions'
 import tester from '@dword-design/tester'
 import testerPluginPuppeteer from '@dword-design/tester-plugin-puppeteer'
 import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir'
+import { buildNuxt, loadNuxt } from '@nuxt/kit'
 import axios from 'axios'
 import packageName from 'depcheck-package-name'
 import execa from 'execa'
+import fs from 'fs-extra'
 import jiti from 'jiti'
+import ora from 'ora'
 import outputFiles from 'output-files'
 import P from 'path'
 import smtpTester from 'smtp-tester'
@@ -429,8 +432,22 @@ export default tester(
     testerPluginTmpDir(),
     testerPluginPuppeteer(),
     {
-      after() {
-        return this.mailServer.stop()
+      before: async () => {
+        await fs.outputFile(
+          P.join('node_modules', '.cache', 'tester', 'nuxt2', 'package.json'),
+          JSON.stringify({})
+        )
+
+        const spinner = ora('Installing Nuxt 2').start()
+        await execa.command('yarn add nuxt@^2', {
+          cwd: P.join('node_modules', '.cache', 'tester', 'nuxt2'),
+        })
+        spinner.stop()
+      },
+    },
+    {
+      async after() {
+        await this.mailServer.stop()
       },
       before() {
         this.mailServer = smtpTester.init(3001)
@@ -448,20 +465,13 @@ export default tester(
             ...config.files,
           })
           if (config.nuxtVersion === 3) {
-            await execa.command('yarn add --dev nuxt@3.0.0-rc.12', {
-              stdio: 'inherit',
-            })
-
-            const nuxtImport = await import(
-              P.resolve('node_modules', '@nuxt', 'kit', 'dist', 'index.mjs')
-            )
-
-            const loadNuxt = nuxtImport.loadNuxt
-
-            const buildNuxt = nuxtImport.buildNuxt
-
+            // Loads package.json of nuxt, nuxt3 or nuxt-edge from cwd
+            // Does not work with symlink (Cannot read property send of undefined)
             const nuxt = await loadNuxt({
-              config: { modules: [[self, config.options]] },
+              config: {
+                build: { quiet: true },
+                modules: [[self, config.options]],
+              },
             })
             await buildNuxt(nuxt)
 
@@ -475,7 +485,18 @@ export default tester(
               await kill(childProcess.pid)
             }
           } else {
-            await execa.command('yarn add --dev nuxt@^2')
+            // Loads @nuxt/vue-app from cwd
+            await fs.symlink(
+              P.join(
+                '..',
+                'node_modules',
+                '.cache',
+                'tester',
+                'nuxt2',
+                'node_modules'
+              ),
+              'node_modules'
+            )
 
             const nuxtImport = await import(
               P.resolve('node_modules', 'nuxt', 'dist', 'nuxt.js')
