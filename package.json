@@ -33,16 +33,13 @@
     "commit": "base commit",
     "dev": "base dev",
     "lint": "base lint",
-    "prepare": "base prepare",
     "prepublishOnly": "base prepublishOnly",
     "test": "base test"
   },
   "dependencies": {
     "@dword-design/functions": "^4.0.0",
-    "@nuxt/kit": "^3.0.0-rc.12",
     "express": "^4.17.1",
     "fs-extra": "^11.1.0",
-    "h3": "^0.8.6",
     "nodemailer": "^6.4.11",
     "nuxt-push-plugins": "^2.1.2",
     "parse-packagejson-name": "^1.0.1"
@@ -53,16 +50,22 @@
     "@dword-design/tester": "^2.0.0",
     "@dword-design/tester-plugin-puppeteer": "^2.1.22",
     "@dword-design/tester-plugin-tmp-dir": "^2.1.6",
+    "@nuxt/kit": "^3.0.0",
     "@nuxtjs/axios": "^5.13.1",
     "axios": "^0.27.2",
     "depcheck-package-name": "^2.0.0",
     "execa": "^4",
+    "h3": "^0.8.6",
     "nuxt": "^3.0.0",
     "ora": "^6.1.2",
     "output-files": "^2.0.0",
     "p-event": "^5.0.1",
     "smtp-tester": "^2.0.1",
     "tree-kill-promise": "^2.0.8"
+  },
+  "peerDependencies": {
+    "@nuxt/kit": "^3.0.0",
+    "h3": "^0.8.6"
   },
   "engines": {
     "node": ">=14"
