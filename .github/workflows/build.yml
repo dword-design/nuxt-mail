@@ -10,14 +10,14 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           lfs: true
           ref: ${{ github.event.pull_request.head.repo.full_name == github.repository &&
             github.event.pull_request.head.ref || '' }}
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
       - run: git config --global user.email "actions@github.com"
       - run: git config --global user.name "GitHub Actions"
       - run: yarn --frozen-lockfile
@@ -38,39 +38,37 @@ jobs:
     needs: cancel-existing
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           lfs: true
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
       - run: yarn --frozen-lockfile
-      - run: yarn test
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn test
       - if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Image Snapshot Diffs
           path: "**/__image_snapshots__/__diff_output__"
-      - if: matrix.os == 'ubuntu-latest' && matrix.node == 14
-        uses: codecov/codecov-action@v2
+      - if: matrix.os == 'ubuntu-latest' && matrix.node == 16
+        uses: codecov/codecov-action@v3
         with:
-          fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
     strategy:
       matrix:
-        exclude:
-          - node: 12
+        include:
+          - node: 14
+            os: ubuntu-latest
+          - node: 16
+            os: ubuntu-latest
+          - node: 16
             os: macos-latest
-          - node: 12
+          - node: 16
             os: windows-latest
-        node:
-          - 12
-          - 14
-        os:
-          - macos-latest
-          - windows-latest
-          - ubuntu-latest
 name: build
 on:
   pull_request: {}
