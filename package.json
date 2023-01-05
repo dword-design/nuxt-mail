@@ -48,8 +48,6 @@
     "parse-packagejson-name": "^1.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.6",
-    "@dword-design/babel-config": "^2.1.0",
     "@dword-design/base": "^9.1.9",
     "@dword-design/puppeteer": "^5.0.0",
     "@dword-design/tester": "^2.0.0",
@@ -59,7 +57,6 @@
     "axios": "^0.27.2",
     "depcheck-package-name": "^2.0.0",
     "execa": "^4",
-    "jiti": "^1.16.0",
     "nuxt": "3.0.0-rc.12",
     "ora": "^6.1.2",
     "output-files": "^2.0.0",

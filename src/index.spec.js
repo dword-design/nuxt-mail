@@ -1,6 +1,4 @@
-import { transformSync } from '@babel/core'
-import babelConfig from '@dword-design/babel-config'
-import { delay, endent } from '@dword-design/functions'
+import { endent } from '@dword-design/functions'
 import tester from '@dword-design/tester'
 import testerPluginPuppeteer from '@dword-design/tester-plugin-puppeteer'
 import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir'
@@ -9,25 +7,15 @@ import axios from 'axios'
 import packageName from 'depcheck-package-name'
 import execa from 'execa'
 import fs from 'fs-extra'
-import jiti from 'jiti'
 import ora from 'ora'
 import outputFiles from 'output-files'
+import { pEvent } from 'p-event'
 import P from 'path'
 import smtpTester from 'smtp-tester'
 import kill from 'tree-kill-promise'
 import { fileURLToPath } from 'url'
-import { pEvent } from 'p-event'
 
 import self from './index.js'
-
-const nuxt2BabelConfig = {
-  ...babelConfig,
-  presets: babelConfig.presets.map(preset =>
-    preset[0] === '@babel/preset-env'
-      ? [preset[0], { targets: { node: 10 } }]
-      : preset
-  ),
-}
 
 export default tester(
   {
@@ -477,7 +465,10 @@ export default tester(
             })
             await buildNuxt(nuxt)
 
-            const childProcess = execa.command(`node ${P.join('.output', 'server', 'index.mjs')}`, { all: true })
+            const childProcess = execa.command(
+              `node ${P.join('.output', 'server', 'index.mjs')}`,
+              { all: true }
+            )
             await pEvent(childProcess.all, 'data')
             try {
               await config.test.call(this)
@@ -512,17 +503,6 @@ export default tester(
             const Builder = nuxtImport.Builder
 
             const nuxt = new Nuxt({
-              createRequire: filename =>
-                jiti(filename, {
-                  cache: false,
-                  transform: opts => ({
-                    code:
-                      transformSync(opts.source, {
-                        filename,
-                        ...nuxt2BabelConfig,
-                      })?.code || '',
-                  }),
-                }),
               dev: false,
               modules: [packageName`@nuxtjs/axios`, [self, config.options]],
               telemetry: false,
