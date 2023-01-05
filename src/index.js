@@ -1,4 +1,4 @@
-import { findIndex, omit, some } from '@dword-design/functions'
+import { some } from '@dword-design/functions'
 import {
   addServerHandler,
   addTemplate,
@@ -6,8 +6,19 @@ import {
   isNuxt3 as isNuxt3Try,
 } from '@nuxt/kit'
 import express from 'express'
+import fs from 'fs-extra'
 import nodemailer from 'nodemailer'
 import nuxtPushPlugins from 'nuxt-push-plugins'
+import parsePackagejsonName from 'parse-packagejson-name'
+import P from 'path'
+
+import send from './send.js'
+
+const resolver = createResolver(import.meta.url)
+
+const packageConfig = fs.readJsonSync(resolver.resolve('../package.json'))
+
+const moduleName = parsePackagejsonName(packageConfig.name).fullName
 
 export default function (moduleOptions) {
   const options = { ...this.options.mail, ...moduleOptions }
@@ -26,8 +37,6 @@ export default function (moduleOptions) {
   if (some(c => !c.to && !c.cc && !c.bcc)(options.message)) {
     throw new Error('You have to provide to/cc/bcc in all configs.')
   }
-
-  const resolver = createResolver(import.meta.url)
   let isNuxt3 = true
   try {
     isNuxt3 = isNuxt3Try()
@@ -35,12 +44,18 @@ export default function (moduleOptions) {
     isNuxt3 = false
   }
   if (isNuxt3) {
-    this.options.alias['#mail'] = addTemplate({
-      filename: 'mail.js',
+    addTemplate({
+      filename: P.join(moduleName, 'options.js'),
       getContents: () =>
         `export default ${JSON.stringify(options, undefined, 2)}`,
       write: true,
-    }).dst
+    })
+    addTemplate({
+      filename: P.join(moduleName, 'send.js'),
+      getContents: () => fs.readFile(resolver.resolve('./send.js'), 'utf8'),
+      write: true,
+    })
+    this.options.alias['#mail'] = P.resolve(this.options.buildDir, moduleName)
     addServerHandler({
       handler: resolver.resolve('./server-handler.post.js'),
       route: '/mail/send',
@@ -51,26 +66,8 @@ export default function (moduleOptions) {
     const transport = nodemailer.createTransport(options.smtp)
     app.use(express.json())
     app.post('/send', async (req, res) => {
-      req.body = { config: 0, ...req.body }
       try {
-        if (typeof req.body.config === 'string') {
-          const configIndex =
-            options.message |> findIndex(_ => _.name === req.body.config)
-          if (configIndex === -1) {
-            throw new Error(
-              `Message config with name '${req.body.config}' not found.`
-            )
-          }
-          req.body.config = configIndex
-        } else if (!options.message[req.body.config]) {
-          throw new Error(
-            `Message config not found at index ${req.body.config}.`
-          )
-        }
-        await transport.sendMail({
-          ...(req.body |> omit(['config', 'to', 'cc', 'bcc'])),
-          ...(options.message[req.body.config] |> omit(['name'])),
-        })
+        await send(req.body, options, transport)
       } catch (error) {
         return res.status(400).send(error.message)
       }

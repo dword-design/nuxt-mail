@@ -4,8 +4,18 @@
     "useFetch": "readonly"
   },
   "settings": {
-    "import/core-modules": [
+    "import/ignore": [
       "#mail"
+    ]
+  },
+  "rules": {
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": [
+          "#mail"
+        ]
+      }
     ]
   }
 }

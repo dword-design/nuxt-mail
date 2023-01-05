@@ -14,8 +14,8 @@
     "globals": {
       "useFetch": "readonly"
     },
-    "settings": {
-      "import/core-modules": ["#mail"]
+    "rules": {
+      "import/no-unresolved": ["error", { "ignore": ["#mail"] }]
     }
   },
   "depcheckConfig": {
