@@ -15,6 +15,7 @@ import outputFiles from 'output-files'
 import P from 'path'
 import smtpTester from 'smtp-tester'
 import kill from 'tree-kill-promise'
+import { fileURLToPath } from 'url'
 
 import self from './index.js'
 
@@ -499,7 +500,12 @@ export default tester(
             )
 
             const nuxtImport = await import(
-              P.resolve('node_modules', 'nuxt', 'dist', 'nuxt.js')
+              `./${P.relative(
+                P.dirname(fileURLToPath(import.meta.url)),
+                './node_modules/nuxt/dist/nuxt.js'
+              )
+                .split(P.sep)
+                .join('/')}`
             )
 
             const Nuxt = nuxtImport.Nuxt
