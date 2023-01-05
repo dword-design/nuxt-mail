@@ -22,6 +22,7 @@ const moduleName = parsePackagejsonName(packageConfig.name).fullName
 
 export default function (moduleOptions, nuxt) {
   nuxt = nuxt || this
+
   const options = { ...nuxt.options.mail, ...moduleOptions }
   if (!options.smtp) {
     throw new Error('SMTP config is missing.')

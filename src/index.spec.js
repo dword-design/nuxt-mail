@@ -124,14 +124,11 @@ export default tester(
       files: {
         'pages/index.vue': endent`
           <template>
-            <button :class="{ sent }" @click="send" />
+            <button @click="send" />
           </template>
 
           <script>
           export default {
-            data: () => ({
-              sent: false,
-            }),
             methods: {
               async send() {
                 await this.$mail.send({
@@ -140,7 +137,6 @@ export default tester(
                   text: 'This is an incredible test message',
                   to: 'foo@bar.de',
                 })
-                this.sent = true
               },
             },
           }
@@ -156,7 +152,6 @@ export default tester(
 
         const waiter = this.mailServer.captureOne('johndoe@gmail.com')
         await button.click()
-        await this.page.waitForSelector('button.sent')
 
         const email = await waiter
         expect(email.email.body).toEqual('This is an incredible test message')
@@ -330,6 +325,43 @@ export default tester(
       async test() {
         const waiter = this.mailServer.captureOne('johndoe@gmail.com')
         await axios.get('http://localhost:3000')
+
+        const email = await waiter
+        expect(email.email.body).toEqual('This is an incredible test message')
+        expect(email.email.headers.subject).toEqual('Incredible')
+        expect(email.email.headers.from).toEqual('a@b.de')
+        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
+      },
+    },
+    'nuxt3: client side': {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <button @click="send" />
+          </template>
+
+          <script setup>
+          const { $mail } = useNuxtApp()
+
+          const send = () => $mail.send({
+            from: 'a@b.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+            to: 'foo@bar.de',
+          })
+          </script>
+
+        `,
+      },
+      nuxtVersion: 3,
+      options: { message: { to: 'johndoe@gmail.com' }, smtp: { port: 3001 } },
+      async test() {
+        await this.page.goto('http://localhost:3000')
+
+        const button = await this.page.waitForSelector('button')
+
+        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
+        await button.click()
 
         const email = await waiter
         expect(email.email.body).toEqual('This is an incredible test message')
