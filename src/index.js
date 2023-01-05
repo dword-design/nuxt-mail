@@ -1,5 +1,6 @@
 import { some } from '@dword-design/functions'
 import {
+  addImports,
   addServerHandler,
   addTemplate,
   createResolver,
@@ -62,6 +63,7 @@ export default function (moduleOptions, nuxt) {
       handler: resolver.resolve('./server-handler.post.js'),
       route: '/mail/send',
     })
+    addImports([{ from: resolver.resolve('./composable.js'), name: 'useMail' }])
   } else {
     const app = express()
 

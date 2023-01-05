@@ -67,13 +67,14 @@ $ yarn add nuxt-mail
 ```
 <!-- /INSTALL -->
 
-## Usage
+## Configuration
 
-Add the module to the `modules` array in your `nuxt.config.js`. Note to add it to `modules` instead of `buildModules`, otherwise the server route will not be generated. We also have to install the [@nuxtjs/axios](https://www.npmjs.com/package/@nuxtjs/axios) module because it is used internally to call the server route:
+Add the module to the `modules` array in your `nuxt.config.js`. Note to add it to `modules` instead of `buildModules`, otherwise the server route will not be generated.
+
 ```js
+// nuxt.config.js
 export default {
   modules: [
-    '@nuxtjs/axios',
     ['nuxt-mail', {
       message: {
         to: 'foo@bar.de',
@@ -101,36 +102,109 @@ The `smtp` options are required and directly passed to [nodemailer](https://node
 
 The module injects the `$mail` variable, which we now use to send emails:
 
-```js
-// Inside a component
-this.$mail.send({
+## Nuxt 3
+
+### Via composable
+
+```html
+<script setup>
+const mail = useMail()
+
+mail.send({
   from: 'John Doe',
   subject: 'Incredible',
   text: 'This is an incredible test message',
 })
+</script>
 ```
 
-You can also directly call the generated `/mail/send` post route:
+### Via injected variable
 
-```js
-// Inside a component
-this.$axios.$post('/mail/send', {
+```html
+<script setup>
+const { $mail } = useNuxtApp()
+
+$mail.send({
   from: 'John Doe',
   subject: 'Incredible',
   text: 'This is an incredible test message',
 })
+</script>
 ```
 
-Note that the data are passed to [nodemailer](https://nodemailer.com/message/). Refer to the documentation for available config options.
+### Via Options API
+
+```html
+<script>
+export default {
+  methods: {
+    sendEmail() {
+      this.$mail.send({
+        from: 'John Doe',
+        subject: 'Incredible',
+        text: 'This is an incredible test message',
+      })
+    },
+  },
+}
+</script>
+```
+
+## Nuxt 2
+
+For Nuxt 2, you need to install [@nuxtjs/axios](https://www.npmjs.com/package/@nuxtjs/axios) and add it to your module list before `nuxt-mail`:
+
+```js
+// nuxt.config.js
+export default {
+  modules: [
+    [
+      '@nuxtjs/axios',
+      ['nuxt-mail', { /* ... */ }],
+    }],
+  ],
+}
+```
+
+Then you can use the injected variable like so:
+
+```html
+<script>
+export default {
+  methods: {
+    sendEmail() {
+      this.$mail.send({
+        from: 'John Doe',
+        subject: 'Incredible',
+        text: 'This is an incredible test message',
+      })
+    },
+  },
+}
+</script>
+```
+
+### Note about production use
+
+When you use `nuxt-mail` in production and you configured a reverse proxy that hides your localhost behind a domain, you need to tell `@nuxt/axios` which base URL you are using. Otherwise `nuxt-mail` won't find the send route. Refer to [@nuxt/axios options](https://axios.nuxtjs.org/options) on how to do that. The easiest option is to set the `API_URL` environment variable, or set something else in your `nuxt.config.js`:
+
+```js
+// nuxt.config.js
+export default {
+  axios: {
+    baseURL: process.env.BASE_URL,
+  },
+}
+```
 
 ## Multiple message configs
 
 It is also possible to provide multiple message configurations by changing the `message` config into an array.
 
 ```js
+// nuxt.config.js
 export default {
   modules: [
-    '@nuxtjs/axios',
     ['nuxt-mail', {
       message: [
         { name: 'contact', to: 'contact@foo.de' },
@@ -145,7 +219,7 @@ export default {
 Then you can reference the config like this:
 
 ```js
-this.$axios.$post('/mail/send', {
+mail.send({
   config: 'support',
   from: 'John Doe',
   subject: 'Incredible',
@@ -156,26 +230,12 @@ this.$axios.$post('/mail/send', {
 Or via index (in which case you do not need the `name` property):
 
 ```js
-this.$axios.$post('/mail/send', {
+mail.send({
   config: 1, // Resolves to 'support'
   from: 'John Doe',
   subject: 'Incredible',
   text: 'This is an incredible test message',
 })
-```
-
-## Note about production use
-
-When you use `nuxt-mail` in production and you configured a reverse proxy that hides your localhost behind a domain, you need to tell `@nuxt/axios` which base URL you are using. Otherwise `nuxt-mail` won't find the send route. Refer to [@nuxt/axios options](https://axios.nuxtjs.org/options) on how to do that. The easiest option is to set the `API_URL` environment variable, or set something else in your `nuxt.config.js`:
-
-```js
-// nuxt.config.js
-
-export default {
-  axios: {
-    baseURL: process.env.BASE_URL,
-  },
-}
 ```
 
 Also, the module does not work for static sites (via `nuxt generate`) because the module creates a server route.
@@ -187,11 +247,10 @@ Also, the module does not work for static sites (via `nuxt generate`) because th
 You have to setup an [app-specific password](https://myaccount.google.com/apppasswords) to log into the SMTP server. Then, add the following config to your `nuxt-mail` config:
 
 ```js
+// nuxt.config.js
 export default {
   modules: [
-    '@nuxtjs/axios',
     ['nuxt-mail', {
-      // ...
       smtp: {
         service: 'gmail',
         auth: {
@@ -208,7 +267,7 @@ Missing something? Add your service here via a [pull request](https://github.com
 
 ## Debugging mail errors
 
-If the mail doesn't get sent, you can debug the error using the browser developer tools. If a `400` error is thrown (check out the console output), you can find the error message in the Network tab. For Chrome users, open the Network tab, then find the "send" request. Open it and select the "Response" tab. There it should show the error message. In most cases, it is related to authentication with the SMTP server.
+If the mail doesn't get sent, you can debug the error using the browser developer tools. If a `500` error is thrown (check out the console output), you can find the error message in the Network tab. For Chrome users, open the Network tab, then find the "send" request. Open it and select the "Response" tab. There it should show the error message. In most cases, it is related to authentication with the SMTP server.
 
 ## Open questions
 

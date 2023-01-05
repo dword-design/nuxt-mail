@@ -151,6 +151,42 @@ export default tester(
         expect(email.email.headers.to).toEqual('johndoe@gmail.com')
       },
     },
+    composable: {
+      files: {
+        'pages/index.vue': endent`
+          <template>
+            <div />
+          </template>
+
+          <script setup>
+          const mail = useMail()
+
+          await mail.send({
+            from: 'a@b.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+            to: 'foo@bar.de',
+          })
+          </script>
+
+        `,
+      },
+      nuxtVersion: 3,
+      options: {
+        message: { to: 'johndoe@gmail.com' },
+        smtp: { port: 3001 },
+      },
+      async test() {
+        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
+        await axios.get('http://localhost:3000')
+
+        const email = await waiter
+        expect(email.email.body).toEqual('This is an incredible test message')
+        expect(email.email.headers.subject).toEqual('Incredible')
+        expect(email.email.headers.from).toEqual('a@b.de')
+        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
+      },
+    },
     'config by index': {
       files: {
         'pages/index.vue': endent`
