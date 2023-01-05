@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/dword-design/nuxt-mail/compare/v3.1.0...v3.1.1) (2023-01-05)
+
+
+### Bug Fixes
+
+* add composable support ([b57f392](https://github.com/dword-design/nuxt-mail/commit/b57f39235bf6c9c27ab328c2ef9cceb0bcfe8d1c))
+
 # [3.1.0](https://github.com/dword-design/nuxt-mail/compare/v3.0.23...v3.1.0) (2023-01-05)
 
 
