@@ -3,11 +3,6 @@
   "globals": {
     "useFetch": "readonly"
   },
-  "settings": {
-    "import/ignore": [
-      "#mail"
-    ]
-  },
   "rules": {
     "import/no-unresolved": [
       "error",

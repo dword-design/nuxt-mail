@@ -63,6 +63,7 @@
     "nuxt": "3.0.0-rc.12",
     "ora": "^6.1.2",
     "output-files": "^2.0.0",
+    "p-event": "^5.0.1",
     "smtp-tester": "^2.0.1",
     "tree-kill-promise": "^2.0.8"
   },

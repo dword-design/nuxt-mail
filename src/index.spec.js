@@ -16,6 +16,7 @@ import P from 'path'
 import smtpTester from 'smtp-tester'
 import kill from 'tree-kill-promise'
 import { fileURLToPath } from 'url'
+import { pEvent } from 'p-event'
 
 import self from './index.js'
 
@@ -476,10 +477,8 @@ export default tester(
             })
             await buildNuxt(nuxt)
 
-            const childProcess = execa('node', [
-              P.join('.output', 'server', 'index.mjs'),
-            ])
-            await delay(5000)
+            const childProcess = execa.command(`node ${P.join('.output', 'server', 'index.mjs')}`, { all: true })
+            await pEvent(childProcess.all, 'data')
             try {
               await config.test.call(this)
             } finally {
