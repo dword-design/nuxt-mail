@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/dword-design/nuxt-mail/compare/v3.0.23...v3.1.0) (2023-01-05)
+
+
+### Features
+
+* nuxt 3 compatibility ([#132](https://github.com/dword-design/nuxt-mail/issues/132)) ([72a32b0](https://github.com/dword-design/nuxt-mail/commit/72a32b06de71a1adcbd7f2a290a55f61e0b96058))
+
 ## [3.0.23](https://github.com/dword-design/nuxt-mail/compare/v3.0.22...v3.0.23) (2022-02-13)
 
 
