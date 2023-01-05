@@ -17,8 +17,5 @@
     "rules": {
       "import/no-unresolved": ["error", { "ignore": ["#mail"] }]
     }
-  },
-  "depcheckConfig": {
-    "ignoreMatches": ["nuxt"]
   }
 }
