@@ -7345,17 +7345,7 @@ gzip-size@^7.0.0:
   dependencies:
     duplexer "^0.1.2"
 
-h3@^0.8.6:
-  version "0.8.6"
-  resolved "https://registry.yarnpkg.com/h3/-/h3-0.8.6.tgz#8095ef998fe14769b87170b7c8b68ba9c54973d5"
-  integrity sha512-CSWNOKa3QGo67rFU2PhbFTp0uPJtilNji2Z0pMiSRQt3+OkIW0u3E1WMJqIycLqaTgb9JyFqH/S4mcTyyGtvyQ==
-  dependencies:
-    cookie-es "^0.5.0"
-    destr "^1.2.0"
-    radix3 "^0.2.1"
-    ufo "^0.8.6"
-
-h3@^1.0.1:
+h3@^1.0.1, h3@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/h3/-/h3-1.0.2.tgz#3a2992921a62de697bd4a3f449401f7600116df6"
   integrity sha512-25QqjQMz8pX1NI2rZ/ziNT9B8Aog7jmu2a0o8Qm9kKoH3zOhE+2icVs069h6DEp0g1Dst1+zKfRdRYcK0MogJA==
@@ -12153,11 +12143,6 @@ quick-lru@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
-
-radix3@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/radix3/-/radix3-0.2.1.tgz#77e66a41c7ba5600a8bc137fd259ef661d314418"
-  integrity sha512-FnhArTl5Tq7dodiLeSPKrDUyCQuJqEncP8cKdyy399g8F/cz7GH6FmzA3Rkosu2IZMkpswFFwXfb2ERSiL06pg==
 
 radix3@^1.0.0:
   version "1.0.0"

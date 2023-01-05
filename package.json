@@ -41,7 +41,7 @@
     "@nuxt/kit": "^3.0.0",
     "express": "^4.17.1",
     "fs-extra": "^11.1.0",
-    "h3": "^0.8.6",
+    "h3": "^1.0.2",
     "nodemailer": "^6.4.11",
     "nuxt-push-plugins": "^2.1.2",
     "parse-packagejson-name": "^1.0.1"
