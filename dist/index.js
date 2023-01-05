@@ -58,7 +58,7 @@ export default function (moduleOptions, nuxt) {
       try {
         await send(req.body, options, transport);
       } catch (error) {
-        return res.status(400).send(error.message);
+        return res.status(500).send(error.message);
       }
       return res.sendStatus(200);
     });
