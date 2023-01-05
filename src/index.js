@@ -78,5 +78,5 @@ export default function (moduleOptions, nuxt) {
     })
     nuxt.addServerMiddleware({ handler: app, path: '/mail' })
   }
-  nuxtPushPlugins(nuxt, resolver.resolve('./plugin.js'))
+  nuxtPushPlugins(nuxt, resolver.resolve(`./plugin-nuxt${isNuxt3 ? 3 : 2}.js`))
 }

@@ -1,13 +1,11 @@
 {
   "extends": "@dword-design/eslint-config",
-  "globals": {
-    "useFetch": "readonly"
-  },
   "rules": {
     "import/no-unresolved": [
       "error",
       {
         "ignore": [
+          "#app",
           "#mail"
         ]
       }

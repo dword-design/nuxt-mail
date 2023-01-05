@@ -11,11 +11,8 @@
   "supportedNodeVersions": [14, 16],
   "eslintConfig": {
     "extends": "@dword-design/eslint-config",
-    "globals": {
-      "useFetch": "readonly"
-    },
     "rules": {
-      "import/no-unresolved": ["error", { "ignore": ["#mail"] }]
+      "import/no-unresolved": ["error", { "ignore": ["#app", "#mail"] }]
     }
   }
 }
