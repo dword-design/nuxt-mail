@@ -20,8 +20,9 @@ const packageConfig = fs.readJsonSync(resolver.resolve('../package.json'))
 
 const moduleName = parsePackagejsonName(packageConfig.name).fullName
 
-export default function (moduleOptions) {
-  const options = { ...this.options.mail, ...moduleOptions }
+export default function (moduleOptions, nuxt) {
+  nuxt = nuxt || this
+  const options = { ...nuxt.options.mail, ...moduleOptions }
   if (!options.smtp) {
     throw new Error('SMTP config is missing.')
   }
@@ -55,7 +56,7 @@ export default function (moduleOptions) {
       getContents: () => fs.readFile(resolver.resolve('./send.js'), 'utf8'),
       write: true,
     })
-    this.options.alias['#mail'] = P.resolve(this.options.buildDir, moduleName)
+    nuxt.options.alias['#mail'] = P.resolve(nuxt.options.buildDir, moduleName)
     addServerHandler({
       handler: resolver.resolve('./server-handler.post.js'),
       route: '/mail/send',
@@ -74,7 +75,7 @@ export default function (moduleOptions) {
 
       return res.sendStatus(200)
     })
-    this.addServerMiddleware({ handler: app, path: '/mail' })
+    nuxt.addServerMiddleware({ handler: app, path: '/mail' })
   }
-  nuxtPushPlugins(this, resolver.resolve('./plugin.js'))
+  nuxtPushPlugins(nuxt, resolver.resolve('./plugin.js'))
 }
