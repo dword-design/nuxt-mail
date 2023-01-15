@@ -1,3 +1,10 @@
+## [3.1.3](https://github.com/dword-design/nuxt-mail/compare/v3.1.2...v3.1.3) (2023-01-15)
+
+
+### Bug Fixes
+
+* fix commonjs ([#140](https://github.com/dword-design/nuxt-mail/issues/140)) ([daa4f58](https://github.com/dword-design/nuxt-mail/commit/daa4f58acacd0ba8b6f36a6abeff1d9657ae4ef6))
+
 ## [3.1.2](https://github.com/dword-design/nuxt-mail/compare/v3.1.1...v3.1.2) (2023-01-15)
 
 
