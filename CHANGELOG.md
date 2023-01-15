@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/dword-design/nuxt-mail/compare/v3.1.1...v3.1.2) (2023-01-15)
+
+
+### Bug Fixes
+
+* defineNuxtPlugin ([#139](https://github.com/dword-design/nuxt-mail/issues/139)) ([914b6e2](https://github.com/dword-design/nuxt-mail/commit/914b6e2517c011b9e1712b6db0e345e1f9c44a9e))
+
 ## [3.1.1](https://github.com/dword-design/nuxt-mail/compare/v3.1.0...v3.1.1) (2023-01-05)
 
 
