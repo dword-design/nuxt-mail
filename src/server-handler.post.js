@@ -1,8 +1,8 @@
 import { createError, defineEventHandler, readBody } from 'h3'
 import nodemailer from 'nodemailer'
 
-import options from '#mail/options.js'
-import send from '#mail/send.js'
+import options from '#mail/options.mjs'
+import send from '#mail/send.mjs'
 
 const transport = nodemailer.createTransport(options.smtp)
 
