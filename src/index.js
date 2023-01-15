@@ -48,13 +48,13 @@ export default function (moduleOptions, nuxt) {
   }
   if (isNuxt3) {
     addTemplate({
-      filename: P.join(moduleName, 'options.js'),
+      filename: P.join(moduleName, 'options.mjs'),
       getContents: () =>
         `export default ${JSON.stringify(options, undefined, 2)}`,
       write: true,
     })
     addTemplate({
-      filename: P.join(moduleName, 'send.js'),
+      filename: P.join(moduleName, 'send.mjs'),
       getContents: () => fs.readFile(resolver.resolve('./send.js'), 'utf8'),
       write: true,
     })
