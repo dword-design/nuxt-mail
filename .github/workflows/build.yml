@@ -67,7 +67,11 @@ jobs:
             os: ubuntu-latest
           - node: 16
             os: macos-latest
+          - node: 14
+            os: windows-latest
           - node: 16
+            os: windows-latest
+          - node: 18
             os: windows-latest
 name: build
 on:
