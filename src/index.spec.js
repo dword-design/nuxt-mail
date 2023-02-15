@@ -360,6 +360,32 @@ export default tester(
         expect(email.email.headers.to).toEqual('johndoe@gmail.com')
       },
     },
+    'nuxt3 error': {
+      files: {
+        'pages/index.vue': endent`
+          <script setup>
+          const mail = useMail()
+          
+          await mail.send({ config: 10 })
+          </script>
+
+        `,
+      },
+      nuxtVersion: 3,
+      options: {
+        message: [{ to: 'foo@bar.com' }],
+        smtp: {},
+      },
+      test: async () => {
+        let errorMessage
+        try {
+          await axios.post('http://localhost:3000')
+        } catch (error) {
+          errorMessage = error.response.data.message
+        }
+        expect(errorMessage).toEqual('Message config not found at index 10.')
+      },
+    },
     'nuxt3: client side': {
       files: {
         'pages/index.vue': endent`
