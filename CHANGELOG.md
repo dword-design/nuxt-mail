@@ -1,3 +1,10 @@
+## [3.1.5](https://github.com/dword-design/nuxt-mail/compare/v3.1.4...v3.1.5) (2023-02-15)
+
+
+### Bug Fixes
+
+* fix error handling for nuxt 3 ([#145](https://github.com/dword-design/nuxt-mail/issues/145)) ([8073527](https://github.com/dword-design/nuxt-mail/commit/8073527e9f478e3053d22c91122ac97672c060d0))
+
 ## [3.1.4](https://github.com/dword-design/nuxt-mail/compare/v3.1.3...v3.1.4) (2023-02-15)
 
 
