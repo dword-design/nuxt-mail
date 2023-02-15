@@ -14,5 +14,6 @@
     "rules": {
       "import/no-unresolved": ["error", { "ignore": ["#app", "#mail"] }]
     }
-  }
+  },
+  "windows": false
 }
