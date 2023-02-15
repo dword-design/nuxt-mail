@@ -32,6 +32,7 @@
   "scripts": {
     "checkUnknownFiles": "base checkUnknownFiles",
     "commit": "base commit",
+    "depcheck": "base depcheck",
     "dev": "base dev",
     "lint": "base lint",
     "prepare": "base prepare",
