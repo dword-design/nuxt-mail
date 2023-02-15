@@ -2603,9 +2603,9 @@
     read-pkg-up "^7.0.0"
 
 "@sinclair/typebox@^0.25.16":
-  version "0.25.21"
-  resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.25.21.tgz#763b05a4b472c93a8db29b2c3e359d55b29ce272"
-  integrity sha512-gFukHN4t8K4+wVC+ECqeqwzBDeFeTzBXroBTqE6vcWrQGbEUpHO7LYdG0f4xnvYq4VOEwITSlHlp0JBAIFMS/g==
+  version "0.25.22"
+  resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.25.22.tgz#2808d895e9c2722b20a622a9c8cb332f6720eb4a"
+  integrity sha512-6U6r2L7rnM7EG8G1tWzIjdB3QlsHF4slgcqXNN/SF0xJOAr0nDmT2GedlkyO3mrv8mDTJ24UuOMWR3diBrCvQQ==
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -5429,9 +5429,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.284:
-  version "1.4.295"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.295.tgz#911d5df67542bf7554336142eb302c5ec90bba66"
-  integrity sha512-lEO94zqf1bDA3aepxwnWoHUjA8sZ+2owgcSZjYQy0+uOSEclJX0VieZC+r+wLpSxUHRd6gG32znTWmr+5iGzFw==
+  version "1.4.296"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.296.tgz#dbc84a25c25a432a12fbf62903cae4a87461eb8c"
+  integrity sha512-i/6Q+Y9bluDa2a0NbMvdtG5TuS/1Fr3TKK8L+7UUL9QjRS5iFJzCC3r70xjyOnLiYG8qGV4/mMpe6HuAbdJW4w==
 
 emoji-regex@^8.0.0:
   version "8.0.0"

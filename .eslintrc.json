@@ -10,5 +10,8 @@
         ]
       }
     ]
+  },
+  "globals": {
+    "$fetch": "readonly"
   }
 }
