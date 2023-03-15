@@ -7369,15 +7369,16 @@ gzip-size@^7.0.0:
     duplexer "^0.1.2"
 
 h3@^1.0.2, h3@^1.1.0, h3@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/h3/-/h3-1.4.0.tgz#9ee3eada42fdb01a5452f9e52f5d2e0542a37b52"
-  integrity sha512-FWG+FUdW6XQnf/54L4AXzZs1KUYwSJk5cbdFvTM4EG96bEQiWDJ5003xW4S3UGgXI0VJJgyY6KCaDmAL75kjbA==
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/h3/-/h3-1.6.2.tgz#40177d886acf585a275098601d05cefd628238b7"
+  integrity sha512-1v/clj/qCzWbuiG+DbpViuOVO789sEYNjlwRjekkmyLGsezIJk30gazbnjcWvF8L/ffUdRz2SwxE5HNgNx+Yjg==
   dependencies:
     cookie-es "^0.5.0"
+    defu "^6.1.2"
     destr "^1.2.2"
-    iron-webcrypto "^0.4.0"
+    iron-webcrypto "^0.6.0"
     radix3 "^1.0.0"
-    ufo "^1.0.1"
+    ufo "^1.1.1"
     uncrypto "^0.1.2"
 
 handlebars@^4.7.6:
@@ -7916,10 +7917,10 @@ ipv6-normalize@1.0.1:
   resolved "https://registry.yarnpkg.com/ipv6-normalize/-/ipv6-normalize-1.0.1.tgz#1b3258290d365fa83239e89907dde4592e7620a8"
   integrity sha512-Bm6H79i01DjgGTCWjUuCjJ6QDo1HB96PT/xCYuyJUP9WFbVDrLSbG4EZCvOCun2rNswZb0c3e4Jt/ws795esHA==
 
-iron-webcrypto@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/iron-webcrypto/-/iron-webcrypto-0.4.0.tgz#8e23931ea0649c9c5cefb5e43c8375e60cd7952d"
-  integrity sha512-5OG53gJ4dBTq4y3IJqK7MEG9CPZRsYn9EP9J4jjgH4TcP/ywdsSMAmqj9VTSzdXu0/xfUrqjGHU7WLUme2+k5Q==
+iron-webcrypto@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/iron-webcrypto/-/iron-webcrypto-0.6.0.tgz#3e597930b41363fc81a6ec415d25eb5000092144"
+  integrity sha512-WYgEQttulX/+JTv1BTJFYY3OsAb+ZnCuA53IjppZMyiRsVdGeEuZ/k4fJrg77Rzn0pp9/PgWtXUF+5HndDA5SQ==
 
 is-absolute@^1.0.0:
   version "1.0.0"
@@ -14048,6 +14049,11 @@ ufo@^1.0.0, ufo@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ufo/-/ufo-1.0.1.tgz#64ed43b530706bda2e4892f911f568cf4cf67d29"
   integrity sha512-boAm74ubXHY7KJQZLlXrtMz52qFvpsbOxDcZOnw/Wf+LS4Mmyu7JxmzD4tDLtUQtmZECypJ0FrCz4QIe6dvKRA==
+
+ufo@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/ufo/-/ufo-1.1.1.tgz#e70265e7152f3aba425bd013d150b2cdf4056d7c"
+  integrity sha512-MvlCc4GHrmZdAllBc0iUDowff36Q9Ndw/UzqmEKyrfSzokTd9ZCy1i+IIk5hrYKkjoYVQyNbrw7/F8XJ2rEwTg==
 
 uglify-js@^3.1.4:
   version "3.17.4"
