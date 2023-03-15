@@ -1,3 +1,10 @@
+## [3.1.6](https://github.com/dword-design/nuxt-mail/compare/v3.1.5...v3.1.6) (2023-03-15)
+
+
+### Bug Fixes
+
+* update dependency nuxt-push-plugins to v2.1.4 ([f7ea291](https://github.com/dword-design/nuxt-mail/commit/f7ea291b40ce78670f4bd2162fc50de75c86bd2e))
+
 ## [3.1.5](https://github.com/dword-design/nuxt-mail/compare/v3.1.4...v3.1.5) (2023-02-15)
 
 
