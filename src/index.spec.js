@@ -190,22 +190,22 @@ export default tester(
     'config by index': {
       files: {
         'pages/index.vue': endent`
-        <template>
-          <div />
-        </template>
+          <template>
+            <div />
+          </template>
 
-        <script>
-        export default {
-          asyncData: context => context.$mail.send({
-            from: 'a@b.de',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-            config: 1,
-          }),
-        }
-        </script>
+          <script>
+          export default {
+            asyncData: context => context.$mail.send({
+              from: 'a@b.de',
+              subject: 'Incredible',
+              text: 'This is an incredible test message',
+              config: 1,
+            }),
+          }
+          </script>
 
-      `,
+        `,
       },
       options: {
         message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
@@ -309,7 +309,7 @@ export default tester(
           errorMessage = error.response.data.message
         }
         expect(errorMessage).toEqual(
-          "Message config with name 'foo' not found."
+          "Message config with name 'foo' not found.",
         )
       },
     },
@@ -365,7 +365,7 @@ export default tester(
         'pages/index.vue': endent`
           <script setup>
           const mail = useMail()
-          
+
           await mail.send({ config: 10 })
           </script>
 
@@ -529,5 +529,5 @@ export default tester(
         this.mailServer = smtpTester.init(3001)
       },
     },
-  ]
+  ],
 )
