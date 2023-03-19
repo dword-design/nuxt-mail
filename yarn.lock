@@ -10860,9 +10860,9 @@ nuxi@3.2.0:
     fsevents "~2.3.2"
 
 nuxt-push-plugins@^2.1.2:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/nuxt-push-plugins/-/nuxt-push-plugins-2.1.4.tgz#6fd0887b03e9708b283a905050acc01626d5d89f"
-  integrity sha512-kCVApIYvILr/Uq/m4xZDdH/O39OOodIxkk7x86X8DP7hJIQYMz7F6iJRsSEX7GiDix4u0G7Hu0kFR+Ezo+19pg==
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/nuxt-push-plugins/-/nuxt-push-plugins-2.1.6.tgz#980d13f164cd481d3ac99dc1bd1f4e7b0b52b5cc"
+  integrity sha512-nnasOcjlX/eQob5kos+yjuNPF7/xVIYNfMTHOmhX4huiirNFMJHbVgsUGRFJqU9i6kUPrNxRi/wGE2DVKcChaQ==
   dependencies:
     "@dword-design/functions" "^4.0.0"
     "@nuxt/kit" "^3.0.0"
