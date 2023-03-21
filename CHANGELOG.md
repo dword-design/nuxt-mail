@@ -1,3 +1,10 @@
+## [3.1.19](https://github.com/dword-design/nuxt-mail/compare/v3.1.18...v3.1.19) (2023-03-21)
+
+
+### Bug Fixes
+
+* update dependency fs-extra to v11.1.1 ([b6773ce](https://github.com/dword-design/nuxt-mail/commit/b6773ce459958b5eec8a91005bb09e1e407dce8b))
+
 ## [3.1.18](https://github.com/dword-design/nuxt-mail/compare/v3.1.17...v3.1.18) (2023-03-20)
 
 
