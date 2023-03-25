@@ -1,3 +1,10 @@
+## [3.1.23](https://github.com/dword-design/nuxt-mail/compare/v3.1.22...v3.1.23) (2023-03-25)
+
+
+### Bug Fixes
+
+* update dependency @dword-design/tester-plugin-nuxt-config to v1.1.26 ([b2e36c7](https://github.com/dword-design/nuxt-mail/commit/b2e36c7bbf7e05442245f127fca9756a9b1d1205))
+
 ## [3.1.22](https://github.com/dword-design/nuxt-mail/compare/v3.1.21...v3.1.22) (2023-03-24)
 
 
