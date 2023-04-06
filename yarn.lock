@@ -10904,9 +10904,9 @@ nuxi@3.3.2:
     fsevents "~2.3.2"
 
 nuxt-push-plugins@^2.1.2:
-  version "2.1.11"
-  resolved "https://registry.yarnpkg.com/nuxt-push-plugins/-/nuxt-push-plugins-2.1.11.tgz#c241b288474d6cdb4abde6db4168af5d8fd05b79"
-  integrity sha512-aqn63OBRjKL8jYFJ5bCwkJMI5Pj5JoAYmV5EkH4tfSpI14XcEcE/zGE+6Yw4V6DIVYRd8fzodOFsSPF67QFYOg==
+  version "2.1.13"
+  resolved "https://registry.yarnpkg.com/nuxt-push-plugins/-/nuxt-push-plugins-2.1.13.tgz#af3dd0e2c92869509e9d4598025417b6df9ebb3c"
+  integrity sha512-vEE9aUs5A15haoFqeC60Nq2EJmdC2HHCM9AcaMnvoJ2hMld7gA9o32WCSj5EG0+aiPsePrsy0pV9bvqWfio4uQ==
   dependencies:
     "@dword-design/functions" "^4.0.0"
     "@nuxt/kit" "^3.0.0"
