@@ -1,3 +1,10 @@
+## [3.1.27](https://github.com/dword-design/nuxt-mail/compare/v3.1.26...v3.1.27) (2023-04-07)
+
+
+### Bug Fixes
+
+* update dependency @dword-design/tester-plugin-puppeteer to v2.1.46 ([f9126fb](https://github.com/dword-design/nuxt-mail/commit/f9126fb3e63c361a6cdee2d9300026906f0178ad))
+
 ## [3.1.26](https://github.com/dword-design/nuxt-mail/compare/v3.1.25...v3.1.26) (2023-04-07)
 
 
