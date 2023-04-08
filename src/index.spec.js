@@ -627,7 +627,7 @@ export default {
   async afterEach() {
     await this.page.close()
     await this.browser.close()
-    this.resetWithLocalTmpDir()
+    await this.resetWithLocalTmpDir()
   },
   async before() {
     this.mailServer = smtpTester.init(3001)
