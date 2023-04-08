@@ -12,7 +12,7 @@ import nodemailer from 'nodemailer'
 import nuxtPushPlugins from 'nuxt-push-plugins'
 import parsePackagejsonName from 'parse-packagejson-name'
 import P from 'path'
-import { pathToFileUrl } from 'url'
+import { pathToFileURL } from 'url'
 
 import send from './send.js'
 
@@ -22,17 +22,17 @@ const packageConfig = fs.readJsonSync(resolver.resolve('../package.json'))
 
 const moduleName = parsePackagejsonName(packageConfig.name).fullName
 
+const getAliasPath = nuxt => {
+  if (process.env.NODE_ENV === 'development') {
+    return pathToFileURL(P.resolve(nuxt.options.buildDir, moduleName)).href
+  }
+  return P.resolve(nuxt.options.buildDir, moduleName);
+}
+
 export default function (moduleOptions, nuxt) {
   nuxt = nuxt || this
 
   const options = { ...nuxt.options.mail, ...moduleOptions }
-  
-  function setAliasPath() {
-    if (process.env.NODE_ENV === 'development') {
-      return pathToFileURL(P.resolve(nuxt.options.buildDir, moduleName)).href
-    }
-    return P.resolve(nuxt.options.buildDir, moduleName);
-  }
   
   if (!options.smtp) {
     throw new Error('SMTP config is missing.')
@@ -67,7 +67,7 @@ export default function (moduleOptions, nuxt) {
       getContents: () => fs.readFile(resolver.resolve('./send.js'), 'utf8'),
       write: true,
     })
-    nuxt.options.alias['#mail'] = setAliasPath();
+    nuxt.options.alias['#mail'] = getAliasPath(nuxt);
     addServerHandler({
       handler: resolver.resolve('./server-handler.post.js'),
       route: '/mail/send',
