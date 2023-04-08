@@ -222,21 +222,21 @@ export default {
         }
       `,
       'pages/index.vue': endent`
-      <template>
-        <div />
-      </template>
+        <template>
+          <div />
+        </template>
 
-      <script setup>
-      const mail = useMail()
-      
-      await mail.send({
-        from: 'a@b.de',
-        subject: 'Incredible',
-        text: 'This is an incredible test message',
-        config: 1,
-      })
-      </script>
-    `,
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+          config: 1,
+        })
+        </script>
+      `,
     })
 
     const nuxt = execaCommand('nuxt dev')
@@ -277,7 +277,7 @@ export default {
 
         <script setup>
         const mail = useMail()
-        
+
         await mail.send({
           config: 'foo',
           from: 'a@b.de',
@@ -319,7 +319,7 @@ export default {
       'pages/index.vue': endent`
         <script setup>
         const mail = useMail()
-        
+
         await mail.send({ config: 10 })
         </script>
       `,
@@ -351,7 +351,7 @@ export default {
       'pages/index.vue': endent`
         <script setup>
         const mail = useMail()
-        
+
         await mail.send({ config: 'foo' })
         </script>
       `,
@@ -421,43 +421,43 @@ export default {
     await fs.outputFile(
       'nuxt.config.js',
       endent`
-      export default {
-        modules: [
-          ['../src/index.js', { smtp: {} }],
-        ],
-      }
-    `
+        export default {
+          modules: [
+            ['../src/index.js', { smtp: {} }],
+          ],
+        }
+      `,
     )
     await expect(execaCommand('nuxt build')).rejects.toThrow(
-      'You have to provide at least one config.'
+      'You have to provide at least one config.',
     )
   },
   'no recipients': async () => {
     await fs.outputFile(
       'nuxt.config.js',
       endent`
-      export default {
-        modules: [
-          ['../src/index.js', { message: {}, smtp: {} }],
-        ],
-      }
-    `
+        export default {
+          modules: [
+            ['../src/index.js', { message: {}, smtp: {} }],
+          ],
+        }
+      `,
     )
     await expect(execaCommand('nuxt build')).rejects.toThrow(
-      'You have to provide to/cc/bcc in all configs.'
+      'You have to provide to/cc/bcc in all configs.',
     )
   },
   'no smtp config': async () => {
     await fs.outputFile(
       'nuxt.config.js',
       endent`
-      export default {
-        modules: ['../src/index.js'],
-      }
-    `
+        export default {
+          modules: ['../src/index.js'],
+        }
+      `,
     )
     await expect(execaCommand('nuxt build')).rejects.toThrow(
-      'SMTP config is missing.'
+      'SMTP config is missing.',
     )
   },
   ...(process.platform === 'win32'
@@ -466,36 +466,36 @@ export default {
         async nuxt2() {
           await outputFiles({
             'nuxt.config.js': endent`
-            export default {
-              modules: [
-                '${packageName`@nuxtjs/axios`}',
-                ['~/../src/index.js', {
-                  message: { to: 'johndoe@gmail.com' },
-                  smtp: { port: 3001 },
-                }],
-              ],
-            }
-          `,
+              export default {
+                modules: [
+                  '${packageName`@nuxtjs/axios`}',
+                  ['~/../src/index.js', {
+                    message: { to: 'johndoe@gmail.com' },
+                    smtp: { port: 3001 },
+                  }],
+                ],
+              }
+            `,
             'pages/index.vue': endent`
-            <template>
-              <div />
-            </template>
+              <template>
+                <div />
+              </template>
 
-            <script>
-            export default {
-              asyncData: context => context.$mail.send({
-                from: 'a@b.de',
-                subject: 'Incredible',
-                text: 'This is an incredible test message',
-                to: 'foo@bar.de',
-              })
-            }
-            </script>
-          `,
+              <script>
+              export default {
+                asyncData: context => context.$mail.send({
+                  from: 'a@b.de',
+                  subject: 'Incredible',
+                  text: 'This is an incredible test message',
+                  to: 'foo@bar.de',
+                })
+              }
+              </script>
+            `,
           })
           await fs.symlink(
             P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
-            'node_modules'
+            'node_modules',
           )
 
           const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
@@ -507,7 +507,7 @@ export default {
 
             const email = await waiter
             expect(email.email.body).toEqual(
-              'This is an incredible test message'
+              'This is an incredible test message',
             )
             expect(email.email.headers.subject).toEqual('Incredible')
             expect(email.email.headers.from).toEqual('a@b.de')
@@ -519,40 +519,40 @@ export default {
         async 'nuxt2: client side'() {
           await outputFiles({
             'nuxt.config.js': endent`
-            export default {
-              modules: [
-                '${packageName`@nuxtjs/axios`}',
-                ['~/../src/index.js', {
-                  message: { to: 'johndoe@gmail.com' },
-                  smtp: { port: 3001 },
-                }],
-              ],
-            }
-          `,
+              export default {
+                modules: [
+                  '${packageName`@nuxtjs/axios`}',
+                  ['~/../src/index.js', {
+                    message: { to: 'johndoe@gmail.com' },
+                    smtp: { port: 3001 },
+                  }],
+                ],
+              }
+            `,
             'pages/index.vue': endent`
-            <template>
-              <button @click="send" />
-            </template>
+              <template>
+                <button @click="send" />
+              </template>
 
-            <script>
-            export default {
-              methods: {
-                send() {
-                  this.$mail.send({
-                    from: 'a@b.de',
-                    subject: 'Incredible',
-                    text: 'This is an incredible test message',
-                    to: 'foo@bar.de',
-                  })
+              <script>
+              export default {
+                methods: {
+                  send() {
+                    this.$mail.send({
+                      from: 'a@b.de',
+                      subject: 'Incredible',
+                      text: 'This is an incredible test message',
+                      to: 'foo@bar.de',
+                    })
+                  },
                 },
-              },
-            }
-            </script>
-          `,
+              }
+              </script>
+            `,
           })
           await fs.symlink(
             P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
-            'node_modules'
+            'node_modules',
           )
 
           const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'], {
@@ -569,7 +569,7 @@ export default {
 
             const email = await waiter
             expect(email.email.body).toEqual(
-              'This is an incredible test message'
+              'This is an incredible test message',
             )
             expect(email.email.headers.subject).toEqual('Incredible')
             expect(email.email.headers.from).toEqual('a@b.de')
@@ -581,27 +581,27 @@ export default {
         'nuxt2: error': async () => {
           await outputFiles({
             'nuxt.config.js': endent`
-            export default {
-              modules: [
-                '${packageName`@nuxtjs/axios`}',
-                ['~/../src/index.js', {
-                  message: [{ to: 'foo@bar.com' }],
-                  smtp: {},
-                }],
-              ],
-            }
-          `,
+              export default {
+                modules: [
+                  '${packageName`@nuxtjs/axios`}',
+                  ['~/../src/index.js', {
+                    message: [{ to: 'foo@bar.com' }],
+                    smtp: {},
+                  }],
+                ],
+              }
+            `,
             'pages/index.vue': endent`
-            <script>
-            export default {
-              asyncData: context => context.$mail.send({ config: 10 })
-            }
-            </script>
-          `,
+              <script>
+              export default {
+                asyncData: context => context.$mail.send({ config: 10 })
+              }
+              </script>
+            `,
           })
           await fs.symlink(
             P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
-            'node_modules'
+            'node_modules',
           )
 
           const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
@@ -614,7 +614,7 @@ export default {
               errorMessage = error.response.data.message
             }
             expect(errorMessage).toEqual(
-              'Message config not found at index 10.'
+              'Message config not found at index 10.',
             )
           } finally {
             await kill(nuxt.pid)
@@ -634,7 +634,7 @@ export default {
     if (process.platform !== 'win32') {
       await fs.outputFile(
         P.join('node_modules', '.cache', 'nuxt2', 'package.json'),
-        JSON.stringify({})
+        JSON.stringify({}),
       )
 
       const spinner = ora('Installing Nuxt 2').start()
