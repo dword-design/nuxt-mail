@@ -24,5 +24,6 @@
       ]
     }
   ],
+  "rangeStrategy": "auto",
   "semanticCommitScope": null
 }
