@@ -1,4 +1,4 @@
-import { endent } from '@dword-design/functions'
+import { delay, endent } from '@dword-design/functions'
 import puppeteer from '@dword-design/puppeteer'
 import axios from 'axios'
 import packageName from 'depcheck-package-name'
@@ -6,6 +6,7 @@ import { execa, execaCommand } from 'execa'
 import fs from 'fs-extra'
 import ora from 'ora'
 import outputFiles from 'output-files'
+import pWaitFor from 'p-wait-for'
 import P from 'path'
 import portReady from 'port-ready'
 import smtpTester from 'smtp-tester'
@@ -16,7 +17,7 @@ const devServerReady = async () => {
   await portReady(3000)
   for (let i = 0; i < 50; i += 1) {
     try {
-      await new Promise(resolve => setTimeout(resolve, 100))
+      await delay(100)
 
       const result = await axios.get('http://localhost:3000')
       if (
@@ -27,7 +28,6 @@ const devServerReady = async () => {
       }
     } catch {
       // continue
-      return
     }
   }
 }
@@ -559,9 +559,7 @@ export default {
             'node_modules',
           )
 
-          const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'], {
-            stdio: 'inherit',
-          })
+          const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
           try {
             await devServerReady()
             await this.page.goto('http://localhost:3000')
