@@ -59,7 +59,6 @@
     "nuxt": "^3.3.3",
     "ora": "^6.3.0",
     "output-files": "^2.0.19",
-    "p-wait-for": "^5.0.2",
     "port-ready": "^0.1.0",
     "smtp-tester": "^2.0.1",
     "tree-kill-promise": "^3.0.9",
