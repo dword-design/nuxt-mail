@@ -1,195 +1,511 @@
-import { endent, omit } from '@dword-design/functions'
-import tester from '@dword-design/tester'
-import testerPluginNuxtConfig from '@dword-design/tester-plugin-nuxt-config'
-import testerPluginPuppeteer from '@dword-design/tester-plugin-puppeteer'
+import { delay, endent } from '@dword-design/functions'
+import puppeteer from '@dword-design/puppeteer'
 import axios from 'axios'
 import packageName from 'depcheck-package-name'
+import { execa, execaCommand } from 'execa'
+import fs from 'fs-extra'
+import ora from 'ora'
+import outputFiles from 'output-files'
+import P from 'path'
+import portReady from 'port-ready'
 import smtpTester from 'smtp-tester'
+import kill from 'tree-kill-promise'
+import withLocalTmpDir from 'with-local-tmp-dir'
 
-import self from './index.js'
+const devServerReady = async () => {
+  await portReady(3000)
+  for (let i = 0; i < 50; i += 1) {
+    try {
+      await delay(100)
 
-export default tester(
-  {
-    bcc: {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <div />
-          </template>
+      const result = await axios.get('http://localhost:3000')
+      if (
+        !result.data.includes('__NUXT_LOADING__') &&
+        !result.data.includes('id="nuxt_loading_screen"')
+      ) {
+        return
+      }
+    } catch {
+      // continue
+    }
+  }
+}
 
-          <script>
-          export default {
-            asyncData: context => context.$mail.send({
-              from: 'a@b.de',
-              subject: 'Incredible',
-              text: 'This is an incredible test message',
-            }),
-          }
-          </script>
+export default {
+  async after() {
+    await this.mailServer.stop()
+  },
+  async afterEach() {
+    await this.page.close()
+    await this.browser.close()
+    await this.resetWithLocalTmpDir()
+  },
+  async bcc() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', { message: { bcc: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
 
-        `,
-      },
-      options: { message: { bcc: 'johndoe@gmail.com' }, smtp: { port: 3001 } },
-      async test() {
-        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
-        await axios.get('http://localhost:3000')
+        <script setup>
+        const mail = useMail()
 
-        const email = await waiter
-        expect(email.email.body).toEqual('This is an incredible test message')
-        expect(email.email.headers.subject).toEqual('Incredible')
-        expect(email.email.headers.from).toEqual('a@b.de')
-        expect(email.email.receivers).toEqual({ 'johndoe@gmail.com': true })
-      },
-    },
-    cc: {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <div />
-          </template>
-
-          <script>
-          export default {
-            asyncData: context => context.$mail.send({
-              from: 'a@b.de',
-              subject: 'Incredible',
-              text: 'This is an incredible test message',
-            }),
-          }
-          </script>
-
-        `,
-      },
-      options: { message: { cc: 'johndoe@gmail.com' }, smtp: { port: 3001 } },
-      async test() {
-        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
-        await axios.get('http://localhost:3000')
-
-        const email = await waiter
-        expect(email.email.body).toEqual('This is an incredible test message')
-        expect(email.email.headers.subject).toEqual('Incredible')
-        expect(email.email.headers.from).toEqual('a@b.de')
-        expect(email.email.headers.cc).toEqual('johndoe@gmail.com')
-        expect(email.email.receivers).toEqual({ 'johndoe@gmail.com': true })
-      },
-    },
-    'cc and bcc': {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <div />
-          </template>
-
-          <script>
-          export default {
-            asyncData: context => context.$mail.send({
-              from: 'a@b.de',
-              subject: 'Incredible',
-              text: 'This is an incredible test message',
-            }),
-          }
-          </script>
-
-        `,
-      },
-      options: {
-        message: { bcc: 'bcc@gmail.com', cc: 'cc@gmail.com' },
-        smtp: { port: 3001 },
-      },
-      async test() {
-        const waiter = this.mailServer.captureOne('cc@gmail.com')
-        await axios.get('http://localhost:3000')
-
-        const email = await waiter
-        expect(email.email.body).toEqual('This is an incredible test message')
-        expect(email.email.headers.subject).toEqual('Incredible')
-        expect(email.email.headers.from).toEqual('a@b.de')
-        expect(email.email.headers.cc).toEqual('cc@gmail.com')
-        expect(email.email.receivers).toEqual({
-          'bcc@gmail.com': true,
-          'cc@gmail.com': true,
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
         })
-      },
-    },
-    'client side': {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <button @click="send" />
-          </template>
+        </script>
+      `,
+    })
 
-          <script>
-          export default {
-            methods: {
-              async send() {
-                await this.$mail.send({
-                  from: 'a@b.de',
-                  subject: 'Incredible',
-                  text: 'This is an incredible test message',
-                  to: 'foo@bar.de',
-                })
-              },
-            },
-          }
-          </script>
+    const nuxt = execaCommand('nuxt dev')
+    try {
+      await devServerReady()
 
-        `,
-      },
-      options: { message: { to: 'johndoe@gmail.com' }, smtp: { port: 3001 } },
-      async test() {
-        await this.page.goto('http://localhost:3000')
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.receivers).toEqual({ 'johndoe@gmail.com': true })
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  async before() {
+    this.mailServer = smtpTester.init(3001)
+    if (process.platform !== 'win32') {
+      await fs.outputFile(
+        P.join('node_modules', '.cache', 'nuxt2', 'package.json'),
+        JSON.stringify({}),
+      )
 
-        const button = await this.page.waitForSelector('button')
+      const spinner = ora('Installing Nuxt 2').start()
+      await execaCommand('yarn add nuxt@^2', {
+        cwd: P.join('node_modules', '.cache', 'nuxt2'),
+      })
+      spinner.stop()
+    }
+  },
+  async beforeEach() {
+    this.resetWithLocalTmpDir = await withLocalTmpDir()
+    this.browser = await puppeteer.launch()
+    this.page = await this.browser.newPage()
+    this.mailServer.removeAll()
+  },
+  async cc() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', { message: { cc: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
 
-        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
-        await button.click()
+        <script setup>
+        const mail = useMail()
 
-        const email = await waiter
-        expect(email.email.body).toEqual('This is an incredible test message')
-        expect(email.email.headers.subject).toEqual('Incredible')
-        expect(email.email.headers.from).toEqual('a@b.de')
-        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
-      },
-    },
-    composable: {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <div />
-          </template>
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+        })
+        </script>
+      `,
+    })
 
-          <script setup>
-          const mail = useMail()
+    const nuxt = execaCommand('nuxt dev')
+    try {
+      await devServerReady()
 
-          await mail.send({
-            from: 'a@b.de',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-            to: 'foo@bar.de',
-          })
-          </script>
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.cc).toEqual('johndoe@gmail.com')
+      expect(capture.email.receivers).toEqual({ 'johndoe@gmail.com': true })
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  async 'cc and bcc'() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', {
+              message: { bcc: 'bcc@gmail.com', cc: 'cc@gmail.com' },
+              smtp: { port: 3001 },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
 
-        `,
-      },
-      nuxtVersion: 3,
-      options: {
-        message: { to: 'johndoe@gmail.com' },
-        smtp: { port: 3001 },
-      },
-      async test() {
-        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
-        await axios.get('http://localhost:3000')
+        <script setup>
+        const mail = useMail()
 
-        const email = await waiter
-        expect(email.email.body).toEqual('This is an incredible test message')
-        expect(email.email.headers.subject).toEqual('Incredible')
-        expect(email.email.headers.from).toEqual('a@b.de')
-        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
-      },
-    },
-    'config by index': {
-      files: {
-        'pages/index.vue': endent`
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+        })
+        </script>
+      `,
+    })
+
+    const nuxt = execaCommand('nuxt dev')
+    try {
+      await devServerReady()
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('cc@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.cc).toEqual('cc@gmail.com')
+      expect(capture.email.receivers).toEqual({
+        'bcc@gmail.com': true,
+        'cc@gmail.com': true,
+      })
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  async 'client side'() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', { message: { to: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <button @click="send" />
+        </template>
+
+        <script setup>
+        const mail = useMail()
+
+        const send = mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+          to: 'foo@bar.de',
+        })
+        </script>
+      `,
+    })
+
+    const nuxt = execaCommand('nuxt dev')
+    try {
+      await devServerReady()
+      await this.page.goto('http://localhost:3000')
+
+      const button = await this.page.waitForSelector('button')
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        button.click(),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  async 'config by index'() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', {
+              message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
+              smtp: { port: 3001 },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+          config: 1,
+        })
+        </script>
+      `,
+    })
+
+    const nuxt = execaCommand('nuxt dev')
+    try {
+      await devServerReady()
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  async 'config by name'() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', {
+              message: [
+                { to: 'foo@bar.com' },
+                { name: 'foo', to: 'johndoe@gmail.com' },
+              ],
+              smtp: { port: 3001 },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({
+          config: 'foo',
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+        })
+        </script>
+      `,
+    })
+
+    const nuxt = execaCommand('nuxt dev')
+    try {
+      await devServerReady()
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  'config invalid index': async () => {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', {
+              message: [{ to: 'foo@bar.com' }],
+              smtp: {},
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({ config: 10 })
+        </script>
+      `,
+    })
+
+    const nuxt = execaCommand('nuxt dev')
+    try {
+      await devServerReady()
+      let errorMessage
+      try {
+        await axios.post('http://localhost:3000')
+      } catch (error) {
+        errorMessage = error.response.data.message
+      }
+      expect(errorMessage).toEqual('Message config not found at index 10.')
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  'config name not found': async () => {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', { message: [{ to: 'foo@bar.com' }], smtp: {} }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({ config: 'foo' })
+        </script>
+      `,
+    })
+
+    const nuxt = execaCommand('nuxt dev')
+    try {
+      await devServerReady()
+      let errorMessage
+      try {
+        await axios.post('http://localhost:3000')
+      } catch (error) {
+        errorMessage = error.response.data.message
+      }
+      expect(errorMessage).toEqual("Message config with name 'foo' not found.")
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  async injected() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', {
+              message: { to: 'johndoe@gmail.com' },
+              smtp: { port: 3001 },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script setup>
+        const { $mail } = useNuxtApp()
+
+        await $mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+          to: 'foo@bar.de',
+        })
+        </script>
+      `,
+    })
+
+    const nuxt = execaCommand('nuxt dev')
+    try {
+      await devServerReady()
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  'no message configs': async () => {
+    await fs.outputFile(
+      'nuxt.config.js',
+      endent`
+        export default {
+          modules: [
+            ['../src/index.js', { smtp: {} }],
+          ],
+        }
+      `,
+    )
+    await expect(execaCommand('nuxt build')).rejects.toThrow(
+      'You have to provide at least one config.',
+    )
+  },
+  'no recipients': async () => {
+    await fs.outputFile(
+      'nuxt.config.js',
+      endent`
+        export default {
+          modules: [
+            ['../src/index.js', { message: {}, smtp: {} }],
+          ],
+        }
+      `,
+    )
+    await expect(execaCommand('nuxt build')).rejects.toThrow(
+      'You have to provide to/cc/bcc in all configs.',
+    )
+  },
+  'no smtp config': async () => {
+    await fs.outputFile(
+      'nuxt.config.js',
+      endent`
+        export default {
+          modules: ['../src/index.js'],
+        }
+      `,
+    )
+    await expect(execaCommand('nuxt build')).rejects.toThrow(
+      'SMTP config is missing.',
+    )
+  },
+  async nuxt2() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            '${packageName`@nuxtjs/axios`}',
+            ['~/../src/index.js', {
+              message: { to: 'johndoe@gmail.com' },
+              smtp: { port: 3001 },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
         <template>
           <div />
         </template>
@@ -200,334 +516,277 @@ export default tester(
             from: 'a@b.de',
             subject: 'Incredible',
             text: 'This is an incredible test message',
-            config: 1,
-          }),
+            to: 'foo@bar.de',
+          })
         }
         </script>
-
       `,
-      },
-      options: {
-        message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
-        smtp: { port: 3001 },
-      },
-      async test() {
-        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
-        await axios.get('http://localhost:3000')
+    })
+    await fs.symlink(
+      P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
+      'node_modules',
+    )
 
-        const email = await waiter
-        expect(email.email.body).toEqual('This is an incredible test message')
-        expect(email.email.headers.subject).toEqual('Incredible')
-        expect(email.email.headers.from).toEqual('a@b.de')
-        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
-      },
-    },
-    'config by name': {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <div />
-          </template>
+    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
+    try {
+      await devServerReady()
 
-          <script>
-          export default {
-            asyncData: context => context.$mail.send({
-              config: 'foo',
-              from: 'a@b.de',
-              subject: 'Incredible',
-              text: 'This is an incredible test message',
-            }),
-          }
-          </script>
-
-        `,
-      },
-      options: {
-        message: [
-          { to: 'foo@bar.com' },
-          { name: 'foo', to: 'johndoe@gmail.com' },
-        ],
-        smtp: { port: 3001 },
-      },
-      async test() {
-        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
-        await axios.get('http://localhost:3000')
-
-        const email = await waiter
-        expect(email.email.body).toEqual('This is an incredible test message')
-        expect(email.email.headers.subject).toEqual('Incredible')
-        expect(email.email.headers.from).toEqual('a@b.de')
-        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
-      },
-    },
-    'config invalid index': {
-      files: {
-        'pages/index.vue': endent`
-          <script>
-          export default {
-            asyncData(context) {
-              return context.$mail.send({ config: 10 })
-            },
-          }
-          </script>
-
-        `,
-      },
-      options: {
-        message: [{ to: 'foo@bar.com' }],
-        smtp: {},
-      },
-      test: async () => {
-        let errorMessage
-        try {
-          await axios.post('http://localhost:3000')
-        } catch (error) {
-          errorMessage = error.response.data.message
-        }
-        expect(errorMessage).toEqual('Message config not found at index 10.')
-      },
-    },
-    'config name not found': {
-      files: {
-        'pages/index.vue': endent`
-          <script>
-          export default {
-            asyncData(context) {
-              return context.$mail.send({ config: 'foo' })
-            },
-          }
-          </script>
-
-        `,
-      },
-      options: { message: [{ to: 'foo@bar.com' }], smtp: {} },
-      test: async () => {
-        let errorMessage
-        try {
-          await axios.post('http://localhost:3000')
-        } catch (error) {
-          errorMessage = error.response.data.message
-        }
-        expect(errorMessage).toEqual(
-          "Message config with name 'foo' not found."
-        )
-      },
-    },
-    'no message configs': {
-      error: 'You have to provide at least one config.',
-      options: { smtp: {} },
-    },
-    'no recipients': {
-      error: 'You have to provide to/cc/bcc in all configs.',
-      options: { message: {}, smtp: {} },
-    },
-    'no smtp config': {
-      error: 'SMTP config is missing.',
-    },
-    nuxt3: {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <div />
-          </template>
-
-          <script setup>
-          const { $mail } = useNuxtApp()
-
-          await $mail.send({
-            from: 'a@b.de',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-            to: 'foo@bar.de',
-          })
-          </script>
-
-        `,
-      },
-      nuxtVersion: 3,
-      options: {
-        message: { to: 'johndoe@gmail.com' },
-        smtp: { port: 3001 },
-      },
-      async test() {
-        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
-        await axios.get('http://localhost:3000')
-
-        const email = await waiter
-        expect(email.email.body).toEqual('This is an incredible test message')
-        expect(email.email.headers.subject).toEqual('Incredible')
-        expect(email.email.headers.from).toEqual('a@b.de')
-        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
-      },
-    },
-    'nuxt3 error': {
-      files: {
-        'pages/index.vue': endent`
-          <script setup>
-          const mail = useMail()
-          
-          await mail.send({ config: 10 })
-          </script>
-
-        `,
-      },
-      nuxtVersion: 3,
-      options: {
-        message: [{ to: 'foo@bar.com' }],
-        smtp: {},
-      },
-      test: async () => {
-        let errorMessage
-        try {
-          await axios.post('http://localhost:3000')
-        } catch (error) {
-          errorMessage = error.response.data.message
-        }
-        expect(errorMessage).toEqual('Message config not found at index 10.')
-      },
-    },
-    'nuxt3: client side': {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <button @click="send" />
-          </template>
-
-          <script setup>
-          const { $mail } = useNuxtApp()
-
-          const send = () => $mail.send({
-            from: 'a@b.de',
-            subject: 'Incredible',
-            text: 'This is an incredible test message',
-            to: 'foo@bar.de',
-          })
-          </script>
-
-        `,
-      },
-      nuxtVersion: 3,
-      options: { message: { to: 'johndoe@gmail.com' }, smtp: { port: 3001 } },
-      async test() {
-        await this.page.goto('http://localhost:3000')
-
-        const button = await this.page.waitForSelector('button')
-
-        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
-        await button.click()
-
-        const email = await waiter
-        expect(email.email.body).toEqual('This is an incredible test message')
-        expect(email.email.headers.subject).toEqual('Incredible')
-        expect(email.email.headers.from).toEqual('a@b.de')
-        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
-      },
-    },
-    'to, cc and bcc': {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <div />
-          </template>
-
-          <script>
-          export default {
-            asyncData: context => context.$mail.send({
-              from: 'a@b.de',
-              subject: 'Incredible',
-              text: 'This is an incredible test message',
-            }),
-          }
-          </script>
-
-        `,
-      },
-      options: {
-        message: {
-          bcc: 'bcc@gmail.com',
-          cc: 'cc@gmail.com',
-          to: 'to@gmail.com',
-        },
-        smtp: { port: 3001 },
-      },
-      async test() {
-        const waiter = this.mailServer.captureOne('to@gmail.com')
-        await axios.get('http://localhost:3000')
-
-        const email = await waiter
-        expect(email.email.body).toEqual('This is an incredible test message')
-        expect(email.email.headers.subject).toEqual('Incredible')
-        expect(email.email.headers.from).toEqual('a@b.de')
-        expect(email.email.headers.to).toEqual('to@gmail.com')
-        expect(email.email.headers.cc).toEqual('cc@gmail.com')
-        expect(email.email.receivers).toEqual({
-          'bcc@gmail.com': true,
-          'cc@gmail.com': true,
-          'to@gmail.com': true,
-        })
-      },
-    },
-    valid: {
-      files: {
-        'pages/index.vue': endent`
-          <template>
-            <div />
-          </template>
-
-          <script>
-          export default {
-            asyncData: context => context.$mail.send({
-              from: 'a@b.de',
-              subject: 'Incredible',
-              text: 'This is an incredible test message',
-              to: 'foo@bar.de',
-            })
-          }
-          </script>
-
-        `,
-      },
-      options: {
-        message: { to: 'johndoe@gmail.com' },
-        smtp: { port: 3001 },
-      },
-      async test() {
-        const waiter = this.mailServer.captureOne('johndoe@gmail.com')
-        await axios.get('http://localhost:3000')
-
-        const email = await waiter
-        expect(email.email.body).toEqual('This is an incredible test message')
-        expect(email.email.headers.subject).toEqual('Incredible')
-        expect(email.email.headers.from).toEqual('a@b.de')
-        expect(email.email.headers.to).toEqual('johndoe@gmail.com')
-      },
-    },
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+    } finally {
+      await kill(nuxt.pid)
+    }
   },
-  [
-    {
-      transform: config => {
-        config.nuxtVersion = config.nuxtVersion || 2
+  async 'nuxt2: client side'() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            '${packageName`@nuxtjs/axios`}',
+            ['~/../src/index.js', {
+              message: { to: 'johndoe@gmail.com' },
+              smtp: { port: 3001 },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <button @click="send" />
+        </template>
 
-        return {
-          ...(config |> omit(['options'])),
-          config: {
-            modules: [
-              ...(config.nuxtVersion === 2 ? [packageName`@nuxtjs/axios`] : []),
-              [self, config.options],
-            ],
+        <script>
+        export default {
+          methods: {
+            send() {
+              this.$mail.send({
+                from: 'a@b.de',
+                subject: 'Incredible',
+                text: 'This is an incredible test message',
+                to: 'foo@bar.de',
+              })
+            },
           },
         }
-      },
-    },
-    testerPluginNuxtConfig(),
-    testerPluginPuppeteer(),
-    {
-      async after() {
-        await this.mailServer.stop()
-      },
-      before() {
-        this.mailServer = smtpTester.init(3001)
-      },
-    },
-  ]
-)
+        </script>
+      `,
+    })
+    await fs.symlink(
+      P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
+      'node_modules',
+    )
+
+    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
+    try {
+      await devServerReady()
+      await this.page.goto('http://localhost:3000')
+
+      const button = await this.page.waitForSelector('button')
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        button.click(),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  'nuxt2: error': async () => {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            '${packageName`@nuxtjs/axios`}',
+            ['~/../src/index.js', {
+              message: [{ to: 'foo@bar.com' }],
+              smtp: {},
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <script>
+        export default {
+          asyncData: context => context.$mail.send({ config: 10 })
+        }
+        </script>
+      `,
+    })
+    await fs.symlink(
+      P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
+      'node_modules',
+    )
+
+    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
+    try {
+      await devServerReady()
+      let errorMessage
+      try {
+        console.log(await axios.post('http://localhost:3000'))
+      } catch (error) {
+        errorMessage = error.response.data.error.message
+      }
+      expect(errorMessage).toEqual('Message config not found at index 10.')
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  async prod() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', {
+              message: { to: 'johndoe@gmail.com' },
+              smtp: { port: 3001 },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+          to: 'foo@bar.de',
+        })
+        </script>
+      `,
+    })
+    await execaCommand('nuxt build')
+
+    const nuxt = execaCommand('nuxt start')
+    try {
+      await portReady(3000)
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  async 'to, cc and bcc'() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', {
+              message: {
+                bcc: 'bcc@gmail.com',
+                cc: 'cc@gmail.com',
+                to: 'to@gmail.com',
+              },
+              smtp: { port: 3001 },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+        })
+        </script>
+      `,
+    })
+
+    const nuxt = execaCommand('nuxt dev')
+    try {
+      await devServerReady()
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('to@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.to).toEqual('to@gmail.com')
+      expect(capture.email.headers.cc).toEqual('cc@gmail.com')
+      expect(capture.email.receivers).toEqual({
+        'bcc@gmail.com': true,
+        'cc@gmail.com': true,
+        'to@gmail.com': true,
+      })
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+  async valid() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', {
+              message: { to: 'johndoe@gmail.com' },
+              smtp: { port: 3001 },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+          to: 'foo@bar.de',
+        })
+        </script>
+      `,
+    })
+
+    const nuxt = execaCommand('nuxt dev')
+    try {
+      await devServerReady()
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+    } finally {
+      await kill(nuxt.pid)
+    }
+  },
+}
