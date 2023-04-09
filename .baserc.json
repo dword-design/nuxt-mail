@@ -17,5 +17,6 @@
     "globals": {
       "$fetch": "readonly"
     }
-  }
+  },
+  "windows": false
 }
