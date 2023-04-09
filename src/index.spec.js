@@ -18,12 +18,16 @@ const devServerReady = async () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 100))
 
-      const res = await axios.get('http://localhost:3000')
-      if (!res.includes('__NUXT_LOADING__')) {
+      const result = await axios.get('http://localhost:3000')
+      if (
+        !result.data.includes('__NUXT_LOADING__') &&
+        !result.data.includes('id="nuxt_loading_screen"')
+      ) {
         return
       }
     } catch {
       // continue
+      return
     }
   }
 }
@@ -609,7 +613,7 @@ export default {
             await devServerReady()
             let errorMessage
             try {
-              await axios.post('http://localhost:3000')
+              console.log(await axios.post('http://localhost:3000'))
             } catch (error) {
               errorMessage = error.response.data.error.message
             }
@@ -649,6 +653,53 @@ export default {
     this.browser = await puppeteer.launch()
     this.page = await this.browser.newPage()
     this.mailServer.removeAll()
+  },
+  async prod() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', {
+              message: { to: 'johndoe@gmail.com' },
+              smtp: { port: 3001 },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+          to: 'foo@bar.de',
+        })
+        </script>
+      `,
+    })
+    await execaCommand('nuxt build')
+
+    const nuxt = execaCommand('nuxt start')
+    try {
+      await portReady(3000)
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ])
+      expect(capture.email.body).toEqual('This is an incredible test message')
+      expect(capture.email.headers.subject).toEqual('Incredible')
+      expect(capture.email.headers.from).toEqual('a@b.de')
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+    } finally {
+      await kill(nuxt.pid)
+    }
   },
   async 'to, cc and bcc'() {
     await outputFiles({
