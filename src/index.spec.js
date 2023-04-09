@@ -32,6 +32,14 @@ const devServerReady = async () => {
 }
 
 export default {
+  async after() {
+    await this.mailServer.stop()
+  },
+  async afterEach() {
+    await this.page.close()
+    await this.browser.close()
+    await this.resetWithLocalTmpDir()
+  },
   async bcc() {
     await outputFiles({
       'nuxt.config.js': endent`
@@ -73,6 +81,27 @@ export default {
     } finally {
       await kill(nuxt.pid)
     }
+  },
+  async before() {
+    this.mailServer = smtpTester.init(3001)
+    if (process.platform !== 'win32') {
+      await fs.outputFile(
+        P.join('node_modules', '.cache', 'nuxt2', 'package.json'),
+        JSON.stringify({}),
+      )
+
+      const spinner = ora('Installing Nuxt 2').start()
+      await execaCommand('yarn add nuxt@^2', {
+        cwd: P.join('node_modules', '.cache', 'nuxt2'),
+      })
+      spinner.stop()
+    }
+  },
+  async beforeEach() {
+    this.resetWithLocalTmpDir = await withLocalTmpDir()
+    this.browser = await puppeteer.launch()
+    this.page = await this.browser.newPage()
+    this.mailServer.removeAll()
   },
   async cc() {
     await outputFiles({
@@ -506,9 +535,7 @@ export default {
         this.mailServer.captureOne('johndoe@gmail.com'),
         this.page.goto('http://localhost:3000'),
       ])
-      expect(capture.email.body).toEqual(
-        'This is an incredible test message',
-      )
+      expect(capture.email.body).toEqual('This is an incredible test message')
       expect(capture.email.headers.subject).toEqual('Incredible')
       expect(capture.email.headers.from).toEqual('a@b.de')
       expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
@@ -566,9 +593,7 @@ export default {
         this.mailServer.captureOne('johndoe@gmail.com'),
         button.click(),
       ])
-      expect(capture.email.body).toEqual(
-        'This is an incredible test message',
-      )
+      expect(capture.email.body).toEqual('This is an incredible test message')
       expect(capture.email.headers.subject).toEqual('Incredible')
       expect(capture.email.headers.from).toEqual('a@b.de')
       expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
@@ -611,41 +636,10 @@ export default {
       } catch (error) {
         errorMessage = error.response.data.error.message
       }
-      expect(errorMessage).toEqual(
-        'Message config not found at index 10.',
-      )
+      expect(errorMessage).toEqual('Message config not found at index 10.')
     } finally {
       await kill(nuxt.pid)
     }
-  },
-  async after() {
-    await this.mailServer.stop()
-  },
-  async afterEach() {
-    await this.page.close()
-    await this.browser.close()
-    await this.resetWithLocalTmpDir()
-  },
-  async before() {
-    this.mailServer = smtpTester.init(3001)
-    if (process.platform !== 'win32') {
-      await fs.outputFile(
-        P.join('node_modules', '.cache', 'nuxt2', 'package.json'),
-        JSON.stringify({}),
-      )
-
-      const spinner = ora('Installing Nuxt 2').start()
-      await execaCommand('yarn add nuxt@^2', {
-        cwd: P.join('node_modules', '.cache', 'nuxt2'),
-      })
-      spinner.stop()
-    }
-  },
-  async beforeEach() {
-    this.resetWithLocalTmpDir = await withLocalTmpDir()
-    this.browser = await puppeteer.launch()
-    this.page = await this.browser.newPage()
-    this.mailServer.removeAll()
   },
   async prod() {
     await outputFiles({
