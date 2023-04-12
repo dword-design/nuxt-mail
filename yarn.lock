@@ -14431,9 +14431,9 @@ wide-align@^1.1.0, wide-align@^1.1.2, wide-align@^1.1.5:
     string-width "^1.0.2 || 2 || 3 || 4"
 
 with-local-tmp-dir@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/with-local-tmp-dir/-/with-local-tmp-dir-5.0.0.tgz#6565ee6e6bbf17f80d3def31f2b3404722fb0a9a"
-  integrity sha512-30Ppg9fPL/rrlh5PPOxqB0jYDztKrhD2K4HnVJaq99qHq5t5Dgi7SKWB1WvPvb33Rjg9KRtrrCn3jes5p8jooA==
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/with-local-tmp-dir/-/with-local-tmp-dir-5.0.1.tgz#5fa0570e1560008c6089c8f6759a5236f7af4a28"
+  integrity sha512-Ds8Ssl9sfMZArPBlSkEQwxh+EVq3IG8lWxTUipe1ZxP5eNNrkRC622ukpAkhR63jCSu5mvqJ/3bEl1RakRZufw==
   dependencies:
     "@dword-design/chdir" "^2.0.0"
     tmp-promise "^3.0.0"
