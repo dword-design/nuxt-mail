@@ -1,3 +1,10 @@
+## [3.1.33](https://github.com/dword-design/nuxt-mail/compare/v3.1.32...v3.1.33) (2023-04-12)
+
+
+### Bug Fixes
+
+* update dependency tree-kill-promise to v3.0.14 ([067f1ad](https://github.com/dword-design/nuxt-mail/commit/067f1ad6f7ab695f2f2f31fbecf979761ef6cd64))
+
 ## [3.1.32](https://github.com/dword-design/nuxt-mail/compare/v3.1.31...v3.1.32) (2023-04-12)
 
 
