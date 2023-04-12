@@ -1,3 +1,10 @@
+## [3.1.32](https://github.com/dword-design/nuxt-mail/compare/v3.1.31...v3.1.32) (2023-04-12)
+
+
+### Bug Fixes
+
+* update dependency with-local-tmp-dir to v5.0.1 ([1111523](https://github.com/dword-design/nuxt-mail/commit/11115235ee72fdcd8846a63ddfe6216ac1938816))
+
 ## [3.1.31](https://github.com/dword-design/nuxt-mail/compare/v3.1.30...v3.1.31) (2023-04-12)
 
 
