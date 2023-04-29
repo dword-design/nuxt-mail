@@ -1,3 +1,10 @@
+## [3.1.41](https://github.com/dword-design/nuxt-mail/compare/v3.1.40...v3.1.41) (2023-04-29)
+
+
+### Bug Fixes
+
+* update dependency nuxt to v3.4.3 ([f2a0b0e](https://github.com/dword-design/nuxt-mail/commit/f2a0b0e8f0a36e59f65282c0e65a2e34a900acd0))
+
 ## [3.1.40](https://github.com/dword-design/nuxt-mail/compare/v3.1.39...v3.1.40) (2023-04-27)
 
 
