@@ -9,7 +9,9 @@ tasks:
       gitpod-env-per-project >> /home/gitpod/.bashrc && source /home/gitpod/.bashrc
     init: |-
       git config --global user.name "Sebastian Landwehr"
-      git lfs pull && yarn --frozen-lockfile
+      git config diff.lfs.textconv cat
+      git lfs pull
+      yarn --frozen-lockfile
 vscode:
   extensions:
     - https://sebastianlandwehr.com/vscode-extensions/karlito40.fix-irregular-whitespace-0.1.1.vsix
