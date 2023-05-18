@@ -1,3 +1,10 @@
+## [3.1.44](https://github.com/dword-design/nuxt-mail/compare/v3.1.43...v3.1.44) (2023-05-18)
+
+
+### Bug Fixes
+
+* update dependency depcheck-package-name to v3 ([#135](https://github.com/dword-design/nuxt-mail/issues/135)) ([c3d360e](https://github.com/dword-design/nuxt-mail/commit/c3d360e5394f7da580d2c730f520ba54d58697d7))
+
 ## [3.1.43](https://github.com/dword-design/nuxt-mail/compare/v3.1.42...v3.1.43) (2023-05-05)
 
 
