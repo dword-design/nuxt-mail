@@ -1,3 +1,16 @@
+# [4.0.0](https://github.com/dword-design/nuxt-mail/compare/v3.1.45...v4.0.0) (2023-05-19)
+
+
+### Bug Fixes
+
+* drop node 14 support ([bb2aa0a](https://github.com/dword-design/nuxt-mail/commit/bb2aa0a680e746e4103f5d104bcc7cd083d033ba))
+* nuxt-alias-path ([5ff54f4](https://github.com/dword-design/nuxt-mail/commit/5ff54f4c6cfa7171e1b8f1a3f77b434b81f962ea))
+
+
+### BREAKING CHANGES
+
+* drop node 14 support
+
 ## [3.1.45](https://github.com/dword-design/nuxt-mail/compare/v3.1.44...v3.1.45) (2023-05-19)
 
 
