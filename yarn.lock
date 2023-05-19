@@ -1208,7 +1208,7 @@
     "@babel/preset-env" "^7.6.3"
     "@babel/preset-typescript" "^7.13.0"
     "@dword-design/functions" "^4.0.0"
-    "@vue/babel-preset-jsx" "github:dword-design/jsx#fork-babel-preset-jsx"
+    "@vue/babel-preset-jsx" dword-design/jsx#fork-babel-preset-jsx
     babel-plugin-add-module-exports "^1.0.2"
     babel-plugin-macros "^3.0.1"
     babel-plugin-module-resolver "^4"
@@ -2868,7 +2868,6 @@
 
 "@vue/babel-preset-jsx@github:dword-design/jsx#fork-babel-preset-jsx":
   version "1.1.2"
-  uid a73cb9961541a60a66b1b99a69a32e00bc66d336
   resolved "https://codeload.github.com/dword-design/jsx/tar.gz/a73cb9961541a60a66b1b99a69a32e00bc66d336"
   dependencies:
     "@vue/babel-helper-vue-jsx-merge-props" "^1.0.0"
@@ -2887,7 +2886,6 @@
 
 "@vue/babel-sugar-inject-h@dword-design/jsx#fork-babel-sugar-inject-h":
   version "1.1.2"
-  uid cc36a2200c059120f37944615fb2ec0e22f8f3cc
   resolved "https://codeload.github.com/dword-design/jsx/tar.gz/cc36a2200c059120f37944615fb2ec0e22f8f3cc"
   dependencies:
     "@babel/plugin-syntax-jsx" "^7.2.0"
@@ -5045,13 +5043,6 @@ depcheck-detector-package-name@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/depcheck-detector-package-name/-/depcheck-detector-package-name-3.0.2.tgz#b7619eceda72859a2c98894c9fe9ca8ca23c665e"
   integrity sha512-eZAoQ/A8n9HgEvGOH5VyJB8Fw6agoPCKQX+AQS+97ub4SDwQWr/G7OYODGuwn1aiH4vQcZWDBWJw7ALFV/oQAg==
-
-depcheck-package-name@^2.0.0:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/depcheck-package-name/-/depcheck-package-name-2.0.6.tgz#998015be43593711641fa23569aca131f133dc31"
-  integrity sha512-9C8RbkOrafLWXTMt6DIimYiLeKk2qSaQyFoiTTPx1GdnmNo1VpO7zoAmRUy/teEEtSa+5DuyGXi91lhs2G0S8g==
-  dependencies:
-    tagged-template-noop "^2.1.1"
 
 depcheck-package-name@^3.0.0:
   version "3.0.0"
@@ -9175,14 +9166,7 @@ load-json-file@^4.0.0:
     pify "^3.0.0"
     strip-bom "^3.0.0"
 
-load-pkg@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/load-pkg/-/load-pkg-4.0.0.tgz#f80a29aec2f6d02aadde714099fda4eea1b611f1"
-  integrity sha512-xS6uYdbUzHbwO5bExhtM8RsU6Z/fVEfZE4uZpWQOwVygLSUfXz7J97nGzJfZ+FFCZc0Weabn/wA3y1k9Q7Y4mw==
-  dependencies:
-    find-pkg "^2.0.0"
-
-"load-pkg@npm:@dword-design/load-pkg":
+load-pkg@^4.0.0, "load-pkg@npm:@dword-design/load-pkg":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@dword-design/load-pkg/-/load-pkg-4.0.0.tgz#201f76adeb44c64ed22d789591ab740573fe0a5b"
   integrity sha512-lZxKRusgIqSg2y4jLzZzMPWyhrGPGke3YYmAxj4SoJeUGV4CmvYyhJkJnfA7Yaov7GMXZi64nlhx8D809VDazg==
@@ -10622,76 +10606,76 @@ npm@^7.0.0:
   resolved "https://registry.yarnpkg.com/npm/-/npm-7.24.2.tgz#861117af8241bea592289f22407230e5300e59ca"
   integrity sha512-120p116CE8VMMZ+hk8IAb1inCPk4Dj3VZw29/n2g6UI77urJKVYb7FZUDW8hY+EBnfsjI/2yrobBgFyzo7YpVQ==
   dependencies:
-    "@isaacs/string-locale-compare" "*"
-    "@npmcli/arborist" "*"
-    "@npmcli/ci-detect" "*"
-    "@npmcli/config" "*"
-    "@npmcli/map-workspaces" "*"
-    "@npmcli/package-json" "*"
-    "@npmcli/run-script" "*"
-    abbrev "*"
-    ansicolors "*"
-    ansistyles "*"
-    archy "*"
-    cacache "*"
-    chalk "*"
-    chownr "*"
-    cli-columns "*"
-    cli-table3 "*"
-    columnify "*"
-    fastest-levenshtein "*"
-    glob "*"
-    graceful-fs "*"
-    hosted-git-info "*"
-    ini "*"
-    init-package-json "*"
-    is-cidr "*"
-    json-parse-even-better-errors "*"
-    libnpmaccess "*"
-    libnpmdiff "*"
-    libnpmexec "*"
-    libnpmfund "*"
-    libnpmhook "*"
-    libnpmorg "*"
-    libnpmpack "*"
-    libnpmpublish "*"
-    libnpmsearch "*"
-    libnpmteam "*"
-    libnpmversion "*"
-    make-fetch-happen "*"
-    minipass "*"
-    minipass-pipeline "*"
-    mkdirp "*"
-    mkdirp-infer-owner "*"
-    ms "*"
-    node-gyp "*"
-    nopt "*"
-    npm-audit-report "*"
-    npm-install-checks "*"
-    npm-package-arg "*"
-    npm-pick-manifest "*"
-    npm-profile "*"
-    npm-registry-fetch "*"
-    npm-user-validate "*"
-    npmlog "*"
-    opener "*"
-    pacote "*"
-    parse-conflict-json "*"
-    qrcode-terminal "*"
-    read "*"
-    read-package-json "*"
-    read-package-json-fast "*"
-    readdir-scoped-modules "*"
-    rimraf "*"
-    semver "*"
-    ssri "*"
-    tar "*"
-    text-table "*"
-    tiny-relative-date "*"
-    treeverse "*"
-    validate-npm-package-name "*"
-    which "*"
-    write-file-atomic "*"
+    "@isaacs/string-locale-compare" "^1.1.0"
+    "@npmcli/arborist" "^2.9.0"
+    "@npmcli/ci-detect" "^1.2.0"
+    "@npmcli/config" "^2.3.0"
+    "@npmcli/map-workspaces" "^1.0.4"
+    "@npmcli/package-json" "^1.0.1"
+    "@npmcli/run-script" "^1.8.6"
+    abbrev "~1.1.1"
+    ansicolors "~0.3.2"
+    ansistyles "~0.1.3"
+    archy "~1.0.0"
+    cacache "^15.3.0"
+    chalk "^4.1.2"
+    chownr "^2.0.0"
+    cli-columns "^3.1.2"
+    cli-table3 "^0.6.0"
+    columnify "~1.5.4"
+    fastest-levenshtein "^1.0.12"
+    glob "^7.2.0"
+    graceful-fs "^4.2.8"
+    hosted-git-info "^4.0.2"
+    ini "^2.0.0"
+    init-package-json "^2.0.5"
+    is-cidr "^4.0.2"
+    json-parse-even-better-errors "^2.3.1"
+    libnpmaccess "^4.0.2"
+    libnpmdiff "^2.0.4"
+    libnpmexec "^2.0.1"
+    libnpmfund "^1.1.0"
+    libnpmhook "^6.0.2"
+    libnpmorg "^2.0.2"
+    libnpmpack "^2.0.1"
+    libnpmpublish "^4.0.1"
+    libnpmsearch "^3.1.1"
+    libnpmteam "^2.0.3"
+    libnpmversion "^1.2.1"
+    make-fetch-happen "^9.1.0"
+    minipass "^3.1.3"
+    minipass-pipeline "^1.2.4"
+    mkdirp "^1.0.4"
+    mkdirp-infer-owner "^2.0.0"
+    ms "^2.1.2"
+    node-gyp "^7.1.2"
+    nopt "^5.0.0"
+    npm-audit-report "^2.1.5"
+    npm-install-checks "^4.0.0"
+    npm-package-arg "^8.1.5"
+    npm-pick-manifest "^6.1.1"
+    npm-profile "^5.0.3"
+    npm-registry-fetch "^11.0.0"
+    npm-user-validate "^1.0.1"
+    npmlog "^5.0.1"
+    opener "^1.5.2"
+    pacote "^11.3.5"
+    parse-conflict-json "^1.1.1"
+    qrcode-terminal "^0.12.0"
+    read "~1.0.7"
+    read-package-json "^4.1.1"
+    read-package-json-fast "^2.0.3"
+    readdir-scoped-modules "^1.1.0"
+    rimraf "^3.0.2"
+    semver "^7.3.5"
+    ssri "^8.0.1"
+    tar "^6.1.11"
+    text-table "~0.2.0"
+    tiny-relative-date "^1.3.0"
+    treeverse "^1.0.4"
+    validate-npm-package-name "~3.0.0"
+    which "^2.0.2"
+    write-file-atomic "^3.0.3"
 
 npmlog@*, npmlog@^7.0.1:
   version "7.0.1"
@@ -10736,6 +10720,11 @@ nuxi@3.4.3:
   integrity sha512-Flb23UkrWrTP/MmvHTpk+OLu+x2T2V9ciS8aCRsvADXTW3YIY2zGqFkqg6rKDCCeaoFn/MS1IxVgViT/FFe3QQ==
   optionalDependencies:
     fsevents "~2.3.2"
+
+nuxt-alias-path@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/nuxt-alias-path/-/nuxt-alias-path-1.0.0.tgz#b700da66e6a4c050a18800306fd3f68a52e4968f"
+  integrity sha512-Brt1kbn6MxiYOo7B1B3Plz+NoMNLCPUzcQzcFOlSdxFFVtx5lqQoUvlQ/FlEuRZX0p7uKUiR3ItK7IeMRIqdAA==
 
 nuxt-push-plugins@^2.1.2:
   version "2.1.34"
