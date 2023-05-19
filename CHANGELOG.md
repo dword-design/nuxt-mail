@@ -1,3 +1,10 @@
+## [3.1.45](https://github.com/dword-design/nuxt-mail/compare/v3.1.44...v3.1.45) (2023-05-19)
+
+
+### Bug Fixes
+
+* use #imports instead of #app ([dad1449](https://github.com/dword-design/nuxt-mail/commit/dad14492feab28b93e1c0c67b7667a2fbaf0020c))
+
 ## [3.1.44](https://github.com/dword-design/nuxt-mail/compare/v3.1.43...v3.1.44) (2023-05-18)
 
 
