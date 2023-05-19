@@ -5,7 +5,7 @@
       "error",
       {
         "ignore": [
-          "#foo",
+          "#imports",
           "#mail"
         ]
       }
