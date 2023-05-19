@@ -1,9 +1,10 @@
-import { delay, endent } from '@dword-design/functions'
+import { endent } from '@dword-design/functions'
 import puppeteer from '@dword-design/puppeteer'
 import axios from 'axios'
 import packageName from 'depcheck-package-name'
 import { execa, execaCommand } from 'execa'
 import fs from 'fs-extra'
+import nuxtDevReady from 'nuxt-dev-ready'
 import ora from 'ora'
 import outputFiles from 'output-files'
 import P from 'path'
@@ -11,25 +12,6 @@ import portReady from 'port-ready'
 import smtpTester from 'smtp-tester'
 import kill from 'tree-kill-promise'
 import withLocalTmpDir from 'with-local-tmp-dir'
-
-const devServerReady = async () => {
-  await portReady(3000)
-  for (let i = 0; i < 50; i += 1) {
-    try {
-      await delay(100)
-
-      const result = await axios.get('http://localhost:3000')
-      if (
-        !result.data.includes('__NUXT_LOADING__') &&
-        !result.data.includes('id="nuxt_loading_screen"')
-      ) {
-        return
-      }
-    } catch {
-      // continue
-    }
-  }
-}
 
 export default {
   async after() {
@@ -68,7 +50,7 @@ export default {
 
     const nuxt = execaCommand('nuxt dev')
     try {
-      await devServerReady()
+      await nuxtDevReady()
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
@@ -84,18 +66,16 @@ export default {
   },
   async before() {
     this.mailServer = smtpTester.init(3001)
-    if (process.platform !== 'win32') {
-      await fs.outputFile(
-        P.join('node_modules', '.cache', 'nuxt2', 'package.json'),
-        JSON.stringify({}),
-      )
 
-      const spinner = ora('Installing Nuxt 2').start()
-      await execaCommand('yarn add nuxt@^2', {
-        cwd: P.join('node_modules', '.cache', 'nuxt2'),
-      })
-      spinner.stop()
-    }
+    const spinner = ora('Installing Nuxt 2').start()
+    await fs.outputFile(
+      P.join('node_modules', '.cache', 'nuxt2', 'package.json'),
+      JSON.stringify({}),
+    )
+    await execaCommand('yarn add nuxt@^2', {
+      cwd: P.join('node_modules', '.cache', 'nuxt2'),
+    })
+    spinner.stop()
   },
   async beforeEach() {
     this.resetWithLocalTmpDir = await withLocalTmpDir()
@@ -131,7 +111,7 @@ export default {
 
     const nuxt = execaCommand('nuxt dev')
     try {
-      await devServerReady()
+      await nuxtDevReady()
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
@@ -177,7 +157,7 @@ export default {
 
     const nuxt = execaCommand('nuxt dev')
     try {
-      await devServerReady()
+      await nuxtDevReady()
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('cc@gmail.com'),
@@ -224,7 +204,7 @@ export default {
 
     const nuxt = execaCommand('nuxt dev')
     try {
-      await devServerReady()
+      await nuxtDevReady()
       await this.page.goto('http://localhost:3000')
 
       const button = await this.page.waitForSelector('button')
@@ -273,7 +253,7 @@ export default {
 
     const nuxt = execaCommand('nuxt dev')
     try {
-      await devServerReady()
+      await nuxtDevReady()
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
@@ -322,7 +302,7 @@ export default {
 
     const nuxt = execaCommand('nuxt dev')
     try {
-      await devServerReady()
+      await nuxtDevReady()
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
@@ -359,7 +339,7 @@ export default {
 
     const nuxt = execaCommand('nuxt dev')
     try {
-      await devServerReady()
+      await nuxtDevReady()
       let errorMessage
       try {
         await axios.post('http://localhost:3000')
@@ -391,7 +371,7 @@ export default {
 
     const nuxt = execaCommand('nuxt dev')
     try {
-      await devServerReady()
+      await nuxtDevReady()
       let errorMessage
       try {
         await axios.post('http://localhost:3000')
@@ -435,7 +415,7 @@ export default {
 
     const nuxt = execaCommand('nuxt dev')
     try {
-      await devServerReady()
+      await nuxtDevReady()
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
@@ -529,7 +509,7 @@ export default {
 
     const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
     try {
-      await devServerReady()
+      await nuxtDevReady()
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
@@ -584,7 +564,7 @@ export default {
 
     const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
     try {
-      await devServerReady()
+      await nuxtDevReady()
       await this.page.goto('http://localhost:3000')
 
       const button = await this.page.waitForSelector('button')
@@ -629,7 +609,7 @@ export default {
 
     const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
     try {
-      await devServerReady()
+      await nuxtDevReady()
       let errorMessage
       try {
         console.log(await axios.post('http://localhost:3000'))
@@ -723,7 +703,7 @@ export default {
 
     const nuxt = execaCommand('nuxt dev')
     try {
-      await devServerReady()
+      await nuxtDevReady()
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('to@gmail.com'),
@@ -775,7 +755,7 @@ export default {
 
     const nuxt = execaCommand('nuxt dev')
     try {
-      await devServerReady()
+      await nuxtDevReady()
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
