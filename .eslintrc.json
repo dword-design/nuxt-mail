@@ -5,7 +5,7 @@
       "error",
       {
         "ignore": [
-          "#app",
+          "#foo",
           "#mail"
         ]
       }

@@ -12,7 +12,7 @@
   "eslintConfig": {
     "extends": "@dword-design/eslint-config",
     "rules": {
-      "import/no-unresolved": ["error", { "ignore": ["#app", "#mail"] }]
+      "import/no-unresolved": ["error", { "ignore": ["#imports", "#mail"] }]
     },
     "globals": {
       "$fetch": "readonly"
