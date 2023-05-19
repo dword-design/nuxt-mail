@@ -51,7 +51,7 @@
     "parse-packagejson-name": "^1.0.1"
   },
   "devDependencies": {
-    "@dword-design/base": "^9.1.9",
+    "@dword-design/base": "^10.0.0",
     "@dword-design/puppeteer": "^5.0.0",
     "@nuxtjs/axios": "^5.13.1",
     "axios": "^0.27.2",
@@ -66,7 +66,7 @@
     "with-local-tmp-dir": "^5.0.0"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "publishConfig": {
     "access": "public"

@@ -1236,10 +1236,10 @@
     fs-extra "^11.0.0"
     micromatch "^4.0.2"
 
-"@dword-design/base@^9.1.9":
-  version "9.6.4"
-  resolved "https://registry.yarnpkg.com/@dword-design/base/-/base-9.6.4.tgz#cc7c459889fd7d2760479f756a90dfa00e16ec81"
-  integrity sha512-zaEwIO1si3wSYIWA55ci1MRu/4svNs4W21MpJp+VNrH/pGUes1ut0/S27CLZ1bKFfWkprhB7Cm1QlWpOPl+Hlg==
+"@dword-design/base@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@dword-design/base/-/base-10.0.0.tgz#e8352bf1660c82616f9553a445d4b71348219ee3"
+  integrity sha512-DxLFGsBRty7RHN5S8WOV2YHsYgAFDnoz/Bo+doo4shELAPZrWVWgWDuPvfRBPHzeNjcmJF55WxcBrjpV2/NuIQ==
   dependencies:
     "@commitlint/cli" "^17.4.0"
     "@commitlint/config-conventional" "^17.4.0"
