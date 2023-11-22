@@ -1,3 +1,10 @@
+## [4.0.2](https://github.com/dword-design/nuxt-mail/compare/v4.0.1...v4.0.2) (2023-11-22)
+
+
+### Bug Fixes
+
+* update readme ([75c184f](https://github.com/dword-design/nuxt-mail/commit/75c184fec1689fb6ce27e0075bb141a1d213c776))
+
 ## [4.0.1](https://github.com/dword-design/nuxt-mail/compare/v4.0.0...v4.0.1) (2023-05-19)
 
 
