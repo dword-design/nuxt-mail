@@ -244,7 +244,7 @@ Also, the module does not work for static sites (via `nuxt generate`) because th
 
 ### Gmail
 
-You have to setup an [app-specific password](https://myaccount.google.com/apppasswords) to log into the SMTP server. Then, add the following config to your `nuxt-mail` config:
+You have to setup an [app-specific password](https://myaccount.google.com/apppasswords) to log into the SMTP server. Then, add the following config to your `nuxt-mail` config. Looks like there are multiple ways to configure Gmail, so it's best to try out the options:
 
 ```js
 // nuxt.config.js
@@ -253,6 +253,24 @@ export default {
     ['nuxt-mail', {
       smtp: {
         service: 'gmail',
+        auth: {
+          user: 'foo@gmail.com',
+          pass: '<app-specific password>',
+        },
+      },
+    }],
+  ],
+}
+```
+
+```js
+// nuxt.config.js
+export default {
+  modules: [
+    ['nuxt-mail', {
+      smtp: {
+        host: "smtp.gmail.com",
+        port: 587,
         auth: {
           user: 'foo@gmail.com',
           pass: '<app-specific password>',
