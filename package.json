@@ -59,7 +59,7 @@
     "execa": "^7.1.1",
     "nuxt": "^3.3.3",
     "nuxt-dev-ready": "^2.0.1",
-    "ora": "^6.3.0",
+    "ora": "^8.0.0",
     "output-files": "^2.0.19",
     "port-ready": "^0.1.0",
     "smtp-tester": "^2.0.1",
