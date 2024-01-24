@@ -58,7 +58,7 @@
     "depcheck-package-name": "^3.0.0",
     "execa": "^7.1.1",
     "nuxt": "^3.3.3",
-    "nuxt-dev-ready": "^2.0.1",
+    "nuxt-dev-ready": "^3.0.0",
     "ora": "^6.3.0",
     "output-files": "^2.0.19",
     "port-ready": "^0.1.0",

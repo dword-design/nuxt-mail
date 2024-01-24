@@ -10763,10 +10763,10 @@ nuxt-alias-path@^1.0.0:
   resolved "https://registry.yarnpkg.com/nuxt-alias-path/-/nuxt-alias-path-1.0.0.tgz#b700da66e6a4c050a18800306fd3f68a52e4968f"
   integrity sha512-Brt1kbn6MxiYOo7B1B3Plz+NoMNLCPUzcQzcFOlSdxFFVtx5lqQoUvlQ/FlEuRZX0p7uKUiR3ItK7IeMRIqdAA==
 
-nuxt-dev-ready@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/nuxt-dev-ready/-/nuxt-dev-ready-2.0.1.tgz#71adf9bee6d65cb5f3fd365a4c76ef58433ad55f"
-  integrity sha512-ge98WQRpWHJHOvSniFOcO7rlD2+EZ+u03qUVwvO5sQi4D8u9V6ba6YWcm2rA59L0A/7RS5PpPhcG2QfxHKV7HQ==
+nuxt-dev-ready@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/nuxt-dev-ready/-/nuxt-dev-ready-3.0.0.tgz#b253c02360b84fbda37d4ce4caaa6dcb32ba9d6c"
+  integrity sha512-7F+zTD0I/a7QZPUpnFq4WWt8TbMYUYRjQTKBnFLayIYqx6a5k8w61n9aS3gafHwRGBEX00mPv7ggn0n3b004Cg==
   dependencies:
     axios "^1.3.6"
     p-wait-for "^5.0.2"
