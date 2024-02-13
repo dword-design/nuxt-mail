@@ -605,9 +605,7 @@ export default {
       'node_modules',
     )
 
-    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'], {
-      stdio: 'inherit',
-    })
+    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
     try {
       await nuxtDevReady()
 
