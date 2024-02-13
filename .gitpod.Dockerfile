@@ -6,7 +6,7 @@ RUN sudo apt-get install git-lfs
 RUN git lfs install
 
 # https://www.gitpod.io/docs/languages/javascript
-RUN bash -c 'VERSION="16"       && source $HOME/.nvm/nvm.sh && nvm install $VERSION       && nvm use $VERSION && nvm alias default $VERSION'
+RUN bash -c 'VERSION="20"       && source $HOME/.nvm/nvm.sh && nvm install $VERSION       && nvm use $VERSION && nvm alias default $VERSION'
 
 RUN echo "\nexport PATH=$(yarn global bin):\$PATH" >> /home/gitpod/.bashrc
 
