@@ -2,7 +2,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: jaid/action-sync-node-meta@v2.0.0
         with:
           approve: false
