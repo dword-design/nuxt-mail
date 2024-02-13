@@ -10758,10 +10758,10 @@ nuxi@3.5.1:
   optionalDependencies:
     fsevents "~2.3.2"
 
-nuxt-alias-path@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/nuxt-alias-path/-/nuxt-alias-path-1.0.0.tgz#b700da66e6a4c050a18800306fd3f68a52e4968f"
-  integrity sha512-Brt1kbn6MxiYOo7B1B3Plz+NoMNLCPUzcQzcFOlSdxFFVtx5lqQoUvlQ/FlEuRZX0p7uKUiR3ItK7IeMRIqdAA==
+nuxt-alias-path@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/nuxt-alias-path/-/nuxt-alias-path-2.0.0.tgz#234287806a5b514d368f3bf37b00b2ba6eef824c"
+  integrity sha512-rkitqBhqyW+UKWAGHAzwHmIWnZ5FLICSkiPdO/vHllKXG7lqtD7Dtnc+a2HNblD5iVNT6jwI+v7gajBLuUa+Zw==
 
 nuxt-dev-ready@^2.0.1:
   version "2.0.1"
