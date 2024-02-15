@@ -1,3 +1,10 @@
+## [4.0.3](https://github.com/dword-design/nuxt-mail/compare/v4.0.2...v4.0.3) (2024-02-15)
+
+
+### Bug Fixes
+
+* fix @dword-design/functions version ([#222](https://github.com/dword-design/nuxt-mail/issues/222)) ([cb770e5](https://github.com/dword-design/nuxt-mail/commit/cb770e5debaf0ce34f3174bddcd561bb0b86edc1))
+
 ## [4.0.2](https://github.com/dword-design/nuxt-mail/compare/v4.0.1...v4.0.2) (2023-11-22)
 
 
