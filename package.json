@@ -54,7 +54,7 @@
     "@dword-design/base": "^10.0.0",
     "@dword-design/puppeteer": "^5.0.0",
     "@nuxtjs/axios": "^5.13.1",
-    "axios": "^0.27.2",
+    "axios": "^0.28.0",
     "depcheck-package-name": "^3.0.0",
     "execa": "^7.1.1",
     "nuxt": "^3.3.3",
