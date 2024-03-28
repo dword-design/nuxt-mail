@@ -40,26 +40,26 @@
     "test": "base test"
   },
   "dependencies": {
-    "@dword-design/functions": "^5",
+    "@dword-design/functions": "^6.0.0",
     "@nuxt/kit": "^3.0.0",
     "express": "^4.17.1",
     "fs-extra": "^11.1.0",
     "h3": "^1.0.2",
     "nodemailer": "^6.4.11",
-    "nuxt-alias-path": "^1.0.0",
+    "nuxt-alias-path": "^2.0.0",
     "nuxt-push-plugins": "^2.1.2",
     "parse-packagejson-name": "^1.0.1"
   },
   "devDependencies": {
-    "@dword-design/base": "^10.0.0",
-    "@dword-design/puppeteer": "^5.0.0",
+    "@dword-design/base": "^11.0.4",
+    "@dword-design/puppeteer": "^7.0.0",
     "@nuxtjs/axios": "^5.13.1",
-    "axios": "^0.27.2",
+    "axios": "^0",
     "depcheck-package-name": "^3.0.0",
-    "execa": "^7.1.1",
+    "execa": "^8.0.1",
     "nuxt": "^3.3.3",
-    "nuxt-dev-ready": "^2.0.1",
-    "ora": "^6.3.0",
+    "nuxt-dev-ready": "^3.0.0",
+    "ora": "^8.0.1",
     "output-files": "^2.0.19",
     "port-ready": "^0.1.0",
     "smtp-tester": "^2.0.1",
@@ -67,7 +67,7 @@
     "with-local-tmp-dir": "^5.0.0"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "publishConfig": {
     "access": "public"

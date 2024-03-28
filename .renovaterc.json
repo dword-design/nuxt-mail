@@ -3,6 +3,9 @@
     ":semanticCommits",
     ":semanticPrefixFix"
   ],
+  "gitIgnoredAuthors": [
+    "actions@github.com"
+  ],
   "github-actions": {
     "enabled": false
   },
