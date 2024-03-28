@@ -338,5 +338,5 @@ Thanks a lot for your support! ❤️
 
 ## License
 
-[MIT License](https://opensource.org/licenses/MIT) © [Sebastian Landwehr](https://sebastianlandwehr.com)
+[MIT License](https://opensource.org/license/mit/) © [Sebastian Landwehr](https://sebastianlandwehr.com)
 <!-- /LICENSE -->

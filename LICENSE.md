@@ -6,7 +6,7 @@ Copyright &copy; Sebastian Landwehr <info@sebastianlandwehr.com>
 
 and licensed under:
 
-[MIT License](https://opensource.org/licenses/MIT)
+[MIT License](https://opensource.org/license/mit/)
 
 ## MIT License
 
