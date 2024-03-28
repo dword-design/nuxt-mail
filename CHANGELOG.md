@@ -1,3 +1,15 @@
+# [5.0.0](https://github.com/dword-design/nuxt-mail/compare/v4.0.3...v5.0.0) (2024-03-28)
+
+
+### Bug Fixes
+
+* lock file maintenance ([#204](https://github.com/dword-design/nuxt-mail/issues/204)) ([badf619](https://github.com/dword-design/nuxt-mail/commit/badf61936641b086540667e9998405e4f0cd2a36))
+
+
+### BREAKING CHANGES
+
+* node.js >= 18
+
 ## [4.0.3](https://github.com/dword-design/nuxt-mail/compare/v4.0.2...v4.0.3) (2024-02-15)
 
 
