@@ -59,10 +59,6 @@ Does not work for static sites (via `nuxt generate`) because the module creates 
 ## Install
 
 ```bash
-# npm
-$ npx nuxi@latest module add nuxt-mail
-
-# Yarn
 $ npx nuxi@latest module add nuxt-mail
 ```
 <!-- /INSTALL -->
