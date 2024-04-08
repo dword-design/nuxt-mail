@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/dword-design/nuxt-mail/compare/v5.0.0...v5.0.1) (2024-04-08)
+
+
+### Bug Fixes
+
+* use nuxi to install module ([419abc7](https://github.com/dword-design/nuxt-mail/commit/419abc7c45aa6cfdad915c778022f3b227c8e371))
+
 # [5.0.0](https://github.com/dword-design/nuxt-mail/compare/v4.0.3...v5.0.0) (2024-03-28)
 
 
