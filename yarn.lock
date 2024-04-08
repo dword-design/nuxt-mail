@@ -1343,6 +1343,32 @@
     fs-extra "^11.0.0"
     micromatch "^4.0.2"
 
+"@dword-design/base-config-node@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@dword-design/base-config-node/-/base-config-node-3.0.0.tgz#cf88753368b3c42a31aa62d20b5b1f69507aec66"
+  integrity sha512-xFAj86B+KzUZfK2ETpiTfG+tO0EJvZSYhBdzcnTmrPj6RXRtDpR0svhQ5u+9piuGjr6ffK+vuHsAOzlZnNvM1w==
+  dependencies:
+    "@babel/cli" "^7.7.5"
+    "@babel/core" "^7.7.5"
+    "@dword-design/depcheck-parser-sass" "^4.0.0"
+    "@dword-design/functions" "^6.0.0"
+    chokidar "^3.4.0"
+    debounce "^2.0.0"
+    delete-empty "^3.0.0"
+    eslint "^8.28.0"
+    execa "^8.0.1"
+    fs-extra "^11.0.0"
+    micromatch "^4.0.2"
+
+"@dword-design/base-config-nuxt-module@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@dword-design/base-config-nuxt-module/-/base-config-nuxt-module-1.0.0.tgz#4ce9c015bded8f02ca425b199c81acfc76bceb1f"
+  integrity sha512-O7RFfwjLpbEuMJEtydbokQSCDEsbivZ+8G0wTvtisrJXxoJML5YYpRn+hwIUA7OX1XiOpnsrAC8esrFXoB5ErA==
+  dependencies:
+    "@dword-design/base-config-node" "^3.0.0"
+    dedent "^1.5.1"
+    load-pkg "npm:@dword-design/load-pkg"
+
 "@dword-design/base@^11.0.4":
   version "11.0.11"
   resolved "https://registry.yarnpkg.com/@dword-design/base/-/base-11.0.11.tgz#7ebfbc89438ac70b9d86397c8a3a6600f0e77674"
@@ -5333,6 +5359,11 @@ debounce@^1.2.0:
   resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.1.tgz#38881d8f4166a5c5848020c11827b834bcb3e0a5"
   integrity sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==
 
+debounce@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/debounce/-/debounce-2.0.0.tgz#b2f914518a1481466f4edaee0b063e4d473ad549"
+  integrity sha512-xRetU6gL1VJbs85Mc4FoEGSjQxzpdxRyFhe3lmWFyy2EzydIcD4xzUvRJMD+NPDfMwKNhxa3PvsIOU32luIWeA==
+
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -5381,6 +5412,11 @@ dedent@0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/dedent/-/dedent-0.7.0.tgz#2495ddbaf6eb874abb0e1be9df22d2e5a544326c"
   integrity sha512-Q6fKUPqnAHAyhiUgFU7BUzLiv0kd8saH9al7tnu5Q/okj6dnupxyTgFIBjVzJATdfIAm9NAsvXNzjaKa+bxVyA==
+
+dedent@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/dedent/-/dedent-1.5.1.tgz#4f3fc94c8b711e9bb2800d185cd6ad20f2a90aff"
+  integrity sha512-+LxW+KLWxu3HW3M2w2ympwtqPrqYRzU8fqi6Fhd18fBALe15blJPI/I4+UHveMVG6lJqB4JNd4UG0S5cnVHwIg==
 
 deep-extend@^0.6.0:
   version "0.6.0"
@@ -9652,14 +9688,7 @@ load-json-file@^4.0.0:
     pify "^3.0.0"
     strip-bom "^3.0.0"
 
-load-pkg@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/load-pkg/-/load-pkg-4.0.0.tgz#f80a29aec2f6d02aadde714099fda4eea1b611f1"
-  integrity sha512-xS6uYdbUzHbwO5bExhtM8RsU6Z/fVEfZE4uZpWQOwVygLSUfXz7J97nGzJfZ+FFCZc0Weabn/wA3y1k9Q7Y4mw==
-  dependencies:
-    find-pkg "^2.0.0"
-
-"load-pkg@npm:@dword-design/load-pkg":
+load-pkg@^4.0.0, "load-pkg@npm:@dword-design/load-pkg":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@dword-design/load-pkg/-/load-pkg-4.0.0.tgz#201f76adeb44c64ed22d789591ab740573fe0a5b"
   integrity sha512-lZxKRusgIqSg2y4jLzZzMPWyhrGPGke3YYmAxj4SoJeUGV4CmvYyhJkJnfA7Yaov7GMXZi64nlhx8D809VDazg==

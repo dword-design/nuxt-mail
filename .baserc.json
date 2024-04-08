@@ -1,5 +1,5 @@
 {
-  "name": "@dword-design/node",
+  "name": "@dword-design/nuxt-module",
   "seeAlso": [
     { "repository": "nuxt-route-meta", "description": "Adds Nuxt page data to route meta at build time." },
     { "repository": "nuxt-modernizr", "description": "Adds a Modernizr build to your Nuxt.js app." },
