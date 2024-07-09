@@ -1,3 +1,3 @@
-import { useNuxtApp } from '#imports'
+import { useNuxtApp } from '#imports';
 
-export const useMail = () => useNuxtApp().$mail
+export const useMail = () => useNuxtApp().$mail;
