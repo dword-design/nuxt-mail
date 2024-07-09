@@ -1,26 +1,26 @@
-import { endent } from '@dword-design/functions'
-import puppeteer from '@dword-design/puppeteer'
-import axios from 'axios'
-import packageName from 'depcheck-package-name'
-import { execa, execaCommand } from 'execa'
-import fs from 'fs-extra'
-import nuxtDevReady from 'nuxt-dev-ready'
-import ora from 'ora'
-import outputFiles from 'output-files'
-import P from 'path'
-import portReady from 'port-ready'
-import smtpTester from 'smtp-tester'
-import kill from 'tree-kill-promise'
-import withLocalTmpDir from 'with-local-tmp-dir'
+import { endent } from '@dword-design/functions';
+import puppeteer from '@dword-design/puppeteer';
+import axios from 'axios';
+import packageName from 'depcheck-package-name';
+import { execa, execaCommand } from 'execa';
+import fs from 'fs-extra';
+import nuxtDevReady from 'nuxt-dev-ready';
+import ora from 'ora';
+import outputFiles from 'output-files';
+import P from 'path';
+import portReady from 'port-ready';
+import smtpTester from 'smtp-tester';
+import kill from 'tree-kill-promise';
+import withLocalTmpDir from 'with-local-tmp-dir';
 
 export default {
   async after() {
-    await this.mailServer.stop()
+    await this.mailServer.stop();
   },
   async afterEach() {
-    await this.page.close()
-    await this.browser.close()
-    await this.resetWithLocalTmpDir()
+    await this.page.close();
+    await this.browser.close();
+    await this.resetWithLocalTmpDir();
   },
   async bcc() {
     await outputFiles({
@@ -46,42 +46,46 @@ export default {
         })
         </script>
       `,
-    })
+    });
 
-    const nuxt = execaCommand('nuxt dev')
+    const nuxt = execaCommand('nuxt dev');
+
     try {
-      await nuxtDevReady()
+      await nuxtDevReady();
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
         this.page.goto('http://localhost:3000'),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.receivers).toEqual({ 'johndoe@gmail.com': true })
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.receivers).toEqual({ 'johndoe@gmail.com': true });
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   async before() {
-    this.mailServer = smtpTester.init(3001)
+    this.mailServer = smtpTester.init(3001);
+    const spinner = ora('Installing Nuxt 2').start();
 
-    const spinner = ora('Installing Nuxt 2').start()
     await fs.outputFile(
       P.join('node_modules', '.cache', 'nuxt2', 'package.json'),
       JSON.stringify({}),
-    )
+    );
+
     await execaCommand('yarn add nuxt@^2', {
       cwd: P.join('node_modules', '.cache', 'nuxt2'),
-    })
-    spinner.stop()
+    });
+
+    spinner.stop();
   },
   async beforeEach() {
-    this.resetWithLocalTmpDir = await withLocalTmpDir()
-    this.browser = await puppeteer.launch()
-    this.page = await this.browser.newPage()
-    this.mailServer.removeAll()
+    this.resetWithLocalTmpDir = await withLocalTmpDir();
+    this.browser = await puppeteer.launch();
+    this.page = await this.browser.newPage();
+    this.mailServer.removeAll();
   },
   async cc() {
     await outputFiles({
@@ -107,23 +111,25 @@ export default {
         })
         </script>
       `,
-    })
+    });
 
-    const nuxt = execaCommand('nuxt dev')
+    const nuxt = execaCommand('nuxt dev');
+
     try {
-      await nuxtDevReady()
+      await nuxtDevReady();
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
         this.page.goto('http://localhost:3000'),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.headers.cc).toEqual('johndoe@gmail.com')
-      expect(capture.email.receivers).toEqual({ 'johndoe@gmail.com': true })
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.cc).toEqual('johndoe@gmail.com');
+      expect(capture.email.receivers).toEqual({ 'johndoe@gmail.com': true });
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   async 'cc and bcc'() {
@@ -153,26 +159,29 @@ export default {
         })
         </script>
       `,
-    })
+    });
 
-    const nuxt = execaCommand('nuxt dev')
+    const nuxt = execaCommand('nuxt dev');
+
     try {
-      await nuxtDevReady()
+      await nuxtDevReady();
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('cc@gmail.com'),
         this.page.goto('http://localhost:3000'),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.headers.cc).toEqual('cc@gmail.com')
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.cc).toEqual('cc@gmail.com');
+
       expect(capture.email.receivers).toEqual({
         'bcc@gmail.com': true,
         'cc@gmail.com': true,
-      })
+      });
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   async 'client side'() {
@@ -200,25 +209,26 @@ export default {
         })
         </script>
       `,
-    })
+    });
 
-    const nuxt = execaCommand('nuxt dev')
+    const nuxt = execaCommand('nuxt dev');
+
     try {
-      await nuxtDevReady()
-      await this.page.goto('http://localhost:3000')
-
-      const button = await this.page.waitForSelector('button')
+      await nuxtDevReady();
+      await this.page.goto('http://localhost:3000');
+      const button = await this.page.waitForSelector('button');
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
         button.click(),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   async 'config by index'() {
@@ -249,22 +259,24 @@ export default {
         })
         </script>
       `,
-    })
+    });
 
-    const nuxt = execaCommand('nuxt dev')
+    const nuxt = execaCommand('nuxt dev');
+
     try {
-      await nuxtDevReady()
+      await nuxtDevReady();
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
         this.page.goto('http://localhost:3000'),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   async 'config by name'() {
@@ -298,22 +310,24 @@ export default {
         })
         </script>
       `,
-    })
+    });
 
-    const nuxt = execaCommand('nuxt dev')
+    const nuxt = execaCommand('nuxt dev');
+
     try {
-      await nuxtDevReady()
+      await nuxtDevReady();
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
         this.page.goto('http://localhost:3000'),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   'config invalid index': async () => {
@@ -335,20 +349,23 @@ export default {
         await mail.send({ config: 10 })
         </script>
       `,
-    })
+    });
 
-    const nuxt = execaCommand('nuxt dev')
+    const nuxt = execaCommand('nuxt dev');
+
     try {
-      await nuxtDevReady()
-      let errorMessage
+      await nuxtDevReady();
+      let errorMessage;
+
       try {
-        await axios.post('http://localhost:3000')
+        await axios.post('http://localhost:3000');
       } catch (error) {
-        errorMessage = error.response.data.message
+        errorMessage = error.response.data.message;
       }
-      expect(errorMessage).toEqual('Message config not found at index 10.')
+
+      expect(errorMessage).toEqual('Message config not found at index 10.');
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   'config name not found': async () => {
@@ -367,20 +384,23 @@ export default {
         await mail.send({ config: 'foo' })
         </script>
       `,
-    })
+    });
 
-    const nuxt = execaCommand('nuxt dev')
+    const nuxt = execaCommand('nuxt dev');
+
     try {
-      await nuxtDevReady()
-      let errorMessage
+      await nuxtDevReady();
+      let errorMessage;
+
       try {
-        await axios.post('http://localhost:3000')
+        await axios.post('http://localhost:3000');
       } catch (error) {
-        errorMessage = error.response.data.message
+        errorMessage = error.response.data.message;
       }
-      expect(errorMessage).toEqual("Message config with name 'foo' not found.")
+
+      expect(errorMessage).toEqual("Message config with name 'foo' not found.");
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   async injected() {
@@ -411,22 +431,24 @@ export default {
         })
         </script>
       `,
-    })
+    });
 
-    const nuxt = execaCommand('nuxt dev')
+    const nuxt = execaCommand('nuxt dev');
+
     try {
-      await nuxtDevReady()
+      await nuxtDevReady();
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
         this.page.goto('http://localhost:3000'),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   'no message configs': async () => {
@@ -439,10 +461,11 @@ export default {
           ],
         }
       `,
-    )
+    );
+
     await expect(execaCommand('nuxt build')).rejects.toThrow(
       'You have to provide at least one config.',
-    )
+    );
   },
   'no recipients': async () => {
     await fs.outputFile(
@@ -454,10 +477,11 @@ export default {
           ],
         }
       `,
-    )
+    );
+
     await expect(execaCommand('nuxt build')).rejects.toThrow(
       'You have to provide to/cc/bcc in all configs.',
-    )
+    );
   },
   'no smtp config': async () => {
     await fs.outputFile(
@@ -467,10 +491,11 @@ export default {
           modules: ['../src/index.js'],
         }
       `,
-    )
+    );
+
     await expect(execaCommand('nuxt build')).rejects.toThrow(
       'SMTP config is missing.',
-    )
+    );
   },
   async 'nuxt2: client side'() {
     await outputFiles({
@@ -505,29 +530,31 @@ export default {
         }
         </script>
       `,
-    })
+    });
+
     await fs.symlink(
       P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
       'node_modules',
-    )
+    );
 
-    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
+    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev']);
+
     try {
-      await nuxtDevReady()
-      await this.page.goto('http://localhost:3000')
-
-      const button = await this.page.waitForSelector('button')
+      await nuxtDevReady();
+      await this.page.goto('http://localhost:3000');
+      const button = await this.page.waitForSelector('button');
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
         button.click(),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   'nuxt2: error': async () => {
@@ -550,24 +577,28 @@ export default {
         }
         </script>
       `,
-    })
+    });
+
     await fs.symlink(
       P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
       'node_modules',
-    )
+    );
 
-    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
+    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev']);
+
     try {
-      await nuxtDevReady()
-      let errorMessage
+      await nuxtDevReady();
+      let errorMessage;
+
       try {
-        console.log(await axios.post('http://localhost:3000'))
+        console.log(await axios.post('http://localhost:3000'));
       } catch (error) {
-        errorMessage = error.response.data.error.message
+        errorMessage = error.response.data.error.message;
       }
-      expect(errorMessage).toEqual('Message config not found at index 10.')
+
+      expect(errorMessage).toEqual('Message config not found at index 10.');
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   async 'nuxt2: works'() {
@@ -599,26 +630,29 @@ export default {
         }
         </script>
       `,
-    })
+    });
+
     await fs.symlink(
       P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
       'node_modules',
-    )
+    );
 
-    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'])
+    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev']);
+
     try {
-      await nuxtDevReady()
+      await nuxtDevReady();
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
         this.page.goto('http://localhost:3000'),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   async prod() {
@@ -649,23 +683,25 @@ export default {
         })
         </script>
       `,
-    })
-    await execaCommand('nuxt build')
+    });
 
-    const nuxt = execaCommand('nuxt start')
+    await execaCommand('nuxt build');
+    const nuxt = execaCommand('nuxt start');
+
     try {
-      await portReady(3000)
+      await portReady(3000);
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
         this.page.goto('http://localhost:3000'),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   async 'to, cc and bcc'() {
@@ -699,28 +735,31 @@ export default {
         })
         </script>
       `,
-    })
+    });
 
-    const nuxt = execaCommand('nuxt dev')
+    const nuxt = execaCommand('nuxt dev');
+
     try {
-      await nuxtDevReady()
+      await nuxtDevReady();
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('to@gmail.com'),
         this.page.goto('http://localhost:3000'),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.headers.to).toEqual('to@gmail.com')
-      expect(capture.email.headers.cc).toEqual('cc@gmail.com')
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('to@gmail.com');
+      expect(capture.email.headers.cc).toEqual('cc@gmail.com');
+
       expect(capture.email.receivers).toEqual({
         'bcc@gmail.com': true,
         'cc@gmail.com': true,
         'to@gmail.com': true,
-      })
+      });
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
   async valid() {
@@ -751,22 +790,24 @@ export default {
         })
         </script>
       `,
-    })
+    });
 
-    const nuxt = execaCommand('nuxt dev')
+    const nuxt = execaCommand('nuxt dev');
+
     try {
-      await nuxtDevReady()
+      await nuxtDevReady();
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
         this.page.goto('http://localhost:3000'),
-      ])
-      expect(capture.email.body).toEqual('This is an incredible test message')
-      expect(capture.email.headers.subject).toEqual('Incredible')
-      expect(capture.email.headers.from).toEqual('a@b.de')
-      expect(capture.email.headers.to).toEqual('johndoe@gmail.com')
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
     } finally {
-      await kill(nuxt.pid)
+      await kill(nuxt.pid);
     }
   },
-}
+};
