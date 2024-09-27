@@ -26,7 +26,7 @@ export default {
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', { message: { bcc: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
+            ['self', { message: { bcc: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
           ],
         }
       `,
@@ -83,13 +83,24 @@ export default {
     this.browser = await puppeteer.launch();
     this.page = await this.browser.newPage();
     this.mailServer.removeAll();
+
+    await fs.outputFile(
+      'node_modules/self/package.json',
+      JSON.stringify({
+        exports: './src/index.js',
+        name: 'self',
+        type: 'module',
+      }),
+    );
+
+    await fs.copy('../src', 'node_modules/self/src');
   },
   async cc() {
     await outputFiles({
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', { message: { cc: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
+            ['self', { message: { cc: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
           ],
         }
       `,
@@ -134,7 +145,7 @@ export default {
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', {
+            ['self', {
               message: { bcc: 'bcc@gmail.com', cc: 'cc@gmail.com' },
               smtp: { port: 3001 },
             }],
@@ -186,7 +197,7 @@ export default {
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', { message: { to: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
+            ['self', { message: { to: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
           ],
         }
       `,
@@ -233,7 +244,7 @@ export default {
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', {
+            ['self', {
               message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
               smtp: { port: 3001 },
             }],
@@ -281,7 +292,7 @@ export default {
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', {
+            ['self', {
               message: [
                 { to: 'foo@bar.com' },
                 { name: 'foo', to: 'johndoe@gmail.com' },
@@ -332,7 +343,7 @@ export default {
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', {
+            ['self', {
               message: [{ to: 'foo@bar.com' }],
               smtp: {},
             }],
@@ -370,7 +381,7 @@ export default {
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', { message: [{ to: 'foo@bar.com' }], smtp: {} }],
+            ['self', { message: [{ to: 'foo@bar.com' }], smtp: {} }],
           ],
         }
       `,
@@ -405,7 +416,7 @@ export default {
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', {
+            ['self', {
               message: { to: 'johndoe@gmail.com' },
               smtp: { port: 3001 },
             }],
@@ -454,7 +465,7 @@ export default {
       endent`
         export default {
           modules: [
-            ['../src/index.js', { smtp: {} }],
+            ['self', { smtp: {} }],
           ],
         }
       `,
@@ -470,7 +481,7 @@ export default {
       endent`
         export default {
           modules: [
-            ['../src/index.js', { message: {}, smtp: {} }],
+            ['self', { message: {}, smtp: {} }],
           ],
         }
       `,
@@ -485,7 +496,7 @@ export default {
       'nuxt.config.js',
       endent`
         export default {
-          modules: ['../src/index.js'],
+          modules: ['self'],
         }
       `,
     );
@@ -528,6 +539,8 @@ export default {
         </script>
       `,
     });
+
+    await fs.remove('node_modules');
 
     await fs.symlink(
       P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
@@ -575,6 +588,8 @@ export default {
         </script>
       `,
     });
+
+    await fs.remove('node_modules');
 
     await fs.symlink(
       P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
@@ -632,6 +647,8 @@ export default {
       `,
     });
 
+    await fs.remove('node_modules');
+
     await fs.symlink(
       P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
       'node_modules',
@@ -686,6 +703,8 @@ export default {
       `,
     });
 
+    await fs.remove('node_modules');
+
     await fs.symlink(
       P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
       'node_modules',
@@ -714,7 +733,7 @@ export default {
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', {
+            ['self', {
               message: { to: 'johndoe@gmail.com' },
               smtp: { port: 3001 },
             }],
@@ -762,7 +781,7 @@ export default {
     await outputFiles({
       'nuxt.config.js': endent`
         export default {
-          modules: ['../src/index.js'],
+          modules: ['self'],
           runtimeConfig: {
             mail: {
               message: { to: 'johndoe@gmail.com' },
@@ -807,12 +826,65 @@ export default {
       await kill(nuxt.pid);
     }
   },
+  async 'server route'() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['self', {
+              message: { to: 'johndoe@gmail.com' },
+              smtp: { port: 3001 },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script setup>
+        $fetch('/api/foo');
+        </script>
+      `,
+      'server/api/foo.js': endent`
+        import { defineEventHandler, useMail } from '#imports';
+
+        const mail = useMail();
+
+        export default defineEventHandler(() => mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+          to: 'foo@bar.de',
+        }));
+      `,
+    });
+
+    const nuxt = execaCommand('nuxt dev');
+
+    try {
+      await nuxtDevReady();
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto('http://localhost:3000'),
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
+    } finally {
+      await kill(nuxt.pid);
+    }
+  },
   async 'to, cc and bcc'() {
     await outputFiles({
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', {
+            ['self', {
               message: {
                 bcc: 'bcc@gmail.com',
                 cc: 'cc@gmail.com',
@@ -870,7 +942,7 @@ export default {
       'nuxt.config.js': endent`
         export default {
           modules: [
-            ['../src/index.js', {
+            ['self', {
               message: { to: 'johndoe@gmail.com' },
               smtp: { port: 3001 },
             }],
