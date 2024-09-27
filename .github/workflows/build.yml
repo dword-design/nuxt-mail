@@ -18,22 +18,23 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - run: corepack enable
       - run: git config --global user.email "actions@github.com"
       - run: git config --global user.name "GitHub Actions"
-      - run: yarn --frozen-lockfile
-      - run: yarn checkUnknownFiles
-      - run: yarn lint
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm checkUnknownFiles
+      - run: pnpm lint
       - env:
           GITHUB_REPOSITORY: ${{ secrets.GITHUB_REPOSITORY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         name: Push changed files
-        run: yarn dw-ci push-changed-files
+        run: pnpm dw-ci push-changed-files
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         if: github.ref == 'refs/heads/master'
         name: Release
-        run: yarn semantic-release
+        run: pnpm semantic-release
   test:
     needs: cancel-existing
     runs-on: ${{ matrix.os }}
@@ -45,10 +46,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - run: yarn --frozen-lockfile
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn test
+        run: pnpm test
       - if: failure()
         uses: actions/upload-artifact@v3
         with:

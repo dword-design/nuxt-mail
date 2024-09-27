@@ -2,19 +2,24 @@ image:
   file: .gitpod.Dockerfile
 tasks:
   - before: >-
+      echo "corepack enable" >> /home/gitpod/.bashrc
+
+      echo "export COREPACK_ENABLE_DOWNLOAD_PROMPT=0" >> /home/gitpod/.bashrc
+
+      gitpod-env-per-project >> /home/gitpod/.bashrc
+
       echo "export
       PUPPETEER_CACHE_DIR=/workspace/nuxt-mail/node_modules/.cache/puppeteer" >>
       /home/gitpod/.bashrc
 
       echo "export PLAYWRIGHT_BROWSERS_PATH=0" >> /home/gitpod/.bashrc
 
-      gitpod-env-per-project >> /home/gitpod/.bashrc && source
-      /home/gitpod/.bashrc
+      source /home/gitpod/.bashrc
     init: |-
       git config --global user.name "Sebastian Landwehr"
       git config diff.lfs.textconv cat
       git lfs pull
-      yarn --frozen-lockfile
+      pnpm install --frozen-lockfile
 vscode:
   extensions:
     - https://sebastianlandwehr.com/vscode-extensions/karlito40.fix-irregular-whitespace-0.1.1.vsix
