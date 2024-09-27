@@ -1,3 +1,16 @@
+# [5.1.0](https://github.com/dword-design/nuxt-mail/compare/v5.0.1...v5.1.0) (2024-09-27)
+
+
+### Bug Fixes
+
+* fix node 18 ([1b91f26](https://github.com/dword-design/nuxt-mail/commit/1b91f263bc142399803da765e1ada51fbd48e079))
+* lock file maintenance ([#247](https://github.com/dword-design/nuxt-mail/issues/247)) ([50804dc](https://github.com/dword-design/nuxt-mail/commit/50804dc52672330ce32ae4c71d39c0b657b07704))
+
+
+### Features
+
+* use runtimeConfig to set options ([#250](https://github.com/dword-design/nuxt-mail/issues/250)) ([524b715](https://github.com/dword-design/nuxt-mail/commit/524b71507ff623478b970d8437b452bcb58d5609)), closes [#120](https://github.com/dword-design/nuxt-mail/issues/120)
+
 ## [5.0.1](https://github.com/dword-design/nuxt-mail/compare/v5.0.0...v5.0.1) (2024-04-08)
 
 
