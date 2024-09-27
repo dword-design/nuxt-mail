@@ -95,6 +95,18 @@ export default {
       port: 587,
     },
   },
+  // or use runtimeConfig
+  runtimeConfig: {
+    mail: {
+      message: {
+        to: 'foo@bar.de',
+      },
+      smtp: {
+        host: "smtp.example.com",
+        port: 587,
+      },
+    },
+  },
 }
 ```
 

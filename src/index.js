@@ -22,8 +22,16 @@ const moduleName = parsePackagejsonName(packageConfig.name).fullName;
 
 export default function (moduleOptions, nuxt) {
   nuxt = nuxt || this;
+  let isNuxt3 = true;
 
-  const runtimeConfig = useRuntimeConfig();
+  try {
+    isNuxt3 = isNuxt3Try();
+  } catch {
+    isNuxt3 = false;
+  }
+
+  const runtimeConfig =
+    nuxt.options[isNuxt3 ? 'runtimeConfig' : 'privateRuntimeConfig'];
 
   const options = {
     ...runtimeConfig.mail,
@@ -48,14 +56,6 @@ export default function (moduleOptions, nuxt) {
 
   if (some(c => !c.to && !c.cc && !c.bcc)(options.message)) {
     throw new Error('You have to provide to/cc/bcc in all configs.');
-  }
-
-  let isNuxt3 = true;
-
-  try {
-    isNuxt3 = isNuxt3Try();
-  } catch {
-    isNuxt3 = false;
   }
 
   if (isNuxt3) {
