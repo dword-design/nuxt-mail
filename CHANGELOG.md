@@ -1,3 +1,10 @@
+## [5.1.1](https://github.com/dword-design/nuxt-mail/compare/v5.1.0...v5.1.1) (2024-09-27)
+
+
+### Bug Fixes
+
+* trigger release ([a8b4ce7](https://github.com/dword-design/nuxt-mail/commit/a8b4ce75b40f5ff3668890de2d4ec0a0ab342478))
+
 # [5.1.0](https://github.com/dword-design/nuxt-mail/compare/v5.0.1...v5.1.0) (2024-09-27)
 
 
