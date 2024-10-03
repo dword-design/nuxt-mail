@@ -1,6 +1,6 @@
 {
   "name": "nuxt-mail",
-  "version": "5.0.1",
+  "version": "5.1.1",
   "description": "Adds email sending capability to a Nuxt.js app. Adds a server route, an injected variable, and uses nodemailer to send emails.",
   "keywords": [
     "email",
@@ -58,15 +58,16 @@
     "axios": "^0",
     "depcheck-package-name": "^3.0.0",
     "execa": "^8.0.1",
+    "get-port": "^7.1.0",
     "nuxt": "^3.3.3",
     "nuxt-dev-ready": "^3.0.0",
-    "ora": "^8.0.1",
     "output-files": "^2.0.19",
     "port-ready": "^0.1.0",
     "smtp-tester": "^2.0.1",
     "tree-kill-promise": "^3.0.9",
     "with-local-tmp-dir": "^5.0.0"
   },
+  "packageManager": "pnpm@9.11.0+sha256.1c0e33f70e5df9eede84a357bdfa0b1f9dba6e58194628d48a1055756f553754",
   "engines": {
     "node": ">=18"
   },

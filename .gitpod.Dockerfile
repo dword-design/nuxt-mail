@@ -10,8 +10,6 @@ RUN git lfs install
 RUN bash -c 'source $HOME/.nvm/nvm.sh && nvm install 20'
 RUN echo "nvm use default &>/dev/null" >> ~/.bashrc.d/51-nvm-fix
 
-RUN echo "\nexport PATH=$(yarn global bin):\$PATH" >> /home/gitpod/.bashrc
-
 RUN yarn global add gitpod-env-per-project @babel/node @babel/core
 
 RUN sudo apt-get install -y graphviz

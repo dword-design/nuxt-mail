@@ -4,8 +4,8 @@ import axios from 'axios';
 import packageName from 'depcheck-package-name';
 import { execa, execaCommand } from 'execa';
 import fs from 'fs-extra';
+import getPort from 'get-port';
 import nuxtDevReady from 'nuxt-dev-ready';
-import ora from 'ora';
 import outputFiles from 'output-files';
 import P from 'path';
 import portReady from 'port-ready';
@@ -48,14 +48,15 @@ export default {
       `,
     });
 
-    const nuxt = execaCommand('nuxt dev');
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
-        this.page.goto('http://localhost:3000'),
+        this.page.goto(`http://localhost:${port}`),
       ]);
 
       expect(capture.email.body).toEqual('This is an incredible test message');
@@ -68,18 +69,16 @@ export default {
   },
   async before() {
     this.mailServer = smtpTester.init(3001);
-    const spinner = ora('Installing Nuxt 2').start();
 
     await fs.outputFile(
       P.join('node_modules', '.cache', 'nuxt2', 'package.json'),
-      JSON.stringify({}),
+      JSON.stringify({ dependencies: { nuxt: '^2' } }),
     );
 
-    await execaCommand('yarn add nuxt@^2', {
+    await execaCommand('pnpm install', {
       cwd: P.join('node_modules', '.cache', 'nuxt2'),
+      stdio: 'inherit',
     });
-
-    spinner.stop();
   },
   async beforeEach() {
     this.resetWithLocalTmpDir = await withLocalTmpDir();
@@ -113,14 +112,15 @@ export default {
       `,
     });
 
-    const nuxt = execaCommand('nuxt dev');
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
-        this.page.goto('http://localhost:3000'),
+        this.page.goto(`http://localhost:${port}`),
       ]);
 
       expect(capture.email.body).toEqual('This is an incredible test message');
@@ -161,14 +161,15 @@ export default {
       `,
     });
 
-    const nuxt = execaCommand('nuxt dev');
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('cc@gmail.com'),
-        this.page.goto('http://localhost:3000'),
+        this.page.goto(`http://localhost:${port}`),
       ]);
 
       expect(capture.email.body).toEqual('This is an incredible test message');
@@ -211,11 +212,12 @@ export default {
       `,
     });
 
-    const nuxt = execaCommand('nuxt dev');
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
 
     try {
-      await nuxtDevReady();
-      await this.page.goto('http://localhost:3000');
+      await nuxtDevReady(port);
+      await this.page.goto(`http://localhost:${port}`);
       const button = await this.page.waitForSelector('button');
 
       const [capture] = await Promise.all([
@@ -261,14 +263,15 @@ export default {
       `,
     });
 
-    const nuxt = execaCommand('nuxt dev');
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
-        this.page.goto('http://localhost:3000'),
+        this.page.goto(`http://localhost:${port}`),
       ]);
 
       expect(capture.email.body).toEqual('This is an incredible test message');
@@ -312,14 +315,15 @@ export default {
       `,
     });
 
-    const nuxt = execaCommand('nuxt dev');
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
-        this.page.goto('http://localhost:3000'),
+        this.page.goto(`http://localhost:${port}`),
       ]);
 
       expect(capture.email.body).toEqual('This is an incredible test message');
@@ -351,14 +355,15 @@ export default {
       `,
     });
 
-    const nuxt = execaCommand('nuxt dev');
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
       let errorMessage;
 
       try {
-        await axios.post('http://localhost:3000');
+        await axios.post(`http://localhost:${port}`);
       } catch (error) {
         errorMessage = error.response.data.message;
       }
@@ -386,14 +391,15 @@ export default {
       `,
     });
 
-    const nuxt = execaCommand('nuxt dev');
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
       let errorMessage;
 
       try {
-        await axios.post('http://localhost:3000');
+        await axios.post(`http://localhost:${port}`);
       } catch (error) {
         errorMessage = error.response.data.message;
       }
@@ -433,14 +439,15 @@ export default {
       `,
     });
 
-    const nuxt = execaCommand('nuxt dev');
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
-        this.page.goto('http://localhost:3000'),
+        this.page.goto(`http://localhost:${port}`),
       ]);
 
       expect(capture.email.body).toEqual('This is an incredible test message');
@@ -537,11 +544,15 @@ export default {
       'node_modules',
     );
 
-    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev']);
+    const port = await getPort();
+
+    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'], {
+      env: { PORT: port },
+    });
 
     try {
-      await nuxtDevReady();
-      await this.page.goto('http://localhost:3000');
+      await nuxtDevReady(port);
+      await this.page.goto(`http://localhost:${port}`);
       const button = await this.page.waitForSelector('button');
 
       const [capture] = await Promise.all([
@@ -584,19 +595,84 @@ export default {
       'node_modules',
     );
 
-    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev']);
+    const port = await getPort();
+
+    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'], {
+      env: { PORT: port },
+    });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
       let errorMessage;
 
       try {
-        console.log(await axios.post('http://localhost:3000'));
+        await axios.post(`http://localhost:${port}`);
       } catch (error) {
         errorMessage = error.response.data.error.message;
       }
 
       expect(errorMessage).toEqual('Message config not found at index 10.');
+    } finally {
+      await kill(nuxt.pid);
+    }
+  },
+  async 'nuxt2: runtime config'() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            '${packageName`@nuxtjs/axios`}',
+            '~/../src/index.js',
+          ],
+          privateRuntimeConfig: {
+            mail: {
+              message: { to: 'johndoe@gmail.com' },
+              smtp: { port: 3001 },
+            }
+          },
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script>
+        export default {
+          asyncData: context => context.$mail.send({
+            from: 'a@b.de',
+            subject: 'Incredible',
+            text: 'This is an incredible test message',
+            to: 'foo@bar.de',
+          })
+        }
+        </script>
+      `,
+    });
+
+    await fs.symlink(
+      P.join('..', 'node_modules', '.cache', 'nuxt2', 'node_modules'),
+      'node_modules',
+    );
+
+    const port = await getPort();
+
+    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'], {
+      env: { PORT: port },
+    });
+
+    try {
+      await nuxtDevReady(port);
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto(`http://localhost:${port}`),
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
     } finally {
       await kill(nuxt.pid);
     }
@@ -637,14 +713,18 @@ export default {
       'node_modules',
     );
 
-    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev']);
+    const port = await getPort();
+
+    const nuxt = execa(P.join('node_modules', '.bin', 'nuxt'), ['dev'], {
+      env: { PORT: port },
+    });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
-        this.page.goto('http://localhost:3000'),
+        this.page.goto(`http://localhost:${port}`),
       ]);
 
       expect(capture.email.body).toEqual('This is an incredible test message');
@@ -685,15 +765,66 @@ export default {
       `,
     });
 
+    const port = await getPort();
     await execaCommand('nuxt build');
-    const nuxt = execaCommand('nuxt start');
+    const nuxt = execaCommand('nuxt start', { env: { PORT: port } });
 
     try {
-      await portReady(3000);
+      await portReady(port);
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
-        this.page.goto('http://localhost:3000'),
+        this.page.goto(`http://localhost:${port}`),
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
+    } finally {
+      await kill(nuxt.pid);
+    }
+  },
+  async 'runtime config'() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: ['../src/index.js'],
+          runtimeConfig: {
+            mail: {
+              message: { to: 'johndoe@gmail.com' },
+              smtp: { port: 3001 },
+            },
+          },
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+          to: 'foo@bar.de',
+        })
+        </script>
+      `,
+    });
+
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
+
+    try {
+      await nuxtDevReady(port);
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto(`http://localhost:${port}`),
       ]);
 
       expect(capture.email.body).toEqual('This is an incredible test message');
@@ -737,14 +868,15 @@ export default {
       `,
     });
 
-    const nuxt = execaCommand('nuxt dev');
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('to@gmail.com'),
-        this.page.goto('http://localhost:3000'),
+        this.page.goto(`http://localhost:${port}`),
       ]);
 
       expect(capture.email.body).toEqual('This is an incredible test message');
@@ -792,14 +924,15 @@ export default {
       `,
     });
 
-    const nuxt = execaCommand('nuxt dev');
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
 
     try {
-      await nuxtDevReady();
+      await nuxtDevReady(port);
 
       const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
-        this.page.goto('http://localhost:3000'),
+        this.page.goto(`http://localhost:${port}`),
       ]);
 
       expect(capture.email.body).toEqual('This is an incredible test message');
