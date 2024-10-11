@@ -82,6 +82,17 @@ export default function (moduleOptions, nuxt) {
     addImports([
       { from: resolver.resolve('./composable.js'), name: 'useMail' },
     ]);
+
+    nuxt.hook('nitro:config', nitroConfig => {
+      if (!nitroConfig.imports) {
+        nitroConfig.imports = { imports: [] };
+      }
+
+      nitroConfig.imports.imports.push({
+        from: resolver.resolve('./composable.js'),
+        name: 'useMail',
+      });
+    });
   } else {
     const app = express();
     const transport = nodemailer.createTransport(options.smtp);
