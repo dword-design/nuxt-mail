@@ -55,8 +55,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.1
       execa:
-        specifier: ^8.0.1
-        version: 8.0.1
+        specifier: ^9.0.0
+        version: 9.4.0
       get-port:
         specifier: ^7.1.0
         version: 7.1.0
