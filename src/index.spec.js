@@ -282,6 +282,65 @@ export default {
       await kill(nuxt.pid);
     }
   },
+  async 'config by index sendmail'() {
+    /*
+     * To pass this test you need to set up the Postfix locally and configure the relay host to the test mailServer
+     * in the /etc/postfix/main.cf
+     * ...
+     * relayhost = [127.0.0.1]:3001
+     * ...
+     *
+     */
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', {
+              message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
+              transport: 'sendmail',
+              smtp: { port: 3001 },
+              sendmail: { sendmail: true, newline: 'unix', path: '/usr/sbin/sendmail', secure: true },
+            }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+          config: 1,
+        })
+        </script>
+      `,
+    });
+
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
+
+    try {
+      await nuxtDevReady(port);
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto(`http://localhost:${port}`),
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
+    } finally {
+      await kill(nuxt.pid);
+    }
+  },
   async 'config by name'() {
     await outputFiles({
       'nuxt.config.js': endent`

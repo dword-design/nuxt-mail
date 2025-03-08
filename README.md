@@ -79,9 +79,16 @@ export default {
       message: {
         to: 'foo@bar.de',
       },
+      transport: 'smtp', // smtp | sendmail
       smtp: {
         host: "smtp.example.com",
         port: 587,
+      },
+      sendmail: {
+        sendmail: true,
+        newline: 'unix',
+        path: '/usr/sbin/sendmail',
+        secure: true,
       },
     }],
   ],
@@ -90,9 +97,16 @@ export default {
     message: {
       to: 'foo@bar.de',
     },
+    transport: 'smtp', // smtp | sendmail
     smtp: {
       host: "smtp.example.com",
       port: 587,
+    },
+    sendmail: {
+      sendmail: true,
+      newline: 'unix',
+      path: '/usr/sbin/sendmail',
+      secure: true,
     },
   },
   // or use runtimeConfig
@@ -101,9 +115,16 @@ export default {
       message: {
         to: 'foo@bar.de',
       },
+      transport: 'smtp', // smtp | sendmail
       smtp: {
         host: "smtp.example.com",
         port: 587,
+      },
+      sendmail: {
+        sendmail: true,
+        newline: 'unix',
+        path: '/usr/sbin/sendmail',
+        secure: true,
       },
     },
   },

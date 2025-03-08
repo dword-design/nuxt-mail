@@ -34,13 +34,18 @@ export default function (moduleOptions, nuxt) {
     nuxt.options[isNuxt3 ? 'runtimeConfig' : 'privateRuntimeConfig'];
 
   const options = {
+    transport: 'smtp',
     ...runtimeConfig.mail,
     ...nuxt.options.mail,
     ...moduleOptions,
   };
 
-  if (!options.smtp) {
+  if (options.transport === 'smtp' && !options.smtp) {
     throw new Error('SMTP config is missing.');
+  }
+
+  if (options.transport === 'sendmail' && !options.sendmail) {
+    throw new Error('Sendmail config is missing.');
   }
 
   if (
