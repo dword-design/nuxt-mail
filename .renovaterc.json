@@ -25,9 +25,20 @@
         "\\.js$"
       ],
       "matchStrings": [
-        "(^|\\s)gitHubAction`(?<depName>.*?)@v(?<currentValue>.*?)`"
+        "(^|[^\\w])gitHubAction`(?<depName>.*?)@v(?<currentValue>.*?)`"
       ],
       "versioningTemplate": "npm"
+    },
+    {
+      "datasourceTemplate": "node-version",
+      "depNameTemplate": "node",
+      "fileMatch": [
+        "\\.js$"
+      ],
+      "matchStrings": [
+        "(^|[^\\w])nodejsVersion`(?<currentValue>.*?)`"
+      ],
+      "versioningTemplate": "node"
     }
   ],
   "semanticCommitScope": null
