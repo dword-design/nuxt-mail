@@ -53,7 +53,6 @@
   "devDependencies": {
     "@dword-design/base": "^11.2.9",
     "@dword-design/base-config-nuxt-module": "^1.0.0",
-    "@dword-design/puppeteer": "^7.0.2",
     "@nuxtjs/axios": "^5.13.6",
     "axios": "^0.30.0",
     "depcheck-package-name": "^3.0.1",
@@ -62,6 +61,8 @@
     "nuxt": "^3.16.2",
     "nuxt-dev-ready": "^3.0.0",
     "output-files": "^2.0.32",
+    "playwright": "^1.51.1",
+    "playwright-chromium": "^1.51.1",
     "port-ready": "^0.1.0",
     "smtp-tester": "^2.1.0",
     "tree-kill-promise": "^3.0.14",

@@ -1,5 +1,4 @@
 import { endent } from '@dword-design/functions';
-import puppeteer from '@dword-design/puppeteer';
 import axios from 'axios';
 import packageName from 'depcheck-package-name';
 import { execa, execaCommand } from 'execa';
@@ -8,6 +7,7 @@ import getPort from 'get-port';
 import nuxtDevReady from 'nuxt-dev-ready';
 import outputFiles from 'output-files';
 import P from 'path';
+import { chromium } from 'playwright';
 import portReady from 'port-ready';
 import smtpTester from 'smtp-tester';
 import kill from 'tree-kill-promise';
@@ -15,11 +15,9 @@ import withLocalTmpDir from 'with-local-tmp-dir';
 
 export default {
   async after() {
-    await this.mailServer.stop();
+    await Promise.all([this.browser.close(), this.mailServer.stop()]);
   },
   async afterEach() {
-    await this.page.close();
-    await this.browser.close();
     await this.resetWithLocalTmpDir();
   },
   async bcc() {
@@ -69,6 +67,8 @@ export default {
   },
   async before() {
     this.mailServer = smtpTester.init(3001);
+    this.browser = await chromium.launch();
+    this.page = await this.browser.newPage();
 
     await fs.outputFile(
       P.join('node_modules', '.cache', 'nuxt2', 'package.json'),
@@ -77,13 +77,10 @@ export default {
 
     await execaCommand('pnpm install', {
       cwd: P.join('node_modules', '.cache', 'nuxt2'),
-      stdio: 'inherit',
     });
   },
   async beforeEach() {
     this.resetWithLocalTmpDir = await withLocalTmpDir();
-    this.browser = await puppeteer.launch();
-    this.page = await this.browser.newPage();
     this.mailServer.removeAll();
   },
   async cc() {
