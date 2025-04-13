@@ -53,9 +53,7 @@
   "devDependencies": {
     "@dword-design/base": "^11.2.9",
     "@dword-design/base-config-nuxt-module": "^1.0.0",
-    "@nuxtjs/axios": "^5.13.6",
     "axios": "^0.30.0",
-    "depcheck-package-name": "^3.0.1",
     "execa": "^8.0.1",
     "get-port": "^7.1.0",
     "nuxt": "^3.16.2",
