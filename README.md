@@ -55,7 +55,7 @@ Adds email sending capability to a Nuxt.js app. Adds a server route, an injected
 
 Does not work for static sites (via `nuxt generate`) because the module creates a server route.
 
-This module has been built in Nuxt 2 time where it was extra effort to build server routes. With Nuxt 3 it got much easier to do so, so this module is basically for simple contact forms. If you want to build more complex stuff, I recommend to use [nodemailer](https://www.npmjs.com/package/nodemailer) directly or [nuxt-nodemailer](https://www.npmjs.com/package/nuxt-nodemailer) instead.
+ℹ️ **Info:** This module has been built in Nuxt 2 time where it was extra effort to build server routes. With Nuxt 3 it got much easier to do so, so this module is basically for simple contact forms. If you want to build more complex stuff, I recommend to use [nodemailer](https://www.npmjs.com/package/nodemailer) directly or [nuxt-nodemailer](https://www.npmjs.com/package/nuxt-nodemailer) instead.
 
 <!-- INSTALL/ -->
 ## Install
