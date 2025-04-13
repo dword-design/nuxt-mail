@@ -16,7 +16,7 @@ export default {
     await Promise.all([this.browser.close(), this.mailServer.stop()]);
   },
   async afterEach() {
-    await this.resetWithLocalTmpDir();
+    await Promise.all([this.resetWithLocalTmpDir(), this.page.close()]);
   },
   async bcc() {
     await outputFiles({
@@ -66,10 +66,10 @@ export default {
   async before() {
     this.mailServer = smtpTester.init(3001);
     this.browser = await chromium.launch();
-    this.page = await this.browser.newPage();
   },
   async beforeEach() {
     this.resetWithLocalTmpDir = await withLocalTmpDir();
+    this.page = await this.browser.newPage();
     this.mailServer.removeAll();
   },
   async cc() {
