@@ -4,7 +4,8 @@ import nodemailer from 'nodemailer';
 import options from '#mail/options.mjs';
 import send from '#mail/send.mjs';
 
-const transport = nodemailer.createTransport(options.smtp);
+const transportType = options.transport || 'smtp';
+const transport = nodemailer.createTransport(options[transportType]);
 
 export default defineEventHandler(async event => {
   try {
