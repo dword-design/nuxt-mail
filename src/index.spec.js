@@ -18,7 +18,7 @@ export default {
   async afterEach() {
     await Promise.all([this.resetWithLocalTmpDir(), this.page.close()]);
   },
-  async bcc() {
+  async 'bcc foo'() {
     await outputFiles({
       'nuxt.config.js': endent`
         export default {
@@ -55,7 +55,6 @@ export default {
         this.page.goto(`http://localhost:${port}`),
       ]);
 
-      console.log(capture.email);
       expect(capture.email.body).toEqual('This is an incredible test message');
       expect(capture.email.headers.subject).toEqual('Incredible');
       expect(capture.email.headers.from).toEqual('a@b.de');
@@ -72,53 +71,6 @@ export default {
     this.resetWithLocalTmpDir = await withLocalTmpDir();
     this.page = await this.browser.newPage();
     this.mailServer.removeAll();
-  },
-  async cc() {
-    await outputFiles({
-      'nuxt.config.js': endent`
-        export default {
-          modules: [
-            ['../src/index.js', { message: { cc: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
-          ],
-        }
-      `,
-      'pages/index.vue': endent`
-        <template>
-          <div />
-        </template>
-
-        <script setup>
-        const mail = useMail()
-
-        await mail.send({
-          from: 'a@b.de',
-          subject: 'Incredible',
-          text: 'This is an incredible test message',
-        })
-        </script>
-      `,
-    });
-
-    const port = await getPort();
-    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
-
-    try {
-      await nuxtDevReady(port);
-
-      const [capture] = await Promise.all([
-        this.mailServer.captureOne('johndoe@gmail.com'),
-        this.page.goto(`http://localhost:${port}`),
-      ]);
-
-      console.log(capture.email);
-      expect(capture.email.body).toEqual('This is an incredible test message');
-      expect(capture.email.headers.subject).toEqual('Incredible');
-      expect(capture.email.headers.from).toEqual('a@b.de');
-      expect(capture.email.headers.cc).toEqual('johndoe@gmail.com');
-      expect(capture.email.receivers).toEqual({ 'johndoe@gmail.com': true });
-    } finally {
-      await kill(nuxt.pid);
-    }
   },
   async 'cc and bcc'() {
     await outputFiles({
@@ -169,6 +121,52 @@ export default {
         'bcc@gmail.com': true,
         'cc@gmail.com': true,
       });
+    } finally {
+      await kill(nuxt.pid);
+    }
+  },
+  async 'cc foo'() {
+    await outputFiles({
+      'nuxt.config.js': endent`
+        export default {
+          modules: [
+            ['../src/index.js', { message: { cc: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
+          ],
+        }
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+
+        <script setup>
+        const mail = useMail()
+
+        await mail.send({
+          from: 'a@b.de',
+          subject: 'Incredible',
+          text: 'This is an incredible test message',
+        })
+        </script>
+      `,
+    });
+
+    const port = await getPort();
+    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
+
+    try {
+      await nuxtDevReady(port);
+
+      const [capture] = await Promise.all([
+        this.mailServer.captureOne('johndoe@gmail.com'),
+        this.page.goto(`http://localhost:${port}`),
+      ]);
+
+      expect(capture.email.body).toEqual('This is an incredible test message');
+      expect(capture.email.headers.subject).toEqual('Incredible');
+      expect(capture.email.headers.from).toEqual('a@b.de');
+      expect(capture.email.headers.cc).toEqual('johndoe@gmail.com');
+      expect(capture.email.receivers).toEqual({ 'johndoe@gmail.com': true });
     } finally {
       await kill(nuxt.pid);
     }
