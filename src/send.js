@@ -15,11 +15,6 @@ export default async (body, options, transport) => {
     throw new Error(`Message config not found at index ${body.config}.`);
   }
 
-  console.error({
-    ...omit(['config', 'to', 'cc', 'bcc'])(body),
-    ...omit(['name'])(options.message[body.config]),
-  });
-
   await transport.sendMail({
     ...omit(['config', 'to', 'cc', 'bcc'])(body),
     ...omit(['name'])(options.message[body.config]),
