@@ -1,3 +1,17 @@
+# [6.0.0](https://github.com/dword-design/nuxt-mail/compare/v5.1.1...v6.0.0) (2025-04-18)
+
+
+### Bug Fixes
+
+* doc alternatives ([952efa4](https://github.com/dword-design/nuxt-mail/commit/952efa40bdf33133550585d415d6e333976c9cd7))
+* info icon ([843621b](https://github.com/dword-design/nuxt-mail/commit/843621b068b0515ab348f0a22a0e628476ae9e35))
+* lock file maintenance ([#257](https://github.com/dword-design/nuxt-mail/issues/257)) ([aca43c3](https://github.com/dword-design/nuxt-mail/commit/aca43c3cf7e375d2d413214ad3360fdec5dec093))
+
+
+### BREAKING CHANGES
+
+* drop nuxt 2 support
+
 ## [5.1.1](https://github.com/dword-design/nuxt-mail/compare/v5.1.0...v5.1.1) (2024-09-27)
 
 
