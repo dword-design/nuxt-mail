@@ -40,7 +40,7 @@
     "test": "base test"
   },
   "dependencies": {
-    "@dword-design/functions": "^6.0.1",
+    "@dword-design/functions": "^6.0.2",
     "@nuxt/kit": "^3.16.2",
     "express": "^4.21.2",
     "fs-extra": "^11.3.0",
@@ -51,7 +51,7 @@
     "parse-packagejson-name": "^1.0.1"
   },
   "devDependencies": {
-    "@dword-design/base": "^11.2.9",
+    "@dword-design/base": "^11.2.10",
     "@dword-design/base-config-nuxt-module": "^1.0.0",
     "axios": "^0.30.0",
     "execa": "^8.0.1",
@@ -59,14 +59,14 @@
     "nuxt": "^3.16.2",
     "nuxt-dev-ready": "^3.0.0",
     "output-files": "^2.0.32",
-    "playwright": "^1.51.1",
-    "playwright-chromium": "^1.51.1",
+    "playwright": "^1.52.0",
+    "playwright-chromium": "^1.52.0",
     "port-ready": "^0.1.0",
     "smtp-tester": "^2.1.0",
     "tree-kill-promise": "^3.0.14",
     "with-local-tmp-dir": "^5.1.1"
   },
-  "packageManager": "pnpm@9.11.0+sha256.1c0e33f70e5df9eede84a357bdfa0b1f9dba6e58194628d48a1055756f553754",
+  "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677",
   "engines": {
     "node": ">=18"
   },
