@@ -13,10 +13,11 @@ import withLocalTmpDir from 'with-local-tmp-dir';
 
 export default {
   async after() {
-    await Promise.all([this.browser.close(), this.mailServer.stop()]);
+    await this.browser.close();
   },
   async afterEach() {
     await Promise.all([this.resetWithLocalTmpDir(), this.page.close()]);
+    this.mailServer.stop();
   },
   async 'bcc foo'() {
     await outputFiles({
@@ -48,7 +49,6 @@ export default {
 
     const nuxt = execaCommand('nuxt dev', {
       env: { NODE_ENV: '', PORT: port },
-      stdio: 'inherit',
     });
 
     try {
@@ -68,13 +68,12 @@ export default {
     }
   },
   async before() {
-    this.mailServer = smtpTester.init(3001);
     this.browser = await chromium.launch();
   },
   async beforeEach() {
     this.resetWithLocalTmpDir = await withLocalTmpDir();
     this.page = await this.browser.newPage();
-    this.mailServer.removeAll();
+    this.mailServer = smtpTester.init(3001);
   },
   async 'cc and bcc'() {
     await outputFiles({
