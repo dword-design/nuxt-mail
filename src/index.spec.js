@@ -45,7 +45,11 @@ export default {
     });
 
     const port = await getPort();
-    const nuxt = execaCommand('nuxt dev', { env: { PORT: port } });
+
+    const nuxt = execaCommand('nuxt dev', {
+      env: { NODE_ENV: '', PORT: port },
+      stdio: 'inherit',
+    });
 
     try {
       await nuxtDevReady(port);
