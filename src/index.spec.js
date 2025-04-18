@@ -55,6 +55,7 @@ export default {
         this.page.goto(`http://localhost:${port}`),
       ]);
 
+      console.log(capture.email);
       expect(capture.email.body).toEqual('This is an incredible test message');
       expect(capture.email.headers.subject).toEqual('Incredible');
       expect(capture.email.headers.from).toEqual('a@b.de');
