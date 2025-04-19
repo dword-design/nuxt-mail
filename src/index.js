@@ -4,61 +4,45 @@ import {
   addServerHandler,
   addTemplate,
   createResolver,
-  isNuxt3 as isNuxt3Try,
+  defineNuxtConfig,
 } from '@nuxt/kit';
-import express from 'express';
 import fs from 'fs-extra';
-import nodemailer from 'nodemailer';
 import nuxtAliasPath from 'nuxt-alias-path';
 import nuxtPushPlugins from 'nuxt-push-plugins';
 import parsePackagejsonName from 'parse-packagejson-name';
 import P from 'path';
 
-import send from './send.js';
-
 const resolver = createResolver(import.meta.url);
 const packageConfig = fs.readJsonSync(resolver.resolve('../package.json'));
 const moduleName = parsePackagejsonName(packageConfig.name).fullName;
 
-export default function (moduleOptions, nuxt) {
-  nuxt = nuxt || this;
-  let isNuxt3 = true;
+export default defineNuxtConfig({
+  setup: (options, nuxt) => {
+    options = {
+      ...nuxt.options.runtimeConfig.mail,
+      ...nuxt.options.mail,
+      ...options,
+    };
 
-  try {
-    isNuxt3 = isNuxt3Try();
-  } catch {
-    isNuxt3 = false;
-  }
+    if (!options.smtp) {
+      throw new Error('SMTP config is missing.');
+    }
 
-  const runtimeConfig =
-    nuxt.options[isNuxt3 ? 'runtimeConfig' : 'privateRuntimeConfig'];
+    if (
+      (Array.isArray(options.message) && options.message.length === 0) ||
+      !options.message
+    ) {
+      throw new Error('You have to provide at least one config.');
+    }
 
-  const options = {
-    ...runtimeConfig.mail,
-    ...nuxt.options.mail,
-    ...moduleOptions,
-  };
+    if (!Array.isArray(options.message)) {
+      options.message = [options.message];
+    }
 
-  if (!options.smtp) {
-    throw new Error('SMTP config is missing.');
-  }
+    if (some(c => !c.to && !c.cc && !c.bcc)(options.message)) {
+      throw new Error('You have to provide to/cc/bcc in all configs.');
+    }
 
-  if (
-    (Array.isArray(options.message) && options.message.length === 0) ||
-    !options.message
-  ) {
-    throw new Error('You have to provide at least one config.');
-  }
-
-  if (!Array.isArray(options.message)) {
-    options.message = [options.message];
-  }
-
-  if (some(c => !c.to && !c.cc && !c.bcc)(options.message)) {
-    throw new Error('You have to provide to/cc/bcc in all configs.');
-  }
-
-  if (isNuxt3) {
     addTemplate({
       filename: P.join(moduleName, 'options.mjs'),
       getContents: () =>
@@ -82,23 +66,7 @@ export default function (moduleOptions, nuxt) {
     addImports([
       { from: resolver.resolve('./composable.js'), name: 'useMail' },
     ]);
-  } else {
-    const app = express();
-    const transport = nodemailer.createTransport(options.smtp);
-    app.use(express.json());
 
-    app.post('/send', async (req, res) => {
-      try {
-        await send(req.body, options, transport);
-      } catch (error) {
-        return res.status(500).send(error.message);
-      }
-
-      return res.sendStatus(200);
-    });
-
-    nuxt.addServerMiddleware({ handler: app, path: '/mail' });
-  }
-
-  nuxtPushPlugins(nuxt, resolver.resolve(`./plugin-nuxt${isNuxt3 ? 3 : 2}.js`));
-}
+    nuxtPushPlugins(nuxt, resolver.resolve(`./plugin.js`));
+  },
+});

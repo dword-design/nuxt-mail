@@ -42,7 +42,6 @@
   "dependencies": {
     "@dword-design/functions": "^6.0.2",
     "@nuxt/kit": "^3.16.2",
-    "express": "^4.21.2",
     "fs-extra": "^11.3.0",
     "h3": "^1.15.1",
     "nodemailer": "^6.10.1",
