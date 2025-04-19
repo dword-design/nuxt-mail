@@ -1,3 +1,10 @@
+## [6.0.1](https://github.com/dword-design/nuxt-mail/compare/v6.0.0...v6.0.1) (2025-04-19)
+
+
+### Bug Fixes
+
+* drop nuxt 2 ([#264](https://github.com/dword-design/nuxt-mail/issues/264)) ([29a8e31](https://github.com/dword-design/nuxt-mail/commit/29a8e31e3a7c52d10af133ef3ce6c1ea966a459b))
+
 # [6.0.0](https://github.com/dword-design/nuxt-mail/compare/v5.1.1...v6.0.0) (2025-04-18)
 
 
