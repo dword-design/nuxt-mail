@@ -107,13 +107,12 @@ export default {
     try {
       await nuxtDevReady(port);
 
-      const mails = await Promise.all([
+      const [capture] = await Promise.all([
         this.mailServer.captureOne('johndoe@gmail.com'),
         this.page.goto(`http://localhost:${port}`),
       ]);
 
-      console.log(mails);
-      const [capture] = mails;
+      console.log(capture);
       expect(capture.email.body).toEqual('This is an incredible test message');
       expect(capture.email.headers.subject).toEqual('Incredible');
       expect(capture.email.headers.from).toEqual('a@b.de');
