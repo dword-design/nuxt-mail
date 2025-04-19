@@ -5,6 +5,7 @@ import {
   addTemplate,
   createResolver,
   isNuxt3 as isNuxt3Try,
+  useRuntimeConfig,
 } from '@nuxt/kit';
 import express from 'express';
 import fs from 'fs-extra';
@@ -30,8 +31,9 @@ export default function (moduleOptions, nuxt) {
     isNuxt3 = false;
   }
 
-  const runtimeConfig =
-    nuxt.options[isNuxt3 ? 'runtimeConfig' : 'privateRuntimeConfig'];
+  const runtimeConfig = isNuxt3
+    ? useRuntimeConfig()
+    : nuxt.options.privateRuntimeConfig;
 
   const options = {
     ...runtimeConfig.mail,
