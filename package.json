@@ -50,7 +50,7 @@
     "parse-packagejson-name": "^1.0.1"
   },
   "devDependencies": {
-    "@dword-design/base": "^11.2.10",
+    "@dword-design/base": "^12.0.0",
     "@dword-design/base-config-nuxt-module": "^1.0.0",
     "axios": "^0.30.0",
     "execa": "^8.0.1",
