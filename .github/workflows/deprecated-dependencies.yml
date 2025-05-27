@@ -24,7 +24,7 @@ jobs:
         with:
           comment: Auto-closing the issue
           issue-number: ${{ steps.create-deprecation-issue.outputs.number }}
-      - uses: gautamkrishnar/keepalive-workflow@v1
+      - uses: liskin/gh-workflow-keepalive@v1
 name: deprecated-dependencies
 on:
   schedule:
