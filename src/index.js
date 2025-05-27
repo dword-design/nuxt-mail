@@ -1,3 +1,5 @@
+import P from 'node:path';
+
 import { some } from '@dword-design/functions';
 import {
   addImports,
@@ -9,7 +11,6 @@ import fs from 'fs-extra';
 import nuxtAliasPath from 'nuxt-alias-path';
 import nuxtPushPlugins from 'nuxt-push-plugins';
 import parsePackagejsonName from 'parse-packagejson-name';
-import P from 'path';
 
 const resolver = createResolver(import.meta.url);
 const packageConfig = fs.readJsonSync(resolver.resolve('../package.json'));

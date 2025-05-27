@@ -1,24 +1,16 @@
 {
-  "name": "@dword-design/nuxt-module",
-  "seeAlso": [
-    { "repository": "nuxt-route-meta", "description": "Adds Nuxt page data to route meta at build time." },
-    { "repository": "nuxt-modernizr", "description": "Adds a Modernizr build to your Nuxt.js app." },
-    { "repository": "nuxt-mermaid-string", "description": "Embed a Mermaid diagram in a Nuxt.js app by providing its diagram string." },
-    { "repository": "nuxt-content-git", "description": "Additional module for @nuxt/content that replaces or adds createdAt and updatedAt dates based on the git history." },
-    { "repository": "nuxt-babel-runtime", "description": "Nuxt CLI that supports babel. Inspired by @nuxt/typescript-runtime." }
-  ],
-  "eslintConfig": {
-    "extends": "@dword-design/eslint-config",
-    "rules": {
-      "import/no-unresolved": ["error", { "ignore": ["#imports", "#mail"] }]
-    },
-    "globals": {
-      "$fetch": "readonly"
-    }
-  },
   "depcheckConfig": {
     "ignoreMatches": [
       "playwright-chromium"
     ]
-  }
+  },
+  "name": "@dword-design/nuxt-module",
+  "seeAlso": [
+    { "description": "Adds Nuxt page data to route meta at build time.", "repository": "nuxt-route-meta" },
+    { "description": "Adds a Modernizr build to your Nuxt.js app.", "repository": "nuxt-modernizr" },
+    { "description": "Embed a Mermaid diagram in a Nuxt.js app by providing its diagram string.", "repository": "nuxt-mermaid-string" },
+    { "description": "Additional module for @nuxt/content that replaces or adds createdAt and updatedAt dates based on the git history.", "repository": "nuxt-content-git" },
+    { "description": "Nuxt CLI that supports babel. Inspired by @nuxt/typescript-runtime.", "repository": "nuxt-babel-runtime" }
+  ],
+  "virtualImports": ["#mail"]
 }

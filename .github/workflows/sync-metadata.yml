@@ -8,7 +8,7 @@ jobs:
           approve: false
           commitMessage: "fix: write GitHub metadata to package.json [{changes}]"
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-      - uses: gautamkrishnar/keepalive-workflow@v1
+      - uses: liskin/gh-workflow-keepalive@v1
 name: sync-metadata
 on:
   schedule:
