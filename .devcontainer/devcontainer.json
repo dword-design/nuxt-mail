@@ -1,3 +1,3 @@
 {
-  "postCreateCommand": "pnpm install --frozen-lockfile"
+  "postCreateCommand": "bash .devcontainer/postcreate.sh"
 }

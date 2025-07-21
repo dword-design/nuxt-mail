@@ -22,7 +22,7 @@
     {
       "datasourceTemplate": "github-tags",
       "fileMatch": [
-        "\\.js$"
+        "\\.ts$"
       ],
       "matchStrings": [
         "(^|[^\\w])gitHubAction`(?<depName>.*?)@v(?<currentValue>.*?)`"
@@ -33,7 +33,7 @@
       "datasourceTemplate": "node-version",
       "depNameTemplate": "node",
       "fileMatch": [
-        "\\.js$"
+        "\\.ts$"
       ],
       "matchStrings": [
         "(^|[^\\w])nodejsVersion`(?<currentValue>.*?)`"
