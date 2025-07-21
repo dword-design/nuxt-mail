@@ -21,7 +21,7 @@ const test = base.extend<{ mailServer: MailServer }>({
     try {
       await use(mailServer);
     } finally {
-      mailServer.stop(() => {});
+      mailServer.stop();
     }
   },
 });

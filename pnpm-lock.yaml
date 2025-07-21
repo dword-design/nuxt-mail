@@ -67,8 +67,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       smtp-tester:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: npm:@dword-design/smtp-tester-fork@^0.0.1
+        version: '@dword-design/smtp-tester-fork@0.0.1'
       tree-kill-promise:
         specifier: ^4.0.0
         version: 4.0.0
@@ -413,6 +413,10 @@ packages:
 
   '@dword-design/plugin-name-to-package-name@0.1.2':
     resolution: {integrity: sha512-kATg/RzRkq/Yv0qNJziPqwAzKstBTzuXnowH4MvAMyqW6C7o5HlgZtik3GzO0kBKCBZBoRswBSvo9AHclOTxfg==}
+
+  '@dword-design/smtp-tester-fork@0.0.1':
+    resolution: {integrity: sha512-UtLC1LlK1M1f7SqUjQeN/1f9OmJUf7C/yjiRv9BWs5YaSm+q8DMH4ZvUptJKiuTD32m2ugzZPW2ukWooAkiomQ==}
+    engines: {node: '>=14.0.0'}
 
   '@emnapi/core@1.4.5':
     resolution: {integrity: sha512-XsLw1dEOpkSX/WucdqUhPWP7hDxSvZiY+fsUC14h+FtQ2Ifni4znbBt8punRX+Uj2JG/uDb8nEHVKvrVlvdZ5Q==}
@@ -5781,10 +5785,6 @@ packages:
     resolution: {integrity: sha512-cEw/hdIY+xw1pkbQbQ23hvnm9kNABAsgYB+jJYGkzAynZxJ2VB9aqC6JhB1vpdDnqan7C7AL3qHYRGwz5eD6BQ==}
     engines: {node: '>=12.0.0'}
 
-  smtp-tester@2.1.0:
-    resolution: {integrity: sha512-HfOBdHkdwoBO+Qb06H8ShVEc08nnvDbtYWzdT5iQMIeInBdLKu17XOhuaC79uM24zPApRfN3JAg627TIy3y/Ww==}
-    engines: {node: '>=14.0.0'}
-
   sort-keys@5.1.0:
     resolution: {integrity: sha512-aSbHV0DaBcr7u0PVHXzM6NbZNAtrr9sF6+Qfs9UUVG7Ll3jQ6hHi8F/xqIIcn2rvIVbr0v/2zyjSdwSV47AgLQ==}
     engines: {node: '>=12'}
@@ -7399,6 +7399,13 @@ snapshots:
   '@dword-design/plugin-name-to-package-name@0.1.2':
     dependencies:
       is-absolute: 1.0.0
+
+  '@dword-design/smtp-tester-fork@0.0.1':
+    dependencies:
+      '@types/mailparser': 3.4.6
+      '@types/smtp-server': 3.5.10
+      mailparser: 3.7.4
+      smtp-server: 3.14.0
 
   '@emnapi/core@1.4.5':
     dependencies:
@@ -13160,13 +13167,6 @@ snapshots:
       ipv6-normalize: 1.0.1
       nodemailer: 7.0.3
       punycode.js: 2.3.1
-
-  smtp-tester@2.1.0:
-    dependencies:
-      '@types/mailparser': 3.4.6
-      '@types/smtp-server': 3.5.10
-      mailparser: 3.7.4
-      smtp-server: 3.14.0
 
   sort-keys@5.1.0:
     dependencies:
