@@ -24,6 +24,15 @@
   "license": "MIT",
   "author": "Sebastian Landwehr <info@sebastianlandwehr.com>",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/module.js",
+        "types": "./dist/module.d.ts"
+      }
+    }
+  },
+  "main": "dist/module.js",
   "files": [
     "dist"
   ],
