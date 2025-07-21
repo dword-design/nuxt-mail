@@ -53,6 +53,7 @@
     "@dword-design/base-config-nuxt-module": "^3.0.0",
     "@playwright/browser-chromium": "^1.54.1",
     "@playwright/test": "^1.54.1",
+    "@types/nodemailer": "^6.4.17",
     "axios": "^1.9.0",
     "endent": "npm:@dword-design/endent@^1.4.7",
     "execa": "^9.6.0",
