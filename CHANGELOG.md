@@ -1,3 +1,18 @@
+# [7.0.0](https://github.com/dword-design/nuxt-mail/compare/v6.0.2...v7.0.0) (2025-07-21)
+
+
+### Bug Fixes
+
+* foo ([51685b2](https://github.com/dword-design/nuxt-mail/commit/51685b2142fe08df411714ed5e2fc6255a6801a6))
+* lock file maintenance ([#269](https://github.com/dword-design/nuxt-mail/issues/269)) ([f74ae16](https://github.com/dword-design/nuxt-mail/commit/f74ae16e06dd9d7c31718864192ef2e1eca14418))
+* update config files ([4f1e4ba](https://github.com/dword-design/nuxt-mail/commit/4f1e4baf227688719e35cdeffe4f6bb4c57cd57a))
+
+
+### BREAKING CHANGES
+
+* node.js >= 20
+* not pushing plugin anymore. probably not relevant for most. just using default addPlugin from Nuxt.
+
 ## [6.0.2](https://github.com/dword-design/nuxt-mail/compare/v6.0.1...v6.0.2) (2025-05-27)
 
 
