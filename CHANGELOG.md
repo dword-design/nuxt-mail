@@ -1,3 +1,10 @@
+## [7.0.1](https://github.com/dword-design/nuxt-mail/compare/v7.0.0...v7.0.1) (2025-07-21)
+
+
+### Bug Fixes
+
+* update pnpm to v10.13.1 ([#261](https://github.com/dword-design/nuxt-mail/issues/261)) ([840dfa2](https://github.com/dword-design/nuxt-mail/commit/840dfa2bcf5a9bf0aa9f5ee910d9c1d3ededc994))
+
 # [7.0.0](https://github.com/dword-design/nuxt-mail/compare/v6.0.2...v7.0.0) (2025-07-21)
 
 
