@@ -164,53 +164,6 @@ export default {
 </script>
 ```
 
-## Nuxt 2
-
-For Nuxt 2, you need to install [@nuxtjs/axios](https://www.npmjs.com/package/@nuxtjs/axios) and add it to your module list before `nuxt-mail`:
-
-```js
-// nuxt.config.js
-export default {
-  modules: [
-    [
-      '@nuxtjs/axios',
-      ['nuxt-mail', { /* ... */ }],
-    }],
-  ],
-}
-```
-
-Then you can use the injected variable like so:
-
-```html
-<script>
-export default {
-  methods: {
-    sendEmail() {
-      this.$mail.send({
-        from: 'John Doe',
-        subject: 'Incredible',
-        text: 'This is an incredible test message',
-      })
-    },
-  },
-}
-</script>
-```
-
-### Note about production use
-
-When you use `nuxt-mail` in production and you configured a reverse proxy that hides your localhost behind a domain, you need to tell `@nuxt/axios` which base URL you are using. Otherwise `nuxt-mail` won't find the send route. Refer to [@nuxt/axios options](https://axios.nuxtjs.org/options) on how to do that. The easiest option is to set the `API_URL` environment variable, or set something else in your `nuxt.config.js`:
-
-```js
-// nuxt.config.js
-export default {
-  axios: {
-    baseURL: process.env.BASE_URL,
-  },
-}
-```
-
 ## Multiple message configs
 
 It is also possible to provide multiple message configurations by changing the `message` config into an array.

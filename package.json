@@ -62,8 +62,7 @@
     "output-files": "^3.0.0",
     "port-ready": "^0.1.0",
     "smtp-tester": "npm:@dword-design/smtp-tester-fork@^0.0.1",
-    "tree-kill-promise": "^4.0.0",
-    "with-local-tmp-dir": "^5.1.1"
+    "tree-kill-promise": "^4.0.0"
   },
   "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677",
   "engines": {

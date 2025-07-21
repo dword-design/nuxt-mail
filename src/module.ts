@@ -16,6 +16,10 @@ const resolver = createResolver(import.meta.url);
 const packageConfig = fs.readJsonSync(resolver.resolve('../package.json'));
 const moduleName = parsePackagejsonName(packageConfig.name).fullName;
 
+type Message = { from?: string; name?: string };
+
+type MailOptions = { message?: Message | Message[]; smtp: unknown };
+
 export default defineNuxtModule({
   setup: async (options, nuxt) => {
     options = {
@@ -23,10 +27,6 @@ export default defineNuxtModule({
       ...nuxt.options.mail,
       ...options,
     };
-
-    if (!Array.isArray(options.message)) {
-      options.message = [options.message];
-    }
 
     if (!nuxt.options._prepare) {
       if (!options.smtp) {
@@ -39,10 +39,17 @@ export default defineNuxtModule({
       ) {
         throw new Error('You have to provide at least one config.');
       }
+    }
 
-      if (options.message.some(c => !c.to && !c.cc && !c.bcc)) {
-        throw new Error('You have to provide to/cc/bcc in all configs.');
-      }
+    if (!Array.isArray(options.message)) {
+      options.message = [options.message];
+    }
+
+    if (
+      !nuxt.options._prepare &&
+      options.message.some(c => !c.to && !c.cc && !c.bcc)
+    ) {
+      throw new Error('You have to provide to/cc/bcc in all configs.');
     }
 
     addTemplate({
@@ -77,3 +84,14 @@ export default defineNuxtModule({
     addPlugin(resolver.resolve(`./plugin`));
   },
 });
+declare module '@nuxt/schema' {
+  interface NuxtConfig {
+    ['mail']?: MailOptions;
+  }
+  interface NuxtOptions {
+    ['mail']?: MailOptions;
+  }
+  interface RuntimeConfig {
+    mail?: MailOptions;
+  }
+}

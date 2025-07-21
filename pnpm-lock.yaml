@@ -72,9 +72,6 @@ importers:
       tree-kill-promise:
         specifier: ^4.0.0
         version: 4.0.0
-      with-local-tmp-dir:
-        specifier: ^5.1.1
-        version: 5.1.1
 
 packages:
 
@@ -336,10 +333,6 @@ packages:
     resolution: {integrity: sha512-TkjZ7g9rLjyez7AP8ed1U3GoL4anvmQNWR4tlHzkaqzltZSybgAMMQ3lBpeBg7Y3q3UdyAtw9kipsEe+U8gsgg==}
     engines: {node: '>=20'}
     hasBin: true
-
-  '@dword-design/chdir@2.1.4':
-    resolution: {integrity: sha512-cHpMTx4XepHQi3hmDnKma5YXU4pm01k9xKI1k8Wwq25cN3j0FCWbiji11hdrRYr6+uDC9mrb/M5Mo0okYiNRzA==}
-    engines: {node: '>=12'}
 
   '@dword-design/ci@4.0.6':
     resolution: {integrity: sha512-7yIQ2z1PcsOuCnWU9TteY9tabWM74bea6JlG3tbQN2iXMd1xMB/hFGH6j7ykdDSNvtwhiPzJQWV0wZ8OyvAcJw==}
@@ -6572,10 +6565,6 @@ packages:
     resolution: {integrity: sha512-DLiFIXYC5fMPxaRg832S6F5mJYvePtmO5G9v9IgUFPhXm9/GkXarH/TUrBAVzhTCzAj9anE/+GjrgXp/54nOgw==}
     engines: {node: '>= 12.0.0'}
 
-  with-local-tmp-dir@5.1.1:
-    resolution: {integrity: sha512-7HZx3lC2BNMqrkob/29+GxBZtt0J2j5qyYn77/FivEAKS2Q90Tlc6KaqjBAPnVo0B3OfHDtCBZG3i8S6kD8N8A==}
-    engines: {node: '>=14'}
-
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
@@ -7230,8 +7219,6 @@ snapshots:
       - sass
       - supports-color
       - vue-eslint-parser
-
-  '@dword-design/chdir@2.1.4': {}
 
   '@dword-design/ci@4.0.6':
     dependencies:
@@ -13949,11 +13936,6 @@ snapshots:
       stack-trace: 0.0.10
       triple-beam: 1.4.1
       winston-transport: 4.9.0
-
-  with-local-tmp-dir@5.1.1:
-    dependencies:
-      '@dword-design/chdir': 2.1.4
-      tmp-promise: 3.0.3
 
   word-wrap@1.2.5: {}
 

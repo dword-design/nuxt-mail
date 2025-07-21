@@ -13,10 +13,9 @@ import type { MailServer } from 'smtp-tester';
 import smtpTester from 'smtp-tester';
 import kill from 'tree-kill-promise';
 
-const test = base.extend<{ mailServer: MailServer }>({
-  mailServer: async ({}, use) => {
-    const port = await getPort();
-    const mailServer = smtpTester.init(port);
+const test = base.extend<{ mailServer: MailServer; mailServerPort: number }>({
+  mailServer: async ({ mailServerPort }, use) => {
+    const mailServer = smtpTester.init(mailServerPort);
 
     try {
       await use(mailServer);
@@ -24,16 +23,20 @@ const test = base.extend<{ mailServer: MailServer }>({
       mailServer.stop();
     }
   },
+  mailServerPort: async ({}, use) => {
+    const port = await getPort();
+    await use(port);
+  },
 });
 
-test('bcc', async ({ page, mailServer }, testInfo) => {
+test('bcc', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default {
         modules: [
-          ['../../src', { message: { bcc: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
+          ['../../src', { message: { bcc: 'johndoe@gmail.com' }, smtp: { port: ${mailServerPort} } }],
         ],
       }
     `,
@@ -59,6 +62,7 @@ test('bcc', async ({ page, mailServer }, testInfo) => {
   const nuxt = execaCommand('nuxt dev', {
     cwd,
     env: { NODE_ENV: '', PORT: String(port) },
+    reject: false,
   });
 
   try {
@@ -78,14 +82,14 @@ test('bcc', async ({ page, mailServer }, testInfo) => {
   }
 });
 
-test('cc', async ({ page, mailServer }, testInfo) => {
+test('cc', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default {
         modules: [
-          ['../../src', { message: { cc: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
+          ['../../src', { message: { cc: 'johndoe@gmail.com' }, smtp: { port: ${mailServerPort} } }],
         ],
       }
     `,
@@ -107,7 +111,12 @@ test('cc', async ({ page, mailServer }, testInfo) => {
   });
 
   const port = await getPort();
-  const nuxt = execaCommand('nuxt dev', { cwd, env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt dev', {
+    cwd,
+    env: { PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await nuxtDevReady(port);
@@ -127,7 +136,7 @@ test('cc', async ({ page, mailServer }, testInfo) => {
   }
 });
 
-test('cc and bcc', async ({ page, mailServer }, testInfo) => {
+test('cc and bcc', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
@@ -136,7 +145,7 @@ test('cc and bcc', async ({ page, mailServer }, testInfo) => {
         modules: [
           ['../../src', {
             message: { bcc: 'bcc@gmail.com', cc: 'cc@gmail.com' },
-            smtp: { port: 3001 },
+            smtp: { port: ${mailServerPort} },
           }],
         ],
       }
@@ -159,7 +168,12 @@ test('cc and bcc', async ({ page, mailServer }, testInfo) => {
   });
 
   const port = await getPort();
-  const nuxt = execaCommand('nuxt dev', { cwd, env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt dev', {
+    cwd,
+    env: { PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await nuxtDevReady(port);
@@ -183,14 +197,14 @@ test('cc and bcc', async ({ page, mailServer }, testInfo) => {
   }
 });
 
-test('client side', async ({ page, mailServer }, testInfo) => {
+test('client side', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default {
         modules: [
-          ['../../src', { message: { to: 'johndoe@gmail.com' }, smtp: { port: 3001 } }],
+          ['../../src', { message: { to: 'johndoe@gmail.com' }, smtp: { port: ${mailServerPort} } }],
         ],
       }
     `,
@@ -213,7 +227,12 @@ test('client side', async ({ page, mailServer }, testInfo) => {
   });
 
   const port = await getPort();
-  const nuxt = execaCommand('nuxt dev', { cwd, env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt dev', {
+    cwd,
+    env: { PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await nuxtDevReady(port);
@@ -233,7 +252,11 @@ test('client side', async ({ page, mailServer }, testInfo) => {
   }
 });
 
-test('config by index', async ({ page, mailServer }, testInfo) => {
+test('config by index', async ({
+  page,
+  mailServer,
+  mailServerPort,
+}, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
@@ -242,7 +265,7 @@ test('config by index', async ({ page, mailServer }, testInfo) => {
         modules: [
           ['../../src', {
             message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
-            smtp: { port: 3001 },
+            smtp: { port: ${mailServerPort} },
           }],
         ],
       }
@@ -266,7 +289,12 @@ test('config by index', async ({ page, mailServer }, testInfo) => {
   });
 
   const port = await getPort();
-  const nuxt = execaCommand('nuxt dev', { cwd, env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt dev', {
+    cwd,
+    env: { PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await nuxtDevReady(port);
@@ -285,7 +313,11 @@ test('config by index', async ({ page, mailServer }, testInfo) => {
   }
 });
 
-test('config by name', async ({ page, mailServer }, testInfo) => {
+test('config by name', async ({
+  page,
+  mailServer,
+  mailServerPort,
+}, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
@@ -297,7 +329,7 @@ test('config by name', async ({ page, mailServer }, testInfo) => {
               { to: 'foo@bar.com' },
               { name: 'foo', to: 'johndoe@gmail.com' },
             ],
-            smtp: { port: 3001 },
+            smtp: { port: ${mailServerPort} },
           }],
         ],
       }
@@ -321,7 +353,12 @@ test('config by name', async ({ page, mailServer }, testInfo) => {
   });
 
   const port = await getPort();
-  const nuxt = execaCommand('nuxt dev', { env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt dev', {
+    cwd,
+    env: { NODE_ENV: '', PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await nuxtDevReady(port);
@@ -364,7 +401,12 @@ test('config invalid index', async ({}, testInfo) => {
   });
 
   const port = await getPort();
-  const nuxt = execaCommand('nuxt dev', { cwd, env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt dev', {
+    cwd,
+    env: { PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await nuxtDevReady(port);
@@ -403,7 +445,12 @@ test('config name not found', async ({}, testInfo) => {
   });
 
   const port = await getPort();
-  const nuxt = execaCommand('nuxt dev', { cwd, env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt dev', {
+    cwd,
+    env: { PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await nuxtDevReady(port);
@@ -421,7 +468,7 @@ test('config name not found', async ({}, testInfo) => {
   }
 });
 
-test('injected', async ({ page, mailServer }, testInfo) => {
+test('injected', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
@@ -430,7 +477,7 @@ test('injected', async ({ page, mailServer }, testInfo) => {
         modules: [
           ['../../src', {
             message: { to: 'johndoe@gmail.com' },
-            smtp: { port: 3001 },
+            smtp: { port: ${mailServerPort} },
           }],
         ],
       }
@@ -454,7 +501,12 @@ test('injected', async ({ page, mailServer }, testInfo) => {
   });
 
   const port = await getPort();
-  const nuxt = execaCommand('nuxt dev', { cwd, env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt dev', {
+    cwd,
+    env: { PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await nuxtDevReady(port);
@@ -487,9 +539,9 @@ test('no message configs', async ({}, testInfo) => {
     `,
   );
 
-  await expect(execaCommand('nuxt build', { cwd })).rejects.toThrow(
-    'You have to provide at least one config.',
-  );
+  await expect(
+    execaCommand('nuxt build', { cwd, env: { NODE_ENV: '' } }),
+  ).rejects.toThrow('You have to provide at least one config.');
 });
 
 test('no recipients', async ({}, testInfo) => {
@@ -528,7 +580,7 @@ test('no smtp config', async ({}, testInfo) => {
   );
 });
 
-test('prod', async ({ page, mailServer }, testInfo) => {
+test('prod', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
@@ -537,7 +589,7 @@ test('prod', async ({ page, mailServer }, testInfo) => {
         modules: [
           ['../../src', {
             message: { to: 'johndoe@gmail.com' },
-            smtp: { port: 3001 },
+            smtp: { port: ${mailServerPort} },
           }],
         ],
       }
@@ -562,7 +614,12 @@ test('prod', async ({ page, mailServer }, testInfo) => {
 
   const port = await getPort();
   await execaCommand('nuxt build', { cwd });
-  const nuxt = execaCommand('nuxt start', { cwd, env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt start', {
+    cwd,
+    env: { PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await portReady(port);
@@ -581,7 +638,11 @@ test('prod', async ({ page, mailServer }, testInfo) => {
   }
 });
 
-test('runtime config', async ({ page, mailServer }, testInfo) => {
+test('runtime config', async ({
+  page,
+  mailServer,
+  mailServerPort,
+}, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
@@ -591,7 +652,7 @@ test('runtime config', async ({ page, mailServer }, testInfo) => {
         runtimeConfig: {
           mail: {
             message: { to: 'johndoe@gmail.com' },
-            smtp: { port: 3001 },
+            smtp: { port: ${mailServerPort} },
           },
         },
       }
@@ -615,7 +676,12 @@ test('runtime config', async ({ page, mailServer }, testInfo) => {
   });
 
   const port = await getPort();
-  const nuxt = execaCommand('nuxt dev', { cwd, env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt dev', {
+    cwd,
+    env: { PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await nuxtDevReady(port);
@@ -634,7 +700,11 @@ test('runtime config', async ({ page, mailServer }, testInfo) => {
   }
 });
 
-test('to, cc and bcc', async ({ page, mailServer }, testInfo) => {
+test('to, cc and bcc', async ({
+  page,
+  mailServer,
+  mailServerPort,
+}, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
@@ -647,7 +717,7 @@ test('to, cc and bcc', async ({ page, mailServer }, testInfo) => {
               cc: 'cc@gmail.com',
               to: 'to@gmail.com',
             },
-            smtp: { port: 3001 },
+            smtp: { port: ${mailServerPort} },
           }],
         ],
       }
@@ -670,7 +740,12 @@ test('to, cc and bcc', async ({ page, mailServer }, testInfo) => {
   });
 
   const port = await getPort();
-  const nuxt = execaCommand('nuxt dev', { cwd, env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt dev', {
+    cwd,
+    env: { PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await nuxtDevReady(port);
@@ -696,7 +771,7 @@ test('to, cc and bcc', async ({ page, mailServer }, testInfo) => {
   }
 });
 
-test('valid', async ({ page, mailServer }, testInfo) => {
+test('valid', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
@@ -705,7 +780,7 @@ test('valid', async ({ page, mailServer }, testInfo) => {
         modules: [
           ['../../src', {
             message: { to: 'johndoe@gmail.com' },
-            smtp: { port: 3001 },
+            smtp: { port: ${mailServerPort} },
           }],
         ],
       }
@@ -729,7 +804,12 @@ test('valid', async ({ page, mailServer }, testInfo) => {
   });
 
   const port = await getPort();
-  const nuxt = execaCommand('nuxt dev', { cwd, env: { PORT: String(port) } });
+
+  const nuxt = execaCommand('nuxt dev', {
+    cwd,
+    env: { PORT: String(port) },
+    reject: false,
+  });
 
   try {
     await nuxtDevReady(port);
