@@ -9,9 +9,9 @@ import {
   defineNuxtModule,
 } from '@nuxt/kit';
 import fs from 'fs-extra';
+import type { SendMailOptions, TransportOptions } from 'nodemailer';
 import nuxtAliasPath from 'nuxt-alias-path';
 import parsePackagejsonName from 'parse-packagejson-name';
-import type { TransportOptions, SendMailOptions } from 'nodemailer';
 
 const resolver = createResolver(import.meta.url);
 const packageConfig = fs.readJsonSync(resolver.resolve('../package.json'));
