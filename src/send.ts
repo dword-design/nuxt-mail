@@ -1,10 +1,10 @@
-import { findIndex, omit } from '@dword-design/functions';
+import { omit } from 'lodash-es';
 
 export default async (body, options, transport) => {
   body = { config: 0, ...body };
 
   if (typeof body.config === 'string') {
-    const configIndex = findIndex(_ => _.name === body.config)(options.message);
+    const configIndex = options.message.findIndex(_ => _.name === body.config);
 
     if (configIndex === -1) {
       throw new Error(`Message config with name '${body.config}' not found.`);
@@ -16,7 +16,7 @@ export default async (body, options, transport) => {
   }
 
   await transport.sendMail({
-    ...omit(['config', 'to', 'cc', 'bcc'])(body),
-    ...omit(['name'])(options.message[body.config]),
+    ...omit(body, ['config', 'to', 'cc', 'bcc']),
+    ...omit(options.message[body.config], ['name']),
   });
 };

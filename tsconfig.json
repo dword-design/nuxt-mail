@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "target": "ESNext"
+  },
+  "exclude": [
+    "test-results"
+  ],
+  "extends": "./.nuxt/tsconfig.json"
+}

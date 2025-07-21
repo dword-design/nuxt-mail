@@ -1,11 +1,7 @@
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
 jobs:
-  cancel-existing:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    runs-on: ubuntu-latest
-    steps:
-      - env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: rokroskar/workflow-run-cleanup-action@v0.3.3
   release:
     needs: test
     runs-on: ubuntu-latest
@@ -36,12 +32,10 @@ jobs:
         name: Release
         run: pnpm semantic-release
   test:
-    needs: cancel-existing
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           lfs: true
       - uses: actions/setup-node@v4
         with:
@@ -51,25 +45,23 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm test
+        run: pnpm verify
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           if-no-files-found: ignore
-          name: Images from tests
-          path: |-
-            **/__image_snapshots__/__diff_output__
-            test-results/*/**
+          name: Data from tests
+          path: test-results/*/**
       - if: matrix.os == 'ubuntu-latest' && matrix.node == 20
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
     strategy:
       matrix:
         include:
-          - node: 18
-            os: ubuntu-latest
           - node: 20
+            os: ubuntu-latest
+          - node: 22
             os: ubuntu-latest
           - node: 20
             os: macos-latest
