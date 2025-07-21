@@ -16,7 +16,7 @@ const resolver = createResolver(import.meta.url);
 const packageConfig = fs.readJsonSync(resolver.resolve('../package.json'));
 const moduleName = parsePackagejsonName(packageConfig.name).fullName;
 
-type Message = { from?: string; name?: string };
+type Message = { from?: string; to?: string, cc?: string; bcc?: string; name?: string };
 
 type MailOptions = { message?: Message | Message[]; smtp: unknown };
 
