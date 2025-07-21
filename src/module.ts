@@ -11,13 +11,13 @@ import {
 import fs from 'fs-extra';
 import nuxtAliasPath from 'nuxt-alias-path';
 import parsePackagejsonName from 'parse-packagejson-name';
-import type { TransportOptions } from 'nodemailer';
+import type { TransportOptions, SendMailOptions } from 'nodemailer';
 
 const resolver = createResolver(import.meta.url);
 const packageConfig = fs.readJsonSync(resolver.resolve('../package.json'));
 const moduleName = parsePackagejsonName(packageConfig.name).fullName;
 
-type Message = { from?: string; to?: string, cc?: string; bcc?: string; name?: string };
+type Message = SendMailOptions & { name?: string };
 
 type MailOptions = { message?: Message | Message[]; smtp: TransportOptions };
 
