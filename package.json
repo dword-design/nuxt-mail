@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@dword-design/base": "^15.1.2",
-    "@dword-design/base-config-nuxt-module": "^3.0.0",
+    "@dword-design/base-config-nuxt-module": "^5.0.0",
     "@playwright/browser-chromium": "^1.54.1",
     "@playwright/test": "^1.54.1",
     "@types/nodemailer": "^6.4.17",
