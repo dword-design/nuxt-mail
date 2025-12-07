@@ -11,6 +11,5 @@
     { "description": "Embed a Mermaid diagram in a Nuxt.js app by providing its diagram string.", "repository": "nuxt-mermaid-string" },
     { "description": "Additional module for @nuxt/content that replaces or adds createdAt and updatedAt dates based on the git history.", "repository": "nuxt-content-git" },
     { "description": "Nuxt CLI that supports babel. Inspired by @nuxt/typescript-runtime.", "repository": "nuxt-babel-runtime" }
-  ],
-  "virtualImports": ["#mail"]
+  ]
 }

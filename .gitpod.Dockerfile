@@ -7,7 +7,7 @@ RUN git lfs install
 
 # https://www.gitpod.io/docs/languages/javascript
 # https://github.com/gitpod-io/gitpod/issues/945
-RUN bash -c 'source $HOME/.nvm/nvm.sh && nvm install 20'
+RUN bash -c 'source $HOME/.nvm/nvm.sh && nvm install 22'
 RUN echo "nvm use default &>/dev/null" >> ~/.bashrc.d/51-nvm-fix
 
 RUN yarn global add gitpod-env-per-project @babel/node @babel/core

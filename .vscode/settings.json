@@ -14,7 +14,7 @@
     ".husky": true,
     ".npmrc": true,
     ".nuxt": true,
-    ".nyc_output": true,
+    ".pnpm-store": true,
     ".releaserc.json": true,
     ".renovaterc.json": true,
     ".vscode": true,
@@ -26,6 +26,7 @@
     "coverage": true,
     "dist": true,
     "eslint.config.ts": true,
+    "eslint.lint-staged.config.ts": true,
     "node_modules": true,
     "pnpm-lock.yaml": true
   },

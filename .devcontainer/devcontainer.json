@@ -1,3 +1,4 @@
 {
-  "postCreateCommand": "bash .devcontainer/postcreate.sh"
+  "image": "dworddesign/devcontainer",
+  "postCreateCommand": "pnpm install --frozen-lockfile"
 }

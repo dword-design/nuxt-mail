@@ -26,10 +26,8 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": {
-        "default": "./dist/module.js",
-        "types": "./dist/module.d.ts"
-      }
+      "default": "./dist/module.js",
+      "types": "./dist/module.d.ts"
     }
   },
   "main": "dist/module.js",
@@ -49,34 +47,39 @@
     "verify": "base verify"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.17.4",
-    "fs-extra": "^11.3.0",
-    "h3": "^1.15.3",
+    "@dword-design/defaults": "^1.0.0",
+    "@nuxt/kit": "^4.2.1",
+    "endent": "npm:@dword-design/endent@^1.4.7",
+    "fs-extra": "^11.3.2",
     "lodash-es": "^4.17.21",
-    "nodemailer": "^7.0.3",
-    "nuxt-alias-path": "^2.0.0",
-    "parse-packagejson-name": "^1.0.1"
+    "nodemailer": "^7.0.11",
+    "parse-packagejson-name": "^1.1.0"
   },
   "devDependencies": {
-    "@dword-design/base": "^15.1.2",
-    "@dword-design/base-config-nuxt-module": "^3.0.0",
-    "@playwright/browser-chromium": "^1.54.1",
-    "@playwright/test": "^1.54.1",
-    "@types/nodemailer": "^6.4.17",
-    "axios": "^1.9.0",
-    "endent": "npm:@dword-design/endent@^1.4.7",
-    "execa": "^9.6.0",
+    "@dword-design/base": "^16.1.4",
+    "@dword-design/base-config-nuxt-module": "^5.0.0",
+    "@playwright/browser-chromium": "^1.57.0",
+    "@playwright/test": "^1.57.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/lodash-es": "^4.17.12",
+    "@types/nodemailer": "^7.0.4",
+    "axios": "^1.13.2",
+    "execa": "^9.6.1",
     "get-port": "^7.1.0",
-    "nuxt": "^3.17.4",
+    "nuxt": "^4.2.1",
     "nuxt-dev-ready": "^5.0.1",
     "output-files": "^3.0.0",
-    "port-ready": "^0.1.0",
+    "port-ready": "npm:@dword-design/port-ready-fork@^0.0.3",
     "smtp-tester": "npm:@dword-design/smtp-tester-fork@^0.0.1",
     "tree-kill-promise": "^4.0.0"
   },
+  "peerDependencies": {
+    "h3": "*",
+    "ofetch": "*"
+  },
   "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"

@@ -1,7 +1,7 @@
 .DS_Store
 /.env.json
 /.nuxt
-/.nyc_output
+/.pnpm-store
 /.test.env.json
 /codecov
 /codecov.SHA256SUM

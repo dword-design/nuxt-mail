@@ -78,7 +78,7 @@ test('bcc', async ({ page, mailServer, mailServerPort }, testInfo) => {
     expect(capture.email.headers.from).toEqual('a@b.de');
     expect(capture.email.receivers).toEqual({ 'johndoe@gmail.com': true });
   } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
 
@@ -132,7 +132,7 @@ test('cc', async ({ page, mailServer, mailServerPort }, testInfo) => {
     expect(capture.email.headers.cc).toEqual('johndoe@gmail.com');
     expect(capture.email.receivers).toEqual({ 'johndoe@gmail.com': true });
   } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
 
@@ -193,7 +193,7 @@ test('cc and bcc', async ({ page, mailServer, mailServerPort }, testInfo) => {
       'cc@gmail.com': true,
     });
   } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
 
@@ -248,7 +248,7 @@ test('client side', async ({ page, mailServer, mailServerPort }, testInfo) => {
     expect(capture.email.headers.from).toEqual('a@b.de');
     expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
   } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
 
@@ -309,7 +309,7 @@ test('config by index', async ({
     expect(capture.email.headers.from).toEqual('a@b.de');
     expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
   } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
 
@@ -373,7 +373,7 @@ test('config by name', async ({
     expect(capture.email.headers.from).toEqual('a@b.de');
     expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
   } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
 
@@ -410,17 +410,14 @@ test('config invalid index', async ({}, testInfo) => {
 
   try {
     await nuxtDevReady(port);
-    let errorMessage;
 
-    try {
-      await axios.post(`http://localhost:${port}`);
-    } catch (error) {
-      errorMessage = error.response.data.message;
-    }
-
-    expect(errorMessage).toEqual('Message config not found at index 10.');
+    await expect(
+      axios.post(`http://localhost:${port}`).catch(error => {
+        throw new Error(error.response.data.message);
+      }),
+    ).rejects.toThrow('Message config not found at index 10.');
   } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
 
@@ -454,17 +451,14 @@ test('config name not found', async ({}, testInfo) => {
 
   try {
     await nuxtDevReady(port);
-    let errorMessage;
 
-    try {
-      await axios.post(`http://localhost:${port}`);
-    } catch (error) {
-      errorMessage = error.response.data.message;
-    }
-
-    expect(errorMessage).toEqual("Message config with name 'foo' not found.");
+    await expect(
+      axios.post(`http://localhost:${port}`).catch(error => {
+        throw new Error(error.response.data.message);
+      }),
+    ).rejects.toThrow("Message config with name 'foo' not found.");
   } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
 
@@ -521,7 +515,7 @@ test('injected', async ({ page, mailServer, mailServerPort }, testInfo) => {
     expect(capture.email.headers.from).toEqual('a@b.de');
     expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
   } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
 
@@ -634,69 +628,7 @@ test('prod', async ({ page, mailServer, mailServerPort }, testInfo) => {
     expect(capture.email.headers.from).toEqual('a@b.de');
     expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
   } finally {
-    await kill(nuxt.pid);
-  }
-});
-
-test('runtime config', async ({
-  page,
-  mailServer,
-  mailServerPort,
-}, testInfo) => {
-  const cwd = testInfo.outputPath();
-
-  await outputFiles(cwd, {
-    'nuxt.config.ts': endent`
-      export default {
-        modules: ['../../src'],
-        runtimeConfig: {
-          mail: {
-            message: { to: 'johndoe@gmail.com' },
-            smtp: { port: ${mailServerPort} },
-          },
-        },
-      }
-    `,
-    'pages/index.vue': endent`
-      <template>
-        <div />
-      </template>
-
-      <script setup>
-      const mail = useMail()
-
-      await mail.send({
-        from: 'a@b.de',
-        subject: 'Incredible',
-        text: 'This is an incredible test message',
-        to: 'foo@bar.de',
-      })
-      </script>
-    `,
-  });
-
-  const port = await getPort();
-
-  const nuxt = execaCommand('nuxt dev', {
-    cwd,
-    env: { PORT: String(port) },
-    reject: false,
-  });
-
-  try {
-    await nuxtDevReady(port);
-
-    const [capture] = await Promise.all([
-      mailServer.captureOne('johndoe@gmail.com'),
-      page.goto(`http://localhost:${port}`),
-    ]);
-
-    expect(capture.email.body).toEqual('This is an incredible test message');
-    expect(capture.email.headers.subject).toEqual('Incredible');
-    expect(capture.email.headers.from).toEqual('a@b.de');
-    expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
-  } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
 
@@ -767,7 +699,7 @@ test('to, cc and bcc', async ({
       'to@gmail.com': true,
     });
   } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
 
@@ -824,6 +756,6 @@ test('valid', async ({ page, mailServer, mailServerPort }, testInfo) => {
     expect(capture.email.headers.from).toEqual('a@b.de');
     expect(capture.email.headers.to).toEqual('johndoe@gmail.com');
   } finally {
-    await kill(nuxt.pid);
+    await kill(nuxt.pid!);
   }
 });
