@@ -5,8 +5,6 @@ import { useRuntimeConfig } from '#imports';
 const { mail: options } = useRuntimeConfig();
 
 export default defineNitroPlugin(() => {
-  console.log(options);
-
   if (!options.smtp) {
     throw new Error('SMTP config is missing.');
   }

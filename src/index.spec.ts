@@ -615,7 +615,7 @@ test('prod', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const port = await getPort();
   await execaCommand('nuxt build', { cwd });
 
-  const nuxt = execaCommand('nuxt start', {
+  const nuxt = execaCommand('node .output/server/index.mjs', {
     cwd,
     env: { PORT: String(port) },
     reject: false,

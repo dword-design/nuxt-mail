@@ -1,14 +1,18 @@
 import { createError, defineEventHandler, readBody } from 'h3';
-import nodemailer from 'nodemailer';
+import nodemailer, { type Transporter } from 'nodemailer';
 
 import { useRuntimeConfig } from '#imports';
 
 import send from './send';
 
 const { mail: options } = useRuntimeConfig();
-const transport = nodemailer.createTransport(options.smtp!);
+let transport: Transporter | null = null;
 
 export default defineEventHandler(async event => {
+  if (!transport) {
+    transport = nodemailer.createTransport(options.smtp!);
+  }
+
   try {
     await send(await readBody(event), options, transport);
   } catch (error) {

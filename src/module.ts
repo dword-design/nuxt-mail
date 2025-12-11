@@ -18,10 +18,6 @@ declare module '@nuxt/schema' {
 }
 
 const normalizeMessage = (message: MailOptionsInput['message']) => {
-  if (!message) {
-    return [];
-  }
-
   if (Array.isArray(message)) {
     return message;
   }
@@ -37,6 +33,7 @@ export default defineNuxtModule<MailOptionsInput>({
   },
   setup: (optionsInput, nuxt) => {
     const options = defu(optionsInput, nuxt.options.runtimeConfig.mail, {
+      message: [],
       smtp: null,
     });
 
