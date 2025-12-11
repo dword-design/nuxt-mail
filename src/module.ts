@@ -17,6 +17,18 @@ declare module '@nuxt/schema' {
   }
 }
 
+const normalizeMessage = (message: MailOptionsInput['message']) => {
+  if (!message) {
+    return [];
+  }
+
+  if (Array.isArray(message)) {
+    return message;
+  }
+
+  return [message];
+};
+
 export default defineNuxtModule<MailOptionsInput>({
   meta: {
     compatibility: { nuxt: '>=3.0.0' },
@@ -30,9 +42,7 @@ export default defineNuxtModule<MailOptionsInput>({
 
     nuxt.options.runtimeConfig.mail = {
       ...options,
-      message: Array.isArray(options.message)
-        ? options.message
-        : [options.message],
+      message: normalizeMessage(options.message),
     };
 
     addServerPlugin(resolver.resolve('./server-plugin'));

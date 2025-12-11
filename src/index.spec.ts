@@ -533,8 +533,10 @@ test('no message configs', async ({}, testInfo) => {
     `,
   );
 
+  await execaCommand('nuxt build', { cwd });
+
   await expect(
-    execaCommand('nuxt build', { cwd, env: { NODE_ENV: '' } }),
+    execaCommand('node .output/server/index.mjs', { cwd }),
   ).rejects.toThrow('You have to provide at least one config.');
 });
 
@@ -552,9 +554,11 @@ test('no recipients', async ({}, testInfo) => {
     `,
   );
 
-  await expect(execaCommand('nuxt build', { cwd })).rejects.toThrow(
-    'You have to provide to/cc/bcc in all configs.',
-  );
+  await execaCommand('nuxt build', { cwd });
+
+  await expect(
+    execaCommand('node .output/server/index.mjs', { cwd }),
+  ).rejects.toThrow('You have to provide to/cc/bcc in all configs.');
 });
 
 test('no smtp config', async ({}, testInfo) => {
@@ -569,9 +573,11 @@ test('no smtp config', async ({}, testInfo) => {
     `,
   );
 
-  await expect(execaCommand('nuxt build', { cwd })).rejects.toThrow(
-    'SMTP config is missing.',
-  );
+  await execaCommand('nuxt build', { cwd });
+
+  await expect(
+    execaCommand('node .output/server/index.mjs', { cwd }),
+  ).rejects.toThrow('SMTP config is missing.');
 });
 
 test('prod', async ({ page, mailServer, mailServerPort }, testInfo) => {
