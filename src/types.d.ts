@@ -1,8 +1,8 @@
 import type { SendMailOptions, TransportOptions } from 'nodemailer';
 
 export interface MailOptions {
-  message: [Message, ...Message[]];
-  smtp: TransportOptions;
+  message: Message[];
+  smtp: TransportOptions | null;
 }
 
 export interface Message extends Omit<SendMailOptions, 'to' | 'cc' | 'bcc'> {

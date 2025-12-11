@@ -8,27 +8,18 @@ importers:
 
   .:
     dependencies:
-      '@dword-design/defaults':
-        specifier: ^1.0.0
-        version: 1.0.0
       '@nuxt/kit':
         specifier: ^4.2.1
         version: 4.2.1(magicast@0.5.1)
-      endent:
-        specifier: npm:@dword-design/endent@^1.4.7
-        version: '@dword-design/endent@1.4.7'
-      fs-extra:
-        specifier: ^11.3.2
-        version: 11.3.2
+      defu:
+        specifier: ^6.1.4
+        version: 6.1.4
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
       nodemailer:
         specifier: ^7.0.11
         version: 7.0.11
-      parse-packagejson-name:
-        specifier: ^1.1.0
-        version: 1.1.0
     devDependencies:
       '@dword-design/base':
         specifier: ^16.1.4
@@ -54,6 +45,9 @@ importers:
       axios:
         specifier: ^1.13.2
         version: 1.13.2
+      endent:
+        specifier: npm:@dword-design/endent@^1.4.7
+        version: '@dword-design/endent@1.4.7'
       execa:
         specifier: ^9.6.1
         version: 9.6.1
@@ -490,10 +484,6 @@ packages:
 
   '@dword-design/dedent@0.7.0':
     resolution: {integrity: sha512-OFmAmzKiDUh9m7WRMYcoEOPI7b5tS5hdqQmtKDwF+ZssVJv8a+GHo9VOtFsmlw3h8Roh/9QzFWIsjSFZyQUMdg==}
-
-  '@dword-design/defaults@1.0.0':
-    resolution: {integrity: sha512-bv6twXCR7RNoQQbCqsgq+WvLyQRowRpr5muNApIyJHJHsbWtq4OuxT9uwsB679VuXXa8SZOMcYfsB5w/jeG7Jw==}
-    engines: {node: '>=22'}
 
   '@dword-design/defu@1.0.3':
     resolution: {integrity: sha512-QEM8a6CPIrMvudnuNDwr3IxWJ0dcMKG9tgxt3zuPk/NmXV0ejk4qxQJ1PfquJwRzu59UsqNpUAACMG485VMIUA==}
@@ -7918,11 +7908,6 @@ snapshots:
   '@dword-design/dedent@0.7.0':
     dependencies:
       babel-plugin-add-module-exports: 1.0.4
-
-  '@dword-design/defaults@1.0.0':
-    dependencies:
-      is-plain-obj: 4.1.0
-      lodash-es: 4.17.21
 
   '@dword-design/defu@1.0.3':
     dependencies:

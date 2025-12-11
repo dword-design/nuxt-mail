@@ -47,13 +47,10 @@
     "verify": "base verify"
   },
   "dependencies": {
-    "@dword-design/defaults": "^1.0.0",
     "@nuxt/kit": "^4.2.1",
-    "endent": "npm:@dword-design/endent@^1.4.7",
-    "fs-extra": "^11.3.2",
+    "defu": "^6.1.4",
     "lodash-es": "^4.17.21",
-    "nodemailer": "^7.0.11",
-    "parse-packagejson-name": "^1.1.0"
+    "nodemailer": "^7.0.11"
   },
   "devDependencies": {
     "@dword-design/base": "^16.1.4",
@@ -64,6 +61,7 @@
     "@types/lodash-es": "^4.17.12",
     "@types/nodemailer": "^7.0.4",
     "axios": "^1.13.2",
+    "endent": "npm:@dword-design/endent@^1.4.7",
     "execa": "^9.6.1",
     "get-port": "^7.1.0",
     "nuxt": "^4.2.1",
@@ -75,6 +73,7 @@
   },
   "peerDependencies": {
     "h3": "*",
+    "nitropack": "*",
     "ofetch": "*"
   },
   "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",

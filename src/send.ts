@@ -1,4 +1,4 @@
-import defaults from '@dword-design/defaults';
+import defu from 'defu';
 import { omit } from 'lodash-es';
 import type { Transporter } from 'nodemailer';
 
@@ -12,7 +12,7 @@ const resolveConfig = (
   bodyInput: MessageWithConfigInput,
   options: MailOptions,
 ): MessageWithConfig => {
-  const bodyWithDefaults = defaults(bodyInput, { config: 0 });
+  const bodyWithDefaults = defu(bodyInput, { config: 0 });
 
   if (typeof bodyWithDefaults.config === 'string') {
     const configIndex = options.message.findIndex(
