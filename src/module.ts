@@ -5,9 +5,11 @@ import {
   addServerPlugin,
   createResolver,
   defineNuxtModule,
+  useRuntimeConfig,
 } from '@nuxt/kit';
 import defu from 'defu';
 
+import checkOptions from './check-options';
 import type { MailOptions, MailOptionsInput } from './types';
 
 const resolver = createResolver(import.meta.url);
@@ -41,6 +43,11 @@ export default defineNuxtModule<MailOptionsInput>({
       ...options,
       message: normalizeMessage(options.message),
     };
+
+    if (!nuxt.options._prepare) {
+      const resolvedOptions = useRuntimeConfig().mail;
+      checkOptions(resolvedOptions); // For dev
+    }
 
     addServerPlugin(resolver.resolve('./server-plugin'));
 

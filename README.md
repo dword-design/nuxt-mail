@@ -100,6 +100,8 @@ export default defineNuxtConfig({
 });
 ```
 
+You can also set environment variables like `NUXT_MAIL`, `NUXT_MAIL_SMTP`, `NUXT_MAIL_MESSAGE`, etc. as JSON. They will be deserialized and put into the runtime config automatically.
+
 The `smtp` options are required and directly passed to [nodemailer](https://nodemailer.com/smtp/). Refer to their documentation for available options. Also, you have to pass at least `to`, `cc` or `bcc` via the `message` config. This has security reasons, this way the client cannot send emails from your SMTP server to arbitrary recipients. You can actually preconfigure the message via the `message` config, so if you always want to send emails with the same subject or from address, you can configure them here.
 
 Now we can send emails:

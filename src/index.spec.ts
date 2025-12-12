@@ -580,6 +580,25 @@ test('no smtp config', async ({}, testInfo) => {
   ).rejects.toThrow('SMTP config is missing.');
 });
 
+test('check options dev', async ({}, testInfo) => {
+  const cwd = testInfo.outputPath();
+
+  await fs.outputFile(
+    pathLib.join(cwd, 'nuxt.config.ts'),
+    endent`
+      export default {
+        modules: ['../../src'],
+      }
+    `,
+  );
+
+  await expect(
+    execaCommand('nuxt dev', {
+      cwd /* env: { NODE_ENV: '' }, stdio: 'inherit' */,
+    }),
+  ).rejects.toThrow('SMTP config is missing.');
+});
+
 test('prod', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const cwd = testInfo.outputPath();
 
@@ -709,17 +728,15 @@ test('to, cc and bcc', async ({
   }
 });
 
-test('valid', async ({ page, mailServer, mailServerPort }, testInfo) => {
+test('env variable', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
+    '.env': `NUXT_MAIL_SMTP='{ "port": ${mailServerPort} }'`,
     'nuxt.config.ts': endent`
       export default {
         modules: [
-          ['../../src', {
-            message: { to: 'johndoe@gmail.com' },
-            smtp: { port: ${mailServerPort} },
-          }],
+          ['../../src', { message: { to: 'johndoe@gmail.com' } }],
         ],
       }
     `,
