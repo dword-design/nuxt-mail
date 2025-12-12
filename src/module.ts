@@ -10,22 +10,15 @@ import {
 import defu from 'defu';
 
 import checkOptions from './check-options';
-import type { MailOptions, MailOptionsInput } from './types';
+import normalizeOptions from './normalize-options';
+import type { MailOptionsInput } from './types';
 
 const resolver = createResolver(import.meta.url);
 declare module '@nuxt/schema' {
   interface RuntimeConfig {
-    mail: MailOptions;
+    mail: MailOptionsInput;
   }
 }
-
-const normalizeMessage = (message: MailOptionsInput['message']) => {
-  if (Array.isArray(message)) {
-    return message;
-  }
-
-  return [message];
-};
 
 export default defineNuxtModule<MailOptionsInput>({
   meta: {
@@ -39,13 +32,10 @@ export default defineNuxtModule<MailOptionsInput>({
       smtp: null,
     });
 
-    nuxt.options.runtimeConfig.mail = {
-      ...options,
-      message: normalizeMessage(options.message),
-    };
+    nuxt.options.runtimeConfig.mail = normalizeOptions(options);
 
     if (!nuxt.options._prepare) {
-      const resolvedOptions = useRuntimeConfig().mail;
+      const resolvedOptions = normalizeOptions(useRuntimeConfig().mail);
       checkOptions(resolvedOptions); // For dev
     }
 

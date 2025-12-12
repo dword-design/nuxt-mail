@@ -3,9 +3,10 @@ import nodemailer, { type Transporter } from 'nodemailer';
 
 import { useRuntimeConfig } from '#imports';
 
+import normalizeOptions from './normalize-options';
 import send from './send';
 
-const { mail: options } = useRuntimeConfig();
+const options = normalizeOptions(useRuntimeConfig().mail);
 let transport: Transporter | null = null;
 
 export default defineEventHandler(async event => {

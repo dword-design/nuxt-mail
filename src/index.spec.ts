@@ -519,86 +519,6 @@ test('injected', async ({ page, mailServer, mailServerPort }, testInfo) => {
   }
 });
 
-test('no message configs', async ({}, testInfo) => {
-  const cwd = testInfo.outputPath();
-
-  await fs.outputFile(
-    pathLib.join(cwd, 'nuxt.config.ts'),
-    endent`
-      export default {
-        modules: [
-          ['../../src', { smtp: {} }],
-        ],
-      }
-    `,
-  );
-
-  await execaCommand('nuxt build', { cwd });
-
-  await expect(
-    execaCommand('node .output/server/index.mjs', { cwd }),
-  ).rejects.toThrow('You have to provide at least one config.');
-});
-
-test('no recipients', async ({}, testInfo) => {
-  const cwd = testInfo.outputPath();
-
-  await fs.outputFile(
-    pathLib.join(cwd, 'nuxt.config.ts'),
-    endent`
-      export default {
-        modules: [
-          ['../../src', { message: {}, smtp: {} }],
-        ],
-      }
-    `,
-  );
-
-  await execaCommand('nuxt build', { cwd });
-
-  await expect(
-    execaCommand('node .output/server/index.mjs', { cwd }),
-  ).rejects.toThrow('You have to provide to/cc/bcc in all configs.');
-});
-
-test('no smtp config', async ({}, testInfo) => {
-  const cwd = testInfo.outputPath();
-
-  await fs.outputFile(
-    pathLib.join(cwd, 'nuxt.config.ts'),
-    endent`
-      export default {
-        modules: ['../../src'],
-      }
-    `,
-  );
-
-  await execaCommand('nuxt build', { cwd });
-
-  await expect(
-    execaCommand('node .output/server/index.mjs', { cwd }),
-  ).rejects.toThrow('SMTP config is missing.');
-});
-
-test('check options dev', async ({}, testInfo) => {
-  const cwd = testInfo.outputPath();
-
-  await fs.outputFile(
-    pathLib.join(cwd, 'nuxt.config.ts'),
-    endent`
-      export default {
-        modules: ['../../src'],
-      }
-    `,
-  );
-
-  await expect(
-    execaCommand('nuxt dev', {
-      cwd /* env: { NODE_ENV: '' }, stdio: 'inherit' */,
-    }),
-  ).rejects.toThrow('SMTP config is missing.');
-});
-
 test('prod', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const cwd = testInfo.outputPath();
 
@@ -781,4 +701,122 @@ test('env variable', async ({ page, mailServer, mailServerPort }, testInfo) => {
   } finally {
     await kill(nuxt.pid!);
   }
+});
+
+test.describe('options checking', () => {
+  test('no message configs', async ({}, testInfo) => {
+    const cwd = testInfo.outputPath();
+
+    await fs.outputFile(
+      pathLib.join(cwd, 'nuxt.config.ts'),
+      endent`
+        export default {
+          modules: [
+            ['../../src', { smtp: {} }],
+          ],
+        }
+      `,
+    );
+
+    await expect(execaCommand('nuxt dev', { cwd })).rejects.toThrow(
+      'You have to provide at least one config.',
+    );
+  });
+
+  test('no recipients', async ({}, testInfo) => {
+    const cwd = testInfo.outputPath();
+
+    await fs.outputFile(
+      pathLib.join(cwd, 'nuxt.config.ts'),
+      endent`
+        export default {
+          modules: [
+            ['../../src', { message: {}, smtp: {} }],
+          ],
+        }
+      `,
+    );
+
+    await expect(execaCommand('nuxt dev', { cwd })).rejects.toThrow(
+      'You have to provide to/cc/bcc in all configs.',
+    );
+  });
+
+  test('no smtp config', async ({}, testInfo) => {
+    const cwd = testInfo.outputPath();
+
+    await fs.outputFile(
+      pathLib.join(cwd, 'nuxt.config.ts'),
+      endent`
+        export default {
+          modules: ['../../src'],
+        }
+      `,
+    );
+
+    await expect(execaCommand('nuxt dev', { cwd })).rejects.toThrow(
+      'SMTP config is missing.',
+    );
+  });
+
+  test('check options dev', async ({}, testInfo) => {
+    const cwd = testInfo.outputPath();
+
+    await fs.outputFile(
+      pathLib.join(cwd, 'nuxt.config.ts'),
+      endent`
+        export default {
+          modules: ['../../src'],
+        }
+      `,
+    );
+
+    await expect(execaCommand('nuxt dev', { cwd })).rejects.toThrow(
+      'SMTP config is missing.',
+    );
+  });
+
+  test('check options prod build', async ({}, testInfo) => {
+    const cwd = testInfo.outputPath();
+
+    await fs.outputFile(
+      pathLib.join(cwd, 'nuxt.config.ts'),
+      endent`
+        export default {
+          modules: ['../../src'],
+        }
+      `,
+    );
+
+    await expect(execaCommand('nuxt build', { cwd })).rejects.toThrow(
+      'SMTP config is missing.',
+    );
+  });
+
+  test('check options prod start', async ({ mailServerPort }, testInfo) => {
+    const cwd = testInfo.outputPath();
+
+    await fs.outputFile(
+      pathLib.join(cwd, 'nuxt.config.ts'),
+      endent`
+        export default {
+          modules: ['../../src'],
+        }
+      `,
+    );
+
+    await execaCommand('nuxt build', {
+      cwd,
+      env: {
+        NUXT_MAIL: JSON.stringify({
+          message: { to: 'foo@bar.de' },
+          smtp: { port: mailServerPort },
+        }),
+      },
+    });
+
+    await expect(
+      execaCommand('node .output/server/index.mjs', { cwd }),
+    ).rejects.toThrow('SMTP config is missing.');
+  });
 });
