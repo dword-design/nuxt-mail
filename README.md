@@ -71,11 +71,11 @@ $ yarn nuxi module add nuxt-mail
 
 ## Configuration
 
-Add the module to the `modules` array in your `nuxt.config.js`. Note to add it to `modules` instead of `buildModules`, otherwise the server route will not be generated.
+Add the module to the `modules` array in your Nuxt config:
 
-```js
-// nuxt.config.js
-export default {
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
   modules: [
     ['nuxt-mail', {
       message: {
@@ -97,52 +97,26 @@ export default {
       port: 587,
     },
   },
-  // or use runtimeConfig
-  runtimeConfig: {
-    mail: {
-      message: {
-        to: 'foo@bar.de',
-      },
-      smtp: {
-        host: "smtp.example.com",
-        port: 587,
-      },
-    },
-  },
-}
+});
 ```
+
+You can also set environment variables like `NUXT_MAIL`, `NUXT_MAIL_SMTP`, `NUXT_MAIL_MESSAGE`, etc. as JSON. They will be deserialized and put into the runtime config automatically.
 
 The `smtp` options are required and directly passed to [nodemailer](https://nodemailer.com/smtp/). Refer to their documentation for available options. Also, you have to pass at least `to`, `cc` or `bcc` via the `message` config. This has security reasons, this way the client cannot send emails from your SMTP server to arbitrary recipients. You can actually preconfigure the message via the `message` config, so if you always want to send emails with the same subject or from address, you can configure them here.
 
-The module injects the `$mail` variable, which we now use to send emails:
-
-## Nuxt 3
+Now we can send emails:
 
 ### Via composable
 
 ```html
 <script setup>
-const mail = useMail()
+const mail = useMail();
 
 mail.send({
   from: 'John Doe',
   subject: 'Incredible',
   text: 'This is an incredible test message',
-})
-</script>
-```
-
-### Via injected variable
-
-```html
-<script setup>
-const { $mail } = useNuxtApp()
-
-$mail.send({
-  from: 'John Doe',
-  subject: 'Incredible',
-  text: 'This is an incredible test message',
-})
+});
 </script>
 ```
 
@@ -157,10 +131,10 @@ export default {
         from: 'John Doe',
         subject: 'Incredible',
         text: 'This is an incredible test message',
-      })
+      });
     },
   },
-}
+};
 </script>
 ```
 
@@ -168,9 +142,9 @@ export default {
 
 It is also possible to provide multiple message configurations by changing the `message` config into an array.
 
-```js
-// nuxt.config.js
-export default {
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
   modules: [
     ['nuxt-mail', {
       message: [
@@ -180,29 +154,29 @@ export default {
       ...
     }],
   ],
-}
+});
 ```
 
 Then you can reference the config like this:
 
-```js
+```ts
 mail.send({
   config: 'support',
   from: 'John Doe',
   subject: 'Incredible',
   text: 'This is an incredible test message',
-})
+});
 ```
 
 Or via index (in which case you do not need the `name` property):
 
-```js
+```ts
 mail.send({
   config: 1, // Resolves to 'support'
   from: 'John Doe',
   subject: 'Incredible',
   text: 'This is an incredible test message',
-})
+});
 ```
 
 Also, the module does not work for static sites (via `nuxt generate`) because the module creates a server route.
@@ -213,9 +187,9 @@ Also, the module does not work for static sites (via `nuxt generate`) because th
 
 You have to setup an [app-specific password](https://myaccount.google.com/apppasswords) to log into the SMTP server. Then, add the following config to your `nuxt-mail` config. Looks like there are multiple ways to configure Gmail, so it's best to try out the options:
 
-```js
-// nuxt.config.js
-export default {
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
   modules: [
     ['nuxt-mail', {
       smtp: {
@@ -227,12 +201,12 @@ export default {
       },
     }],
   ],
-}
+});
 ```
 
-```js
-// nuxt.config.js
-export default {
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
   modules: [
     ['nuxt-mail', {
       smtp: {
@@ -245,7 +219,7 @@ export default {
       },
     }],
   ],
-}
+});
 ```
 
 Missing something? Add your service here via a [pull request](https://github.com/dword-design/nuxt-mail/pulls).

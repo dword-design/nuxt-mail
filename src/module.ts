@@ -1,80 +1,55 @@
-import P from 'node:path';
-
 import {
   addImports,
   addPlugin,
   addServerHandler,
-  addTemplate,
+  addServerPlugin,
   createResolver,
   defineNuxtModule,
+  useRuntimeConfig,
 } from '@nuxt/kit';
-import fs from 'fs-extra';
-import type { SendMailOptions, TransportOptions } from 'nodemailer';
-import nuxtAliasPath from 'nuxt-alias-path';
-import parsePackagejsonName from 'parse-packagejson-name';
+import defu from 'defu';
+
+import checkOptions from './check-options';
+import type { MailOptions, MailOptionsInput } from './types';
 
 const resolver = createResolver(import.meta.url);
-const packageConfig = fs.readJsonSync(resolver.resolve('../package.json'));
-const moduleName = parsePackagejsonName(packageConfig.name).fullName;
+declare module '@nuxt/schema' {
+  interface RuntimeConfig {
+    mail: MailOptions;
+  }
+}
 
-type Message = SendMailOptions & { name?: string };
+const normalizeMessage = (message: MailOptionsInput['message']) => {
+  if (Array.isArray(message)) {
+    return message;
+  }
 
-type MailOptions = { message?: Message | Message[]; smtp: TransportOptions };
+  return [message];
+};
 
-export default defineNuxtModule({
-  setup: async (options, nuxt) => {
-    options = {
-      ...nuxt.options.runtimeConfig.mail,
-      ...nuxt.options.mail,
+export default defineNuxtModule<MailOptionsInput>({
+  meta: {
+    compatibility: { nuxt: '>=3.0.0' },
+    configKey: 'mail',
+    name: 'nuxt-mail',
+  },
+  setup: (optionsInput, nuxt) => {
+    const options = defu(optionsInput, nuxt.options.runtimeConfig.mail, {
+      message: [],
+      smtp: null,
+    });
+
+    nuxt.options.runtimeConfig.mail = {
       ...options,
+      message: normalizeMessage(options.message),
     };
 
     if (!nuxt.options._prepare) {
-      if (!options.smtp) {
-        throw new Error('SMTP config is missing.');
-      }
-
-      if (
-        (Array.isArray(options.message) && options.message.length === 0) ||
-        !options.message
-      ) {
-        throw new Error('You have to provide at least one config.');
-      }
+      const resolvedOptions = useRuntimeConfig().mail;
+      checkOptions(resolvedOptions); // For dev
     }
 
-    if (!Array.isArray(options.message)) {
-      options.message = [options.message];
-    }
-
-    if (
-      !nuxt.options._prepare &&
-      options.message.some(c => !c.to && !c.cc && !c.bcc)
-    ) {
-      throw new Error('You have to provide to/cc/bcc in all configs.');
-    }
-
-    addTemplate({
-      filename: P.join(moduleName, 'options.mjs'),
-      getContents: () =>
-        `export default ${JSON.stringify(options, undefined, 2)}`,
-      write: true,
-    });
-
-    const sendTemplatePathWithoutExt = resolver.resolve('./send');
-
-    const sendTemplatePath = (await fs.exists(
-      `${sendTemplatePathWithoutExt}.ts`,
-    ))
-      ? `${sendTemplatePathWithoutExt}.ts`
-      : `${sendTemplatePathWithoutExt}.js`;
-
-    addTemplate({
-      filename: P.join(moduleName, 'send.mjs'),
-      getContents: () => fs.readFile(sendTemplatePath, 'utf8'),
-      write: true,
-    });
-
-    nuxt.options.alias['#mail'] = nuxtAliasPath(moduleName, nuxt);
+    addServerPlugin(resolver.resolve('./server-plugin'));
 
     addServerHandler({
       handler: resolver.resolve('./server-handler.post'),
@@ -85,14 +60,3 @@ export default defineNuxtModule({
     addPlugin(resolver.resolve(`./plugin`));
   },
 });
-declare module '@nuxt/schema' {
-  interface NuxtConfig {
-    ['mail']?: MailOptions;
-  }
-  interface NuxtOptions {
-    ['mail']?: MailOptions;
-  }
-  interface RuntimeConfig {
-    mail?: MailOptions;
-  }
-}

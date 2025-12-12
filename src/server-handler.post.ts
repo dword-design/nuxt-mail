@@ -1,16 +1,25 @@
 import { createError, defineEventHandler, readBody } from 'h3';
-import nodemailer from 'nodemailer';
+import nodemailer, { type Transporter } from 'nodemailer';
 
-import options from '#mail/options.mjs';
-import send from '#mail/send.mjs';
+import { useRuntimeConfig } from '#imports';
 
-const transport = nodemailer.createTransport(options.smtp);
+import send from './send';
+
+const { mail: options } = useRuntimeConfig();
+let transport: Transporter | null = null;
 
 export default defineEventHandler(async event => {
+  if (!transport) {
+    transport = nodemailer.createTransport(options.smtp!);
+  }
+
   try {
     await send(await readBody(event), options, transport);
   } catch (error) {
-    throw createError({ statusCode: 500, statusMessage: error.message });
+    throw createError({
+      statusCode: 500,
+      statusMessage: error instanceof Error ? error.message : String(error),
+    });
   }
 
   return '';

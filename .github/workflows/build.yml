@@ -13,12 +13,11 @@ jobs:
             github.event.pull_request.head.ref || '' }}
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - run: corepack enable
       - run: git config --global user.email "actions@github.com"
       - run: git config --global user.name "GitHub Actions"
       - run: pnpm install --frozen-lockfile
-      - run: pnpm checkUnknownFiles
       - run: pnpm lint
       - env:
           GITHUB_REPOSITORY: ${{ secrets.GITHUB_REPOSITORY }}
@@ -27,7 +26,6 @@ jobs:
         run: pnpm dw-ci push-changed-files
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         if: github.ref == 'refs/heads/master'
         name: Release
         run: pnpm semantic-release
@@ -52,20 +50,20 @@ jobs:
           if-no-files-found: ignore
           name: Data from tests
           path: test-results/*/**
-      - if: matrix.os == 'ubuntu-latest' && matrix.node == 20
+      - if: matrix.os == 'ubuntu-latest' && matrix.node == 22
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
     strategy:
       matrix:
         include:
-          - node: 20
-            os: ubuntu-latest
           - node: 22
             os: ubuntu-latest
-          - node: 20
+          - node: 24
+            os: ubuntu-latest
+          - node: 22
             os: macos-latest
-          - node: 20
+          - node: 22
             os: windows-latest
 name: build
 on:
@@ -73,3 +71,8 @@ on:
   push:
     branches:
       - master
+permissions:
+  contents: write
+  id-token: write
+  issues: write
+  pull-requests: write
