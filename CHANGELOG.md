@@ -1,3 +1,18 @@
+# [8.0.0](https://github.com/dword-design/nuxt-mail/compare/v7.0.1...v8.0.0) (2025-12-12)
+
+
+### Bug Fixes
+
+* check runtime config ([6941782](https://github.com/dword-design/nuxt-mail/commit/69417822abac9c1e9dee2d562e0154b035f42696))
+* lock file maintenance ([#284](https://github.com/dword-design/nuxt-mail/issues/284)) ([da7c252](https://github.com/dword-design/nuxt-mail/commit/da7c252735e5cbc9b4bd45c6e45436bde9c60e4d))
+* trigger release ([efaf1a7](https://github.com/dword-design/nuxt-mail/commit/efaf1a7c3ffa0d42f4c9cb3718ac79d62e8454d7))
+
+
+### BREAKING CHANGES
+
+* node.js >= 22
+* env variables are now passed to runtime config. most likely not breaking but merging is a bit different.
+
 ## [7.0.1](https://github.com/dword-design/nuxt-mail/compare/v7.0.0...v7.0.1) (2025-07-21)
 
 
