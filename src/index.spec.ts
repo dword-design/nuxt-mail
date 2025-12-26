@@ -820,3 +820,28 @@ test.describe('options checking', () => {
     ).rejects.toThrow('SMTP config is missing.');
   });
 });
+
+test('types top-level options', async ({}, testInfo) => {
+  const cwd = testInfo.outputPath();
+  await execaCommand('base prepublishOnly');
+
+  await outputFiles(cwd, {
+    'nuxt.config.ts': endent`
+      export default defineNuxtConfig({
+        modules: ['self'],
+        mail: { message: { cc: 'johndoe@gmail.com' }, smtp: { host: 'localhost', port: 1234 } },
+      });
+    `,
+    'tsconfig.json': JSON.stringify({ extends: './.nuxt/tsconfig.json' }),
+  });
+
+  await fs.ensureDir(pathLib.join(cwd, 'node_modules'));
+
+  await fs.symlink(
+    '../../..',
+    pathLib.join(cwd, 'node_modules', 'self'),
+    'dir',
+  );
+
+  await execaCommand('nuxt typecheck', { cwd });
+});
