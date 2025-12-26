@@ -52,7 +52,8 @@
     "@types/nodemailer": "^7.0.4",
     "defu": "^6.1.4",
     "lodash-es": "^4.17.22",
-    "nodemailer": "^7.0.12"
+    "nodemailer": "^7.0.12",
+    "type-fest": "^5.3.1"
   },
   "devDependencies": {
     "@dword-design/base": "^16.1.6",
