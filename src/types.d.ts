@@ -6,12 +6,12 @@ export interface MailOptions {
   smtp: SMTPTransport.Options | null;
 }
 
-export interface Message extends Omit<SendMailOptions, 'to' | 'cc' | 'bcc'> {
-  to: SendMailOptions['to'];
-  cc: SendMailOptions['cc'];
-  bcc: SendMailOptions['bcc'];
-  name?: string;
-}
+export type Message = Omit<SendMailOptions, 'to' | 'cc' | 'bcc'> &
+  (
+    | { to: SendMailOptions['to'] }
+    | { cc: SendMailOptions['cc'] }
+    | { bcc: SendMailOptions['bcc'] }
+  ) & { name?: string };
 
 export interface MailOptionsInput extends Omit<MailOptions, 'message'> {
   message: MailOptions['message'] | Message;
