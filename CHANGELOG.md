@@ -1,3 +1,11 @@
+## [8.0.1](https://github.com/dword-design/nuxt-mail/compare/v8.0.0...v8.0.1) (2025-12-26)
+
+
+### Bug Fixes
+
+* make types a prod dependency ([ef7312e](https://github.com/dword-design/nuxt-mail/commit/ef7312e9e36afb3c6fdcb4e08ca2fc69a61405d1))
+* updates ([332619d](https://github.com/dword-design/nuxt-mail/commit/332619d8a538a65fecce857fb4aea5a5887aabe7))
+
 # [8.0.0](https://github.com/dword-design/nuxt-mail/compare/v7.0.1...v8.0.0) (2025-12-12)
 
 
