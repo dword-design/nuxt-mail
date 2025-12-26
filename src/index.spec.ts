@@ -34,11 +34,11 @@ test('bcc', async ({ page, mailServer, mailServerPort }, testInfo) => {
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', { message: { bcc: 'johndoe@gmail.com' }, smtp: { port: ${mailServerPort} } }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <template>
@@ -87,11 +87,11 @@ test('cc', async ({ page, mailServer, mailServerPort }, testInfo) => {
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', { message: { cc: 'johndoe@gmail.com' }, smtp: { port: ${mailServerPort} } }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <template>
@@ -141,14 +141,14 @@ test('cc and bcc', async ({ page, mailServer, mailServerPort }, testInfo) => {
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', {
             message: { bcc: 'bcc@gmail.com', cc: 'cc@gmail.com' },
             smtp: { port: ${mailServerPort} },
           }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <template>
@@ -202,11 +202,11 @@ test('client side', async ({ page, mailServer, mailServerPort }, testInfo) => {
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', { message: { to: 'johndoe@gmail.com' }, smtp: { port: ${mailServerPort} } }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <template>
@@ -261,14 +261,14 @@ test('config by index', async ({
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', {
             message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
             smtp: { port: ${mailServerPort} },
           }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <template>
@@ -322,7 +322,7 @@ test('config by name', async ({
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', {
             message: [
@@ -332,7 +332,7 @@ test('config by name', async ({
             smtp: { port: ${mailServerPort} },
           }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <template>
@@ -382,14 +382,14 @@ test('config invalid index', async ({}, testInfo) => {
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', {
             message: [{ to: 'foo@bar.com' }],
             smtp: {},
           }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <script setup>
@@ -426,11 +426,11 @@ test('config name not found', async ({}, testInfo) => {
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', { message: [{ to: 'foo@bar.com' }], smtp: {} }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <script setup>
@@ -467,14 +467,14 @@ test('injected', async ({ page, mailServer, mailServerPort }, testInfo) => {
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', {
             message: { to: 'johndoe@gmail.com' },
             smtp: { port: ${mailServerPort} },
           }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <template>
@@ -524,14 +524,14 @@ test('prod', async ({ page, mailServer, mailServerPort }, testInfo) => {
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', {
             message: { to: 'johndoe@gmail.com' },
             smtp: { port: ${mailServerPort} },
           }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <template>
@@ -586,7 +586,7 @@ test('to, cc and bcc', async ({
 
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', {
             message: {
@@ -597,7 +597,7 @@ test('to, cc and bcc', async ({
             smtp: { port: ${mailServerPort} },
           }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <template>
@@ -654,11 +654,11 @@ test('env variable', async ({ page, mailServer, mailServerPort }, testInfo) => {
   await outputFiles(cwd, {
     '.env': `NUXT_MAIL_SMTP='{ "port": ${mailServerPort} }'`,
     'nuxt.config.ts': endent`
-      export default {
+      export default defineNuxtConfig({
         modules: [
           ['../../src', { message: { to: 'johndoe@gmail.com' } }],
         ],
-      }
+      });
     `,
     'pages/index.vue': endent`
       <template>
@@ -710,11 +710,11 @@ test.describe('options checking', () => {
     await fs.outputFile(
       pathLib.join(cwd, 'nuxt.config.ts'),
       endent`
-        export default {
+        export default defineNuxtConfig({
           modules: [
             ['../../src', { smtp: {} }],
           ],
-        }
+        });
       `,
     );
 
@@ -729,11 +729,11 @@ test.describe('options checking', () => {
     await fs.outputFile(
       pathLib.join(cwd, 'nuxt.config.ts'),
       endent`
-        export default {
+        export default defineNuxtConfig({
           modules: [
             ['../../src', { message: {}, smtp: {} }],
           ],
-        }
+        });
       `,
     );
 
@@ -748,9 +748,9 @@ test.describe('options checking', () => {
     await fs.outputFile(
       pathLib.join(cwd, 'nuxt.config.ts'),
       endent`
-        export default {
+        export default defineNuxtConfig({
           modules: ['../../src'],
-        }
+        });
       `,
     );
 
@@ -765,9 +765,9 @@ test.describe('options checking', () => {
     await fs.outputFile(
       pathLib.join(cwd, 'nuxt.config.ts'),
       endent`
-        export default {
+        export default defineNuxtConfig({
           modules: ['../../src'],
-        }
+        });
       `,
     );
 
@@ -782,9 +782,9 @@ test.describe('options checking', () => {
     await fs.outputFile(
       pathLib.join(cwd, 'nuxt.config.ts'),
       endent`
-        export default {
+        export default defineNuxtConfig({
           modules: ['../../src'],
-        }
+        });
       `,
     );
 
@@ -799,9 +799,9 @@ test.describe('options checking', () => {
     await fs.outputFile(
       pathLib.join(cwd, 'nuxt.config.ts'),
       endent`
-        export default {
+        export default defineNuxtConfig({
           modules: ['../../src'],
-        }
+        });
       `,
     );
 
