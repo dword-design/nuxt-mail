@@ -47,13 +47,13 @@
     "verify": "base verify"
   },
   "dependencies": {
-    "@nuxt/kit": "^4.2.1",
+    "@nuxt/kit": "^4.2.2",
     "defu": "^6.1.4",
-    "lodash-es": "^4.17.21",
-    "nodemailer": "^7.0.11"
+    "lodash-es": "^4.17.22",
+    "nodemailer": "^7.0.12"
   },
   "devDependencies": {
-    "@dword-design/base": "^16.1.4",
+    "@dword-design/base": "^16.1.6",
     "@dword-design/base-config-nuxt-module": "^5.0.0",
     "@playwright/browser-chromium": "^1.57.0",
     "@playwright/test": "^1.57.0",
@@ -64,7 +64,7 @@
     "endent": "npm:@dword-design/endent@^1.4.7",
     "execa": "^9.6.1",
     "get-port": "^7.1.0",
-    "nuxt": "^4.2.1",
+    "nuxt": "^4.2.2",
     "nuxt-dev-ready": "^5.0.1",
     "output-files": "^3.0.0",
     "port-ready": "npm:@dword-design/port-ready-fork@^0.0.3",
