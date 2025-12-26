@@ -1,3 +1,12 @@
+## [8.0.2](https://github.com/dword-design/nuxt-mail/compare/v8.0.1...v8.0.2) (2025-12-26)
+
+
+### Bug Fixes
+
+* fix message type to not having to contain all to,cc,bcc fields but at least one ([cc71e45](https://github.com/dword-design/nuxt-mail/commit/cc71e45a39603a3293126adc0803328fbf844dec))
+* fix message types ([cd1ece3](https://github.com/dword-design/nuxt-mail/commit/cd1ece3f1d4e071b53bced5c7d084992d49bba25))
+* fix smtp transport type ([fdb5fd9](https://github.com/dword-design/nuxt-mail/commit/fdb5fd996d8b151303a1ee5659f11a57924180b0))
+
 ## [8.0.1](https://github.com/dword-design/nuxt-mail/compare/v8.0.0...v8.0.1) (2025-12-26)
 
 
