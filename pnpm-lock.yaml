@@ -11,6 +11,12 @@ importers:
       '@nuxt/kit':
         specifier: ^4.2.2
         version: 4.2.2(magicast@0.5.1)
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+      '@types/nodemailer':
+        specifier: ^7.0.4
+        version: 7.0.4
       defu:
         specifier: ^6.1.4
         version: 6.1.4
@@ -36,12 +42,6 @@ importers:
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
-      '@types/lodash-es':
-        specifier: ^4.17.12
-        version: 4.17.12
-      '@types/nodemailer':
-        specifier: ^7.0.4
-        version: 7.0.4
       axios:
         specifier: ^1.13.2
         version: 1.13.2

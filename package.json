@@ -48,6 +48,8 @@
   },
   "dependencies": {
     "@nuxt/kit": "^4.2.2",
+    "@types/lodash-es": "^4.17.12",
+    "@types/nodemailer": "^7.0.4",
     "defu": "^6.1.4",
     "lodash-es": "^4.17.22",
     "nodemailer": "^7.0.12"
@@ -58,8 +60,6 @@
     "@playwright/browser-chromium": "^1.57.0",
     "@playwright/test": "^1.57.0",
     "@types/fs-extra": "^11.0.4",
-    "@types/lodash-es": "^4.17.12",
-    "@types/nodemailer": "^7.0.4",
     "axios": "^1.13.2",
     "endent": "npm:@dword-design/endent@^1.4.7",
     "execa": "^9.6.1",
