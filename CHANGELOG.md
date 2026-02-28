@@ -1,3 +1,11 @@
+## [8.0.3](https://github.com/dword-design/nuxt-mail/compare/v8.0.2...v8.0.3) (2026-02-28)
+
+
+### Bug Fixes
+
+* delete unneeded param ([aa91d54](https://github.com/dword-design/nuxt-mail/commit/aa91d54ce8385e22c9171908e6afae537786f9d5))
+* do not check options on prod build, only on prod start ([f81d0fb](https://github.com/dword-design/nuxt-mail/commit/f81d0fb7abf9a44a2bd37f1db2e980e2ced385ca))
+
 ## [8.0.2](https://github.com/dword-design/nuxt-mail/compare/v8.0.1...v8.0.2) (2025-12-26)
 
 
