@@ -840,7 +840,6 @@ test('types top-level options', async ({}, testInfo) => {
   await fs.symlink(
     '../../..',
     pathLib.join(cwd, 'node_modules', 'self'),
-    'dir',
   );
 
   await execaCommand('nuxt typecheck', { cwd });
