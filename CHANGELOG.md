@@ -1,3 +1,10 @@
+## [8.0.4](https://github.com/dword-design/nuxt-mail/compare/v8.0.3...v8.0.4) (2026-02-28)
+
+
+### Bug Fixes
+
+* do not check options on prerender ([e6e0a19](https://github.com/dword-design/nuxt-mail/commit/e6e0a199149e8cec85836bbe22991f000e874824))
+
 ## [8.0.3](https://github.com/dword-design/nuxt-mail/compare/v8.0.2...v8.0.3) (2026-02-28)
 
 
