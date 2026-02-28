@@ -794,6 +794,30 @@ test.describe('options checking', () => {
       execaCommand('node .output/server/index.mjs', { cwd }),
     ).rejects.toThrow('SMTP config is missing.');
   });
+
+  test('check options prerender build', async ({}, testInfo) => {
+    const cwd = testInfo.outputPath();
+
+    await outputFiles(cwd, {
+      'nuxt.config.ts': endent`
+        export default defineNuxtConfig({
+          modules: ['../../src'],
+          nitro: {
+            prerender: {
+              routes: ['/'],
+            },
+          },
+        });
+      `,
+      'pages/index.vue': endent`
+        <template>
+          <div />
+        </template>
+      `,
+    });
+
+    await execaCommand('nuxt build', { cwd });
+  });
 });
 
 test('types top-level options', async ({}, testInfo) => {

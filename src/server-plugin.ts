@@ -8,4 +8,10 @@ import normalizeOptions from './normalize-options';
 const options = normalizeOptions(useRuntimeConfig().mail);
 
 // For prod
-export default defineNitroPlugin(() => checkOptions(options));
+export default defineNitroPlugin(() => {
+  if (import.meta.prerender) {
+    return;
+  }
+
+  checkOptions(options);
+});
