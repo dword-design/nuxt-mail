@@ -34,9 +34,9 @@ export default defineNuxtModule<MailOptionsInput>({
 
     nuxt.options.runtimeConfig.mail = normalizeOptions(options);
 
-    if (!nuxt.options._prepare) {
+    if (nuxt.options.dev) {
       const resolvedOptions = normalizeOptions(useRuntimeConfig().mail);
-      checkOptions(resolvedOptions); // For dev
+      checkOptions(resolvedOptions);
     }
 
     addServerPlugin(resolver.resolve('./server-plugin'));

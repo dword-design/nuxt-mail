@@ -776,7 +776,7 @@ test.describe('options checking', () => {
     );
   });
 
-  test('check options prod build', async ({}, testInfo) => {
+  test('check options prod', async ({}, testInfo) => {
     const cwd = testInfo.outputPath();
 
     await fs.outputFile(
@@ -788,32 +788,7 @@ test.describe('options checking', () => {
       `,
     );
 
-    await expect(execaCommand('nuxt build', { cwd })).rejects.toThrow(
-      'SMTP config is missing.',
-    );
-  });
-
-  test('check options prod start', async ({ mailServerPort }, testInfo) => {
-    const cwd = testInfo.outputPath();
-
-    await fs.outputFile(
-      pathLib.join(cwd, 'nuxt.config.ts'),
-      endent`
-        export default defineNuxtConfig({
-          modules: ['../../src'],
-        });
-      `,
-    );
-
-    await execaCommand('nuxt build', {
-      cwd,
-      env: {
-        NUXT_MAIL: JSON.stringify({
-          message: { to: 'foo@bar.de' },
-          smtp: { port: mailServerPort },
-        }),
-      },
-    });
+    await execaCommand('nuxt build', { cwd });
 
     await expect(
       execaCommand('node .output/server/index.mjs', { cwd }),
@@ -836,11 +811,6 @@ test('types top-level options', async ({}, testInfo) => {
   });
 
   await fs.ensureDir(pathLib.join(cwd, 'node_modules'));
-
-  await fs.symlink(
-    '../../..',
-    pathLib.join(cwd, 'node_modules', 'self'),
-  );
-
+  await fs.symlink('../../..', pathLib.join(cwd, 'node_modules', 'self'));
   await execaCommand('nuxt typecheck', { cwd });
 });
