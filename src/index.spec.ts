@@ -82,7 +82,7 @@ test('bcc', async ({ page, mailServer, mailServerPort }, testInfo) => {
   }
 });
 
-test('cc', async ({ page, mailServer, mailServerPort }, testInfo) => {
+test.only('cc', async ({ page, mailServer, mailServerPort }, testInfo) => {
   const cwd = testInfo.outputPath();
 
   await outputFiles(cwd, {
@@ -114,8 +114,9 @@ test('cc', async ({ page, mailServer, mailServerPort }, testInfo) => {
 
   const nuxt = execaCommand('nuxt dev', {
     cwd,
-    env: { PORT: String(port) },
+    env: { PORT: String(port), NODE_ENV: '' },
     reject: false,
+    stdio: 'inherit',
   });
 
   try {

@@ -1,9 +1,8 @@
 import { defineNitroPlugin } from 'nitropack/runtime';
 
+import checkOptions from '@@/src/check-options';
+import normalizeOptions from '@@/src/normalize-options';
 import { useRuntimeConfig } from '#imports';
-
-import checkOptions from './check-options';
-import normalizeOptions from './normalize-options';
 
 const options = normalizeOptions(useRuntimeConfig().mail);
 

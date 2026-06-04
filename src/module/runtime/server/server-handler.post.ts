@@ -1,9 +1,13 @@
-import { createError, defineEventHandler, readBody } from 'h3';
 import nodemailer, { type Transporter } from 'nodemailer';
 
-import { useRuntimeConfig } from '#imports';
+import normalizeOptions from '@@/src/normalize-options';
+import {
+  createError,
+  defineEventHandler,
+  readBody,
+  useRuntimeConfig,
+} from '#imports';
 
-import normalizeOptions from './normalize-options';
 import send from './send';
 
 const options = normalizeOptions(useRuntimeConfig().mail);
