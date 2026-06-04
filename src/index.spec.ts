@@ -118,7 +118,6 @@ test('cc', async ({ page, mailServer, mailServerPort }, testInfo) => {
     cwd,
     env: { NODE_ENV: '', PORT: String(port) },
     reject: false,
-    stdio: 'inherit',
   });
 
   try {
