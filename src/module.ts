@@ -39,10 +39,10 @@ export default defineNuxtModule<MailOptionsInput>({
       checkOptions(resolvedOptions);
     }
 
-    addServerPlugin(resolver.resolve('./server-plugin'));
+    addServerPlugin(resolver.resolve('./runtime/server/server-plugin'));
 
     addServerHandler({
-      handler: resolver.resolve('./server-handler.post'),
+      handler: resolver.resolve('./runtime/server/server-handler.post'),
       route: '/mail/send',
     });
 

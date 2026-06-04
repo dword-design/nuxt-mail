@@ -6,7 +6,7 @@ import type {
   MailOptions,
   MessageWithConfig,
   MessageWithConfigInput,
-} from './types';
+} from '@/src/types';
 
 const resolveConfig = (
   bodyInput: MessageWithConfigInput,
