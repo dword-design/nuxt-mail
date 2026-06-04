@@ -1,3 +1,12 @@
+## [8.0.5](https://github.com/dword-design/nuxt-mail/compare/v8.0.4...v8.0.5) (2026-06-04)
+
+
+### Bug Fixes
+
+* fix h3 import ([#300](https://github.com/dword-design/nuxt-mail/issues/300)) ([34943d1](https://github.com/dword-design/nuxt-mail/commit/34943d1c788b51b4595ad9ccaa069a4c973e1676))
+* reduce test envs ([0e84157](https://github.com/dword-design/nuxt-mail/commit/0e84157073c8e77c325389f40ce9a89e26361e09))
+* update dependency nodemailer to v8 ([#294](https://github.com/dword-design/nuxt-mail/issues/294)) ([703382a](https://github.com/dword-design/nuxt-mail/commit/703382af9270b59bc77e45c7d824fc091f9e5c39))
+
 ## [8.0.4](https://github.com/dword-design/nuxt-mail/compare/v8.0.3...v8.0.4) (2026-02-28)
 
 
