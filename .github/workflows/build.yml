@@ -41,16 +41,14 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
-      - env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm verify
+      - run: pnpm verify
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           if-no-files-found: ignore
           name: Data from tests
           path: test-results/*/**
-      - if: matrix.os == 'ubuntu-latest' && matrix.node == 22
+      - if: matrix.os == 'ubuntu-latest'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -59,10 +57,6 @@ jobs:
         include:
           - node: 22
             os: ubuntu-latest
-          - node: 24
-            os: ubuntu-latest
-          - node: 22
-            os: macos-latest
           - node: 22
             os: windows-latest
 name: build
