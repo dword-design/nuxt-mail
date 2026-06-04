@@ -35,7 +35,7 @@ test('bcc', async ({ page, mailServer, mailServerPort }, testInfo) => {
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', { message: { bcc: 'johndoe@gmail.com' }, smtp: { port: ${mailServerPort} } }],
         ],
@@ -89,7 +89,7 @@ test('cc', async ({ page, mailServer, mailServerPort }, testInfo) => {
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', { message: { cc: 'johndoe@gmail.com' }, smtp: { port: ${mailServerPort} } }],
         ],
@@ -145,7 +145,7 @@ test('cc and bcc', async ({ page, mailServer, mailServerPort }, testInfo) => {
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', {
             message: { bcc: 'bcc@gmail.com', cc: 'cc@gmail.com' },
@@ -207,7 +207,7 @@ test('client side', async ({ page, mailServer, mailServerPort }, testInfo) => {
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', { message: { to: 'johndoe@gmail.com' }, smtp: { port: ${mailServerPort} } }],
         ],
@@ -267,7 +267,7 @@ test('config by index', async ({
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', {
             message: [{ to: 'foo@bar.com' }, { to: 'johndoe@gmail.com' }],
@@ -329,7 +329,7 @@ test('config by name', async ({
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', {
             message: [
@@ -390,7 +390,7 @@ test('config invalid index', async ({}, testInfo) => {
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', {
             message: [{ to: 'foo@bar.com' }],
@@ -435,7 +435,7 @@ test('config name not found', async ({}, testInfo) => {
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', { message: [{ to: 'foo@bar.com' }], smtp: {} }],
         ],
@@ -477,7 +477,7 @@ test('injected', async ({ page, mailServer, mailServerPort }, testInfo) => {
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', {
             message: { to: 'johndoe@gmail.com' },
@@ -535,7 +535,7 @@ test('prod', async ({ page, mailServer, mailServerPort }, testInfo) => {
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', {
             message: { to: 'johndoe@gmail.com' },
@@ -598,7 +598,7 @@ test('to, cc and bcc', async ({
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', {
             message: {
@@ -667,7 +667,7 @@ test('env variable', async ({ page, mailServer, mailServerPort }, testInfo) => {
     '.env': `NUXT_MAIL_SMTP='{ "port": ${mailServerPort} }'`,
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: [
           ['../../src', { message: { to: 'johndoe@gmail.com' } }],
         ],
@@ -724,7 +724,7 @@ test.describe('options checking', () => {
       pathLib.join(cwd, 'nuxt.config.ts'),
       endent`
         export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
           modules: [
             ['../../src', { smtp: {} }],
           ],
@@ -744,7 +744,7 @@ test.describe('options checking', () => {
       pathLib.join(cwd, 'nuxt.config.ts'),
       endent`
         export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
           modules: [
             ['../../src', { message: {}, smtp: {} }],
           ],
@@ -764,7 +764,7 @@ test.describe('options checking', () => {
       pathLib.join(cwd, 'nuxt.config.ts'),
       endent`
         export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
           modules: ['../../src'],
         });
       `,
@@ -782,7 +782,7 @@ test.describe('options checking', () => {
       pathLib.join(cwd, 'nuxt.config.ts'),
       endent`
         export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
           modules: ['../../src'],
         });
       `,
@@ -800,7 +800,7 @@ test.describe('options checking', () => {
       pathLib.join(cwd, 'nuxt.config.ts'),
       endent`
         export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
           modules: ['../../src'],
         });
       `,
@@ -819,7 +819,7 @@ test.describe('options checking', () => {
     await outputFiles(cwd, {
       'nuxt.config.ts': endent`
         export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
           modules: ['../../src'],
           nitro: {
             prerender: {
@@ -846,7 +846,7 @@ test('types top-level options', async ({}, testInfo) => {
   await outputFiles(cwd, {
     'nuxt.config.ts': endent`
       export default defineNuxtConfig({
-        alias: { '@': '${pathLib.resolve(cwd, '..', '..')}' },
+        alias: { '@': ${JSON.stringify(pathLib.resolve(cwd, '..', '..'))} },
         modules: ['self'],
         mail: { message: { cc: 'johndoe@gmail.com' }, smtp: { host: 'localhost', port: 1234 } },
       });
