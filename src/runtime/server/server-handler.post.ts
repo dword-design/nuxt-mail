@@ -1,6 +1,6 @@
 import nodemailer, { type Transporter } from 'nodemailer';
 
-import normalizeOptions from '@@/src/normalize-options';
+import normalizeOptions from '@/src/normalize-options';
 import {
   createError,
   defineEventHandler,
