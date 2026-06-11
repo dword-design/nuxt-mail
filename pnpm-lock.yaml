@@ -64,8 +64,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
       output-files:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^4.0.0
+        version: 4.0.0
       port-ready:
         specifier: npm:@dword-design/port-ready-fork@^0.0.3
         version: '@dword-design/port-ready-fork@0.0.3'
@@ -5240,6 +5240,10 @@ packages:
   output-files@3.0.0:
     resolution: {integrity: sha512-mFwRkTDiw6evbQW1G6To+Yp7tN2WOVh8ne7AyzTRWtqPU+Sza3ZhtXEO3vpLnaYPYEIUSrlILeZVp0rOmcA5Kw==}
     engines: {node: '>=18'}
+
+  output-files@4.0.0:
+    resolution: {integrity: sha512-WfOFV7mEwTisw3atSd2PcMx0+6ZrQk3iYRu6mwQS54XN6d3I5PWqDoT4T6nBdIxiDQFNyEoLOJvciyeCMLcaCQ==}
+    engines: {node: '>=22'}
 
   oxc-minify@0.133.0:
     resolution: {integrity: sha512-6bNsYU+5WNIaNHB16zHnL24cUaJuKiPzUvjENoMale3+U8ZBMbGYgdgt//frx0ge7UcgEGIpqtukGGNPT0kxfQ==}
@@ -12988,6 +12992,10 @@ snapshots:
   os-tmpdir@1.0.2: {}
 
   output-files@3.0.0:
+    dependencies:
+      fs-extra: 11.3.5
+
+  output-files@4.0.0:
     dependencies:
       fs-extra: 11.3.5
 
