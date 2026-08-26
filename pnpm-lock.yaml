@@ -61,8 +61,8 @@ importers:
         specifier: ^4.2.2
         version: 4.5.0(@babel/plugin-syntax-jsx@7.29.7(@babel/core@7.29.7))(@babel/plugin-syntax-typescript@7.29.7(@babel/core@7.29.7))(@parcel/watcher@2.6.0)(@types/node@26.1.1)(@vue/compiler-sfc@3.5.40)(commander@14.0.3)(db0@0.3.4)(esbuild@0.28.1)(eslint@9.39.5(jiti@2.7.0))(ioredis@5.11.1)(lightningcss@1.33.0)(magicast@0.5.3)(meow@13.2.0)(optionator@0.9.4)(oxc-parser@0.140.0)(rollup-plugin-visualizer@7.0.1(rolldown@1.2.0)(rollup@4.62.3))(rollup@4.62.3)(sass@1.97.3)(srvx@0.12.4)(terser@5.49.0)(tsx@4.23.1)(typescript@5.9.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.97.3)(terser@5.49.0)(tsx@4.23.1)(yaml@2.9.0))(vue-tsc@3.3.8(typescript@5.9.3))(yaml@2.9.0)
       nuxt-dev-ready:
-        specifier: ^5.0.1
-        version: 5.0.1
+        specifier: ^6.0.0
+        version: 6.0.0
       output-files:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3542,6 +3542,7 @@ packages:
   eslint@9.39.5:
     resolution: {integrity: sha512-DgZS62aPLXKlnxILS/AYCoRvHaZeXceIzlXPkkGGzJWSow1aEk0lbTlxUSlyjC8jcaKxAdOnTDz+o1JFSBsyjw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -5116,9 +5117,9 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nuxt-dev-ready@5.0.1:
-    resolution: {integrity: sha512-gC4kYDoTqITfpzUXsIj28IPuMXlVDHgn6uaob5Jid0uB8hLg/JDmeA7HkJ8Ayje07wJsP6DtF6yhqRi4YoX5tQ==}
-    engines: {node: '>=20'}
+  nuxt-dev-ready@6.0.0:
+    resolution: {integrity: sha512-yxPli2O9SBHG7/P3GRi1Rfy0oiNYsWFiUT3UiUMXhQnp+xLK6JCEjOhXYDpgQZG2pWhMMLNO2iamx7fQHhlQ9w==}
+    engines: {node: '>=22'}
 
   nuxt@4.5.0:
     resolution: {integrity: sha512-MbMAQFR9q8sDf80mp0v1sLtPuFDviSw7ntcBHPP0ok9phpirRy19NM9aDNRI6/12hU646BurrE0zCFJK0pq7NA==}
@@ -5314,9 +5315,9 @@ packages:
     resolution: {integrity: sha512-raZs7eMN7mRqP2UEaXMSxDAkSqwN41J0yXCV1AVU9PbB4t7aBAj/6nDPgFcUikX+4GeBgXWLxITAn9hr+bdhrg==}
     engines: {node: '>=4'}
 
-  p-wait-for@5.0.2:
-    resolution: {integrity: sha512-lwx6u1CotQYPVju77R+D0vFomni/AqRfqLmqQ8hekklqZ6gAY9rONh7lBQ0uxWMkC2AuX9b2DVAl8To0NyP1JA==}
-    engines: {node: '>=12'}
+  p-wait-for@6.0.0:
+    resolution: {integrity: sha512-2kKzMtjS8TVcpCOU/gr3vZ4K/WIyS1AsEFXFWapM/0lERCdyTbB6ZeuCIp+cL1aeLZfQoMdZFCBTHiK4I9UtOw==}
+    engines: {node: '>=20'}
 
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
@@ -5477,10 +5478,6 @@ packages:
   pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
-
-  port-ready@0.1.0:
-    resolution: {integrity: sha512-6IJ0anhRxATv5dZ5PJgYOwDbl3Jeu2GqnB/gLngC16Mur/4/ELdkIrg3D5RNS9bfek+r10rs3206+Jgv65Z+bw==}
-    engines: {node: '>=6'}
 
   postcss-calc@10.1.1:
     resolution: {integrity: sha512-NYEsLHh8DgG/PRH2+G9BTuUdtf9ViS+vdoQ0YA5OQdGsfN4ztiwtDWNtBl9EKeqNMFnIu8IKZ0cLxEQ5r5KVMw==}
@@ -13049,11 +13046,11 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt-dev-ready@5.0.1:
+  nuxt-dev-ready@6.0.0:
     dependencies:
       axios: 1.18.1
-      p-wait-for: 5.0.2
-      port-ready: 0.1.0
+      p-wait-for: 6.0.0
+      port-ready: '@dword-design/port-ready-fork@0.0.3'
     transitivePeerDependencies:
       - debug
       - supports-color
@@ -13397,9 +13394,7 @@ snapshots:
 
   p-wait-for@1.0.0: {}
 
-  p-wait-for@5.0.2:
-    dependencies:
-      p-timeout: 6.1.4
+  p-wait-for@6.0.0: {}
 
   package-json-from-dist@1.0.1: {}
 
@@ -13534,12 +13529,6 @@ snapshots:
       semver-compare: 1.0.0
 
   pluralize@8.0.0: {}
-
-  port-ready@0.1.0:
-    dependencies:
-      connect-port: 0.0.1
-      p-timeout: 2.0.1
-      p-wait-for: 1.0.0
 
   postcss-calc@10.1.1(postcss@8.5.23):
     dependencies:
