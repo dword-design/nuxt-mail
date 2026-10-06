@@ -1,3 +1,15 @@
+# [9.0.0](https://github.com/dword-design/nuxt-mail/compare/v8.0.5...v9.0.0) (2026-10-06)
+
+
+### Bug Fixes
+
+* update dependency nodemailer to v10 ([#312](https://github.com/dword-design/nuxt-mail/issues/312)) ([db7ab06](https://github.com/dword-design/nuxt-mail/commit/db7ab06065461fa3f24f422ac0193e603a137380))
+
+
+### BREAKING CHANGES
+
+* upgrade nodemailer to 10
+
 ## [8.0.5](https://github.com/dword-design/nuxt-mail/compare/v8.0.4...v8.0.5) (2026-06-04)
 
 
